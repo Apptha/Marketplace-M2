@@ -1,0 +1,125 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+?>
+<?php
+$searchedProductName = '';
+$searchedProductName = $this->getRequest ()->getParam ( 'filter_name' );
+$storeCurrencySymbol = $block->getStoreCurrencySymbol ();
+$dataHelper = $this->helper ( 'Apptha\Marketplace\Helper\Data' );
+?>
+<form name="assign_product_form" class="assign_product_form"
+    id="assign_product_form" method="GET"
+    action="<?php echo $block->getSearchResultUrl();?>">
+    <div>
+        <h3><?php echo __('Search product in store');?></h3>
+        <input data-validate="{required:true}"
+            value="<?php if(!empty($searchedProductName)){ echo $searchedProductName ;}?>"
+            class="assign_product_name" type="text"
+            placeholder="Product Name" name="filter_name"
+            id="filter_name" />
+        <button type="submit" class="button multi_submit" title="Search"  name="multi_submit" id="multi_submit">
+            <span><span><?php echo __('Search');?></span></span>
+        </button>
+<?php echo __("Not exist in the Store's Catalog? Want to add a new product?"); ?><a
+            class="button"
+            href="<?php echo  $block->getNewProductUrl() ?>"><?php echo __('Click here'); ?></a>
+    </div>
+</form>
+<div class="assign-products">
+<?php
+/**
+ * Get Assign Product Collection
+ * 
+ * @var object
+ */
+$productCollection = $block->getCollection ();
+$productCollectionCount = count ( $productCollection );
+if ($productCollectionCount > 0 && ! empty ( $searchedProductName )) {
+ ?>
+      <table class="data-table assign-product-details" id="my-product-table">
+        <thead>
+            <tr>
+                <th class="product"><?php echo __('Product');?></th>
+                <th class="name"><?php echo __('Name');?></th>
+                <th class="price"><?php echo __('Price');?></th>
+                <th class="use-product"><?php echo __('Action');?></th>
+            </tr>
+        </thead>
+    <?php foreach($productCollection as $product){?>
+  <tbody>
+      <?php
+  $imagehelper = $this->helper ( 'Magento\Catalog\Helper\Image' );
+  $productImage = $imagehelper->init ( $product, 'category_page_list' )->constrainOnly ( FALSE )->keepAspectRatio ( TRUE )->keepFrame ( FALSE )->resize ( 100 )->getUrl ();
+  ?>
+        <td><a href="<?php echo $product->getProductUrl();?>"> <img  src="<?php echo $productImage; ?>"></a></td>
+            <td><a href="<?php echo $product->getProductUrl();?>"><?php echo $product->getName();?></a></td>
+            <td><?php
+  
+  if ($product->getTypeId () != 'configurable') {
+   echo $dataHelper->getFormattedPrice ( $product->getPrice () );
+  } else {
+   echo '-';
+  }
+  ?></td>
+        <?php
+  $helper = $this->helper( 'Apptha\Marketplace\Helper\Objectmanager' );
+  $assignedProducts = $helper->alreadyAssignedProducts($product->getId ());
+  $assignedProductsCount = count ( $assignedProducts );
+  ?>
+        <?php if($assignedProducts->getSize() > 0){?>
+        <td><?php echo __('Assigned');?></td>
+        <?php
+  
+  } else { ?>
+         <td><button> <a href="<?php echo $block->getAddAssignProductUrl()."id".DIRECTORY_SEPARATOR.$product->getId();?>"><?php echo __('Use');?></a>
+                </button></td>
+        <?php } ?>
+  </tbody>
+    <?php }?>
+</table>
+    <?php
+} else {
+ echo __ ( 'No Records were found' );
+}
+?>
+</div>
+<script>
+require([
+    'jquery',
+    'mage/mage'
+], function($){
+   var dataForm = $('#assign_product_form');
+    var ignore = null;
+    dataForm.mage('validation', {
+            ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
+        }).find('input:text').attr('autocomplete', 'off');
+
+});
+</script>

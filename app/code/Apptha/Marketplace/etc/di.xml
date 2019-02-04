@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+! -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+  <preference for="Magento\Review\Controller\Product\Post" type="Apptha\Marketplace\Controller\Post" />
+  <preference for="Magento\Customer\Controller\Adminhtml\Index\MassDelete" type="Apptha\Marketplace\Controller\Adminhtml\Index\MassDelete" />
+  <preference for="Magento\Customer\Controller\Adminhtml\Index\Delete" type="Apptha\Marketplace\Controller\Adminhtml\Index\Delete" />
+  <preference for="Magento\Customer\Controller\Adminhtml\Index\InlineEdit" type="Apptha\Marketplace\Controller\Adminhtml\Index\MarketplaceInline" />
+  <preference for="Magento\Customer\Controller\Adminhtml\Index\MassAssignGroup" type="Apptha\Marketplace\Controller\Adminhtml\Index\MassAssignGroup" />
+  <preference for="Magento\Checkout\Controller\Cart\Add" type="Apptha\Marketplace\Controller\Assignproduct\Cart\Add" />
+  <preference for="Magento\Customer\Controller\Account\LoginPost" type="Apptha\Marketplace\Controller\Account\LoginPost" />
+  <preference for="Magento\Sales\Block\Order\PrintShipment" type="Magento\Sales\Block\Order\Items" />
+  <preference for="Magento\Checkout\Block\Cart" type="Apptha\Marketplace\Block\Cart" />
+</config>

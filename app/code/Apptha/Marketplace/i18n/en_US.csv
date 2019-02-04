@@ -1,0 +1,494 @@
+Edit Product,Edit Product
+Add Product,Add Product
+Assign Products,Assign Products
+The product has been deleted successfully.,The product has been deleted successfully.
+Contact Admin,Contact Admin
+Orders,Orders
+Order #,Order #
+Manage Products,Manage Products
+All Sellers,All Sellers
+Become a Seller,Become a Seller
+Seller Dashboard,Seller Dashboard
+Seller Login,Seller Login
+Our Sellers,Our Sellers
+My Store,My Store
+Create New Seller Account,Create New Seller Account
+Seller Review,Seller Review
+Subscription Plans,Subscription Plans
+Transactions,Transactions
+Sell On ,Sell On
+Seller can't add their own product,Seller can't add their own product
+"This account is not confirmed. <a href=""%1"">Click here</a> to resend confirmation email.","This account is not confirmed. <a href=""%1"">Click here</a> to resend confirmation email."
+The account is locked. Please wait and try again or contact %1.,The account is locked. Please wait and try again or contact %1.
+An unspecified error occurred. Please contact us for assistance.,An unspecified error occurred. Please contact us for assistance.
+A login and a password are required.,A login and a password are required.
+Seller Payments,Seller Payments
+All Payments,All Payments
+All Payments for ,All Payments for
+Customer could not be deleted.,Customer could not be deleted.
+You deleted the customer.,You deleted the customer.
+Seller Products were disabled and disapproved,Seller Products were disabled and disapproved
+Please correct the data sent.,Please correct the data sent.
+A total of %1 record(s) were updated.,A total of %1 record(s) were updated.
+A total of %1 record(s) were deleted.,A total of %1 record(s) were deleted.
+Seller Products were disabled and disapproved,Seller Products were disabled and disapproved
+This Subscription Plan no longer exists.,This Subscription Plan no longer exists.
+Pay,Pay
+Manage Seller Payments,Manage Seller Payments
+Kindly check your pay amount.,Kindly check your pay amount.
+The payment has been updated successfully.,The payment has been updated successfully.
+This Review no longer exists.,This Review no longer exists.
+Edit Seller Review,Edit Seller Review
+Manage Seller Review,Manage Seller Review
+Manage Webkul Grid View,Manage Webkul Grid View
+A total of %1 record(s) were approved.,A total of %1 record(s) were approved.
+A total of %1 record(s) were disapproved.,A total of %1 record(s) were disapproved.
+This Seller no longer exists.,This Seller no longer exists.
+Manage Commission,Manage Commission
+Manage Sellers,Manage Sellers
+Add Seller,Add Seller
+Manage Seller,Manage Seller
+Please Enable The Seller Products,Please Enable The Seller Products
+Seller Products also Disabled,Seller Products also Disabled
+Data has been saved.,Data has been saved.
+The data has been deleted successfully.,The data has been deleted successfully.
+Edit Subscription Plans,Edit Subscription Plans
+Manage Subscription,Manage Subscription
+Manage Subscription Plans,Manage Subscription Plans
+A total of %1 record(s) were disabled.,A total of %1 record(s) were disabled.
+A total of %1 record(s) were enabled.,A total of %1 record(s) were enabled.
+Data has been saved.,Data has been saved.
+Subscription Profiles,Subscription Profiles
+Subscribed Profiles,Subscribed Profiles
+Manage Seller Orders,Manage Seller Orders
+You added %1 to your shopping cart.,You added %1 to your shopping cart.
+We don\'t have as many ,We don\'t have as many
+ as you requested, as you requested
+We can\'t add this item to your shopping cart right now.,We can\'t add this item to your shopping cart right now.
+You have reached your product limit. If you want to add more product(s) kindly upgrade your subscription plan.,You have reached your product limit. If you want to add more product(s) kindly upgrade your subscription plan.
+You have not subscribed any plan yet. Kindly subscribe for adding product(s).,You have not subscribed any plan yet. Kindly subscribe for adding product(s).
+You must have a seller account to access,You must have a seller account to access
+You saved the product.,You saved the product.
+You must have a seller store to assign products,You must have a seller store to assign products
+Thanks for contacting us with your comments and questions. We\'ll respond to you very soon,Thanks for contacting us with your comments and questions. We\'ll respond to you very soon
+request has been sent to seller successfully,request has been sent to seller successfully
+You dont have permission to proceed this operation,You dont have permission to proceed this operation
+The item has been canceled successfully,The item has been canceled successfully
+The item has been returned successfully,The item has been returned successfully
+You dont have permission to proceed this operation.,You dont have permission to proceed this operation.
+The refund request sent successfully.,The refund request sent successfully.
+The invoice has been created successfully.,The invoice has been created successfully.
+The shipment has been created successfully.,The shipment has been created successfully.
+You dont have permission to proceed this action,You dont have permission to proceed this action
+The invoice has been created for ,The invoice has been created for
+ by , by
+The shipment has been created for ,The shipment has been created for
+Shipment,Shipment
+Custom Attribute(s),Custom Attribute(s)
+You dont have permission to access this page.,You dont have permission to access this page.
+You must have a seller account to access.,You must have a seller account to access.
+"Kindly complete your profile details, before add New Product.","Kindly complete your profile details, before add New Product."
+You have reached your product limit. If you want to add more product(s) kindly upgrade your subscription plan.,You have reached your product limit. If you want to add more product(s) kindly upgrade your subscription plan.
+You have not subscribed any plan yet. Kindly subscribe for adding product(s).,You have not subscribed any plan yet. Kindly subscribe for adding product(s).
+Name Missing,Name Missing
+You have not subscribed any plan yet. Kindly subscribe for adding product(s).,You have not subscribed any plan yet. Kindly subscribe for adding product(s).
+You have reached your product limit. If you want to add more product(s) kindly upgrade your subscription plan.,You have reached your product limit. If you want to add more product(s) kindly upgrade your subscription plan.
+Products were saved successfully,Products were saved successfully
+Sku(s) already exists,Sku(s) already exists
+Error.,Error.
+The product has been deleted successfully.,The product has been deleted successfully.
+You dont have access to delete this product.,You dont have access to delete this product.
+You must have a seller account to access,You must have a seller account to access
+Sku already exists,Sku already exists
+You updated the product.,You updated the product.
+You saved the product.,You saved the product.
+Your Product is waiting for admin approval.,Your Product is waiting for admin approval.
+"You must confirm your account. Please check your email for the confirmation link or <a href=""%1"">click here</a> for a new link.","You must confirm your account. Please check your email for the confirmation link or <a href=""%1"">click here</a> for a new link."
+"There is already an account with this email address. If you are sure that it is your email address, <a href=""%1"">click here</a> to get your password and access your account.","There is already an account with this email address. If you are sure that it is your email address, <a href=""%1"">click here</a> to get your password and access your account."
+We can\'t save the customer.,We can\'t save the customer.
+Please make sure your passwords match.,Please make sure your passwords match.
+"If you are a registered VAT customer, please <a href=""%1"">click here</a> to enter your shipping address for proper VAT calculation.","If you are a registered VAT customer, please <a href=""%1"">click here</a> to enter your shipping address for proper VAT calculation."
+"If you are a registered VAT customer, please <a href=""%1"">click here</a> to enter your billing address for proper VAT calculation.","If you are a registered VAT customer, please <a href=""%1"">click here</a> to enter your billing address for proper VAT calculation."
+Thank you for registering with %1.,Thank you for registering with %1.
+You must have a seller account to access,You must have a seller account to access
+"This account is not confirmed. <a href=""%1"">Click here</a> to resend confirmation email.","This account is not confirmed. <a href=""%1"">Click here</a> to resend confirmation email."
+Invalid login or password.,Invalid login or password.
+A login and a password are required.,A login and a password are required.
+Product(s) count exceed ,Product(s) count exceed
+. Kindly delete exceed product before degrade subscription plan,. Kindly delete exceed product before degrade subscription plan
+Kindly select of the subscription plan.,Kindly select of the subscription plan.
+Minimum Upload image size for Logo is 150 X 110,Minimum Upload image size for Logo is 150 X 110
+Minimum Upload image size for Banner is 1100 X 230,Minimum Upload image size for Banner is 1100 X 230
+Store details has been updated Successfully,Store details has been updated Successfully
+Your review has been added successfully,Your review has been added successfully
+Your review is awaiting for moderation,Your review is awaiting for moderation
+Can't able to contact the own seller,Can't able to contact the own seller
+Thanks for contacting us with your comments and questions. We\'ll respond to you very soon,Thanks for contacting us with your comments and questions. We\'ll respond to you very soon
+Some error occured while processing your request.,Some error occured while processing your request.
+You have subscribed successfully. It will be activated shortly.,You have subscribed successfully. It will be activated shortly.
+Some error occured while processing your request.,Some error occured while processing your request.
+The payment has been updated successfully.,The payment has been updated successfully.
+Seller Can't add review for their own product.,Seller Can't add review for their own product.
+You submitted your review for moderation.,You submitted your review for moderation.
+We can\'t post your review right now.,We can\'t post your review right now.
+Admin Approval is required. Please wait until admin confirms your Seller Account,Admin Approval is required. Please wait until admin confirms your Seller Account
+Pending,Pending
+Active,Active
+Complete,Complete
+Product,Product
+Store,Store
+Enabled,Enabled
+Disabled,Disabled
+Approved,Approved
+Disapproved,Disapproved
+Incorrect CAPTCHA.,Incorrect CAPTCHA.
+Become a Seller,Become a Seller
+MARKETPLACE,MARKETPLACE
+Marketplace,Marketplace
+Seller Dashboard,Seller Dashboard
+Assign Product,Assign Product
+My Store,My Store
+Order Management,Order Management
+Transactions,Transactions
+Reviews,Reviews
+Contact Admin,Contact Admin
+Subscription Plans,Subscription Plans
+My Account,My Account
+Personal Information,Personal Information
+Email,Email
+Address Information,Address Information
+Company,Company
+Phone Number,Phone Number
+Street Address,Street Address
+Address,Address
+Street Address %1,Street Address %1
+City,City
+State/Province,State/Province
+"Please select a region, state or province.","Please select a region, state or province."
+Zip/Postal Code,Zip/Postal Code
+Country,Country
+* Required Fields,* Required Fields
+Sign-in Information,Sign-in Information
+Password,Password
+Password Strength,Password Strength
+No Password,No Password
+Confirm Password,Confirm Password
+Privacy Policy,Privacy Policy
+I agree the Terms and Condition,I agree the Terms and Condition
+Terms and Conditions,Terms and Conditions
+Create an Account,Create an Account
+Back,Back
+Product Details,Product Details
+SKU is available,SKU is available
+SKU is not available,SKU is not available
+Price,Price
+Quantity,Quantity
+Tax Class,Tax Class
+In Stock,In Stock
+Out of Stock,Out of Stock
+Product Information,Product Information
+Select the Variants,Select the Variants
+Qty,Qty
+National Shipping Amount,National Shipping Amount
+International Shipping Price,International Shipping Price
+International Shipping Amount,International Shipping Amount
+Save,Save
+More sellers selling this product,More sellers selling this product
+Seller Information,Seller Information
+Cart,Cart
+Add to Cart,Add to Cart
+Out of stock,Out of stock
+SKU,SKU
+Edit Associated Variants,Edit Associated Variants
+Please check at least one Combination,Please check at least one Combination
+Action,Action
+Select an option,Select an option
+Delete,Delete
+Edit,Edit
+Submit,Submit
+Please Select Option,Please Select Option
+Please Select Products,Please Select Products
+Name,Name
+Status,Status
+All,All
+Type,Type
+Search,Search
+Assign New Product,Assign New Product
+State,State
+Are you sure want to delete?,Are you sure want to delete?
+We couldn't find any records.,We couldn't find any records.
+Search product in store,Search product in store
+Not exist in the Store's Catalog? Want to add a new product?,Not exist in the Store's Catalog? Want to add a new product?
+Click here,Click here
+Assigned,Assigned
+Use,Use
+No Records were found,No Records were found
+Subject,Subject
+Message,Message
+Send,Send
+Save Profile,Save Profile
+Product Name,Product Name
+Ordered,Ordered
+Shipped,Shipped
+Canceled,Canceled
+Refunded,Refunded
+Returned,Returned
+Processing,Processing
+Subtotal,Subtotal
+Cancel request sent,Cancel request sent
+Refund request sent,Refund request sent
+Return request sent,Return request sent
+Refund Item,Refund Item
+Return Item,Return Item
+Cancel Item,Cancel Item
+Reason,Reason
+Closed,Closed
+Cancel,Cancel
+Commission,Commission
+Shipping Handling,Shipping Handling
+Estimated Seller Amount,Estimated Seller Amount
+Date,Date
+Total Product Amount,Total Product Amount
+Seller Amount,Seller Amount
+Completed,Completed
+View,View
+Order Date:,Order Date:
+Items Ordered,Items Ordered
+Invoiced,Invoiced
+Refund request sent to Admin,Refund request sent to Admin
+Back to My Orders,Back to My Orders
+Order Information,Order Information
+Shipping Address,Shipping Address
+Shipping Method,Shipping Method
+Billing Address,Billing Address
+Payment Method,Payment Method
+Invoice,Invoice
+Carrier,Carrier
+Title,Title
+Number,Number
+Add Tracking Number,Add Tracking Number
+Custom Value,Custom Value
+DHL,DHL
+Federal Express,Federal Express
+United Parcel Service,United Parcel Service
+United States Postal Service,United States Postal Service
+Configurations,Configurations
+Configurable products allow customers to choose options (Ex: shirt color).,Configurable products allow customers to choose options (Ex: shirt color).
+You need to create a simple product for each configuration (Ex: a product for each color).,You need to create a simple product for each configuration (Ex: a product for each color).
+Create Configurations,Create Configurations
+Kindly create configurations before save this product,Kindly create configurations before save this product
+Current Variations,Current Variations
+Images,Images
+Create Product Configurations,Create Product Configurations
+Please select attribute(s),Please select attribute(s)
+Select options for all attributes,Select options for all attributes
+Select attribute,Select attribute
+Select Attributes,Select Attributes
+Attribute Values,Attribute Values
+Bulk Images & Price,Bulk Images & Price
+Summary,Summary
+Next,Next
+Generate Product,Generate Product
+You can't remove or add an attribute(s).,You can't remove or add an attribute(s).
+"Bulk Images, Price, and Quantity","Bulk Images, Price, and Quantity"
+fixed,fixed
+Percent,Percent
+Custom Options,Custom Options
+Add New Option,Add New Option
+Input Type,Input Type
+Is Required,Is Required
+Delete Option,Delete Option
+Please select,Please select
+Text,Text
+Area,Area
+File,File
+Select,Select
+Radio Buttons,Radio Buttons
+Checkbox,Checkbox
+Multiple Select,Multiple Select
+Time,Time
+Price Type,Price Type
+Sort Order,Sort Order
+Delete Row,Delete Row
+Add New Row,Add New Row
+Max Characters,Max Characters
+Allowed File Extensions,Allowed File Extensions
+Maximum Image Size,Maximum Image Size
+leave blank if its not an image,leave blank if its not an image
+Downloadable Information,Downloadable Information
+Samples,Samples
+Download,Download
+Links can be purchased separately,Links can be purchased separately
+Yes,Yes
+No,No
+Max. Downloads,Max. Downloads
+Unlimited,Unlimited
+Shareable,Shareable
+Use config,Use config
+GLOBAL,GLOBAL
+Attribute Set,Attribute Set
+Default,Default
+Product Categories,Product Categories
+Special Price,Special Price
+Special Price From Date,Special Price From Date
+Special Price To Date,Special Price To Date
+Description,Description
+base,base
+Product Status,Product Status
+Enable Product,Enable Product
+Meta Keywords,Meta Keywords
+Meta Description,Meta Description
+Select Date,Select Date
+Click here to add images.,Click here to add images.
+Drop-down,Drop-down
+Apply single set of images to all SKUs,Apply single set of images to all SKUs
+Apply unique images by attribute to each SKU,Apply unique images by attribute to each SKU
+Skip image uploading at this time,Skip image uploading at this time
+Simple,Simple
+Virtual,Virtual
+Add New Product,Add New Product
+Thumbnail,Thumbnail
+Bulk Product Upload,Bulk Product Upload
+[Download Sample CSV],[Download Sample CSV]
+Upload CSV File,Upload CSV File
+Upload Image File,Upload Image File
+Upload .zip format,Upload .zip format
+Upload,Upload
+Be the first to review this product,Be the first to review this product
+Wish List,Wish List
+Compare,Compare
+Write Your Own Review,Write Your Own Review
+You\'re reviewing:,You\'re reviewing:
+Nickname,Nickname
+Submit Review,Submit Review
+Add to Wish List,Add to Wish List
+Add to Compare,Add to Compare
+No Registered Seller Records Were Found,No Registered Seller Records Were Found
+Admin Approval is required. Please wait until admin confirms your seller account.,Admin Approval is required. Please wait until admin confirms your seller account.
+Contact Seller,Contact Seller
+Customer Name,Customer Name
+Your Name,Your Name
+Customer Email,Customer Email
+Your Email,Your Email
+Your Message,Your Message
+Today's Sales,Today's Sales
+Today's Orders,Today's Orders
+last Week,last Week
+last Month,last Month
+last Year,last Year
+Last Five Orders,Last Five Orders
+Recent Orders,Recent Orders
+Feedback Ratings,Feedback Ratings
+5 Stars,5 Stars
+4 Stars,4 Stars
+3 Stars,3 Stars
+2 Stars,2 Stars
+1 Stars,1 Stars
+Positive,Positive
+Neutral,Neutral
+Negative,Negative
+View Reviews,View Reviews
+Write a Review to this Seller,Write a Review to this Seller
+Have you bought something from this seller?,Have you bought something from this seller?
+Login to Review,Login to Review
+SELLER,SELLER
+Seller,Seller
+Registered Sellers,Registered Sellers
+"If you have an account, sign in with your email address.","If you have an account, sign in with your email address."
+Login,Login
+Forgot Your Password?,Forgot Your Password?
+Store Location,Store Location
+Most Viewed Products,Most Viewed Products
+No of Views,No of Views
+No Records were Found,No Records were Found
+New Seller,New Seller
+Create a seller account to grow on your business.,Create a seller account to grow on your business.
+Create an Account,Create an Account
+Order Status Chart Not Available,Order Status Chart Not Available
+Store Information,Store Information
+Store Name,Store Name
+Contact Number,Contact Number
+--Please Select--,--Please Select--
+Shipping Amount,Shipping Amount
+Shipping Amount based on / per product,Shipping Amount based on / per product
+Company Description,Company Description
+Store Logo,Store Logo
+Store Banner,Store Banner
+Upload image size 150 X 110,Upload image size 150 X 110
+Upload image size 1100 X 230,Upload image size 1100 X 230
+Remove,Remove
+Social Media,Social Media
+Twitter Page Url,Twitter Page Url
+Facebook Page Url,Facebook Page Url
+Linkedin Page Url,Linkedin Page Url
+Google Plus Page Url,Google Plus Page Url
+SEO Management,SEO Management
+Process Payment via Bank/Paypal Account,Process Payment via Bank/Paypal Account
+Bank Payment,Bank Payment
+"[Please enter your Account number, Bank Name with Branch and IFSC code]","[Please enter your Account number, Bank Name with Branch and IFSC code]"
+Paypal Id,Paypal Id
+Invalid file format,Invalid file format
+Please fill correct telephone number,Please fill correct telephone number
+Please fill correct state,Please fill correct state
+Reviews and Ratings of,Reviews and Ratings of
+Read More,Read More
+We couldn't find any records.,We couldn't find any records.
+Name:,Name:
+Feedback about seller:,Feedback about seller:
+Rate Seller:,Rate Seller:
+Kindly select any one of the option.,Kindly select any one of the option.
+Submit Review,Submit Review
+Note: If you will subscribe any other below plan the current plan will be automatically deactivated.,Note: If you will subscribe any other below plan the current plan will be automatically deactivated.
+Product Count,Product Count
+You have subscribed for,You have subscribed for
+You have paid,You have paid
+as subscription fee. Your plan start date is,as subscription fee. Your plan start date is
+and it will expire on,and it will expire on
+Subscribe,Subscribe
+There is no subscription activated. Kindly contact admin for further process.,There is no subscription activated. Kindly contact admin for further process.
+Invoice Id #,Invoice Id #
+Paid Amount,Paid Amount
+Payment Mode,Payment Mode
+Comment,Comment
+Acknowledge,Acknowledge
+Loading...,Loading...
+Invoice Id,Invoice Id
+Created At,Created At
+Payment Type,Payment Type
+Is Acknowledged,Is Acknowledged
+Acknowledged At,Acknowledged At
+Pay Amount,Pay Amount
+Payment,Payment
+PayPal,PayPal
+Pay Seller Payments,Pay Seller Payments
+Paid,Paid
+PayPal Id : ,PayPal Id :
+Bank Payment : ,Bank Payment :
+View All Payments,View All Payments
+Save and Continue Edit,Save and Continue Edit
+Reset,Reset
+Preview,Preview
+Disapprove,Disapprove
+Approval Status,Approval Status
+Seller Email,Seller Email
+Edit Review,Edit Review
+Edit Seller Review,Edit Seller Review
+Commission (%),Commission (%)
+Seller Commission,Seller Commission
+Commission Information,Commission Information
+General,General
+Add Subscription Plans,Add Subscription Plans
+Plan Name,Plan Name
+Subscription Period Type,Subscription Period Type
+Period Frequency,Period Frequency
+Is Unlimited Product,Is Unlimited Product
+Max Product Count,Max Product Count
+Edit Plans,Edit Plans
+Seller Subscription Plans,Seller Subscription Plans
+Fee,Fee
+Started At,Started At
+End At,End At
+Seller Payments List,Seller Payments List
+No products to display,No products to display
+Note: Please add images with same height and width for better visibility.,Note: Please add images with same height and width for better visibility.
+Select Option,Select Option

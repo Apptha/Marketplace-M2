@@ -1,0 +1,94 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+$sellerOrderCollection = $block->getOrderDetails();
+if(count($sellerOrderCollection) >'0'){
+$completedCount= '0';
+$pendingCount= '0';
+$processingCount= '0';
+$canceledCount= '0';
+$refundedCount= '0';
+$onholdCount= '0';
+foreach ($sellerOrderCollection as $item){
+    $sellerId = $item->getSellerId();
+    $orderId = $item->getOrderId();
+    $customerId = $item->getCustomerId();
+    $status = $item->getStatus(); 
+    if($status == 'completed'){
+        $completedCount = $completedCount+ 1;
+    }elseif($status == 'pending'){
+        $pendingCount = $pendingCount + 1;
+    }elseif($status == 'processing'){
+        $processingCount = $processingCount+ 1;
+    }elseif($status == 'canceled'){
+        $canceledCount = $canceledCount+ 1;
+    }elseif($status == 'refunded'){
+        $refundedCount = $refundedCount+ 1;
+    }elseif($status == 'onhold'){
+        $onholdCount = $onholdCount+ 1;
+    }
+    $data = '1';
+}
+$complete = (!isset($completedCount) || is_null($completedCount)) ? '0' : $completedCount;
+$pending = (!isset($pendingCount) || is_null($pendingCount)) ? '0' : $pendingCount;
+$processing = (!isset($processingCount) || is_null($processingCount)) ? '0' : $processingCount;
+$cancel =  (!isset($canceledCount) || is_null($canceledCount)) ? '0' : $canceledCount;
+$refund = (!isset($refundedCount) || is_null($refundedCount)) ? '0' : $refundedCount;
+$onhold = (!isset($onholdCount) || is_null($onholdCount)) ? '0' : $onholdCount;
+?>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Order Status', 'Count'],
+          ['Completed', <?php echo $complete?>],
+          ['Pending', <?php echo $pending?>],
+          ['Processing', <?php echo $processing?>],
+          ['Cancelled', <?php echo $cancel?>],
+          ['Refunded', <?php echo $refund?>],
+          ['Onhold',<?php echo $onhold?>]
+        ]);
+          
+        var options = {
+          title: 'Order Status',
+          is3D: true,
+          colors: ['#99cc66','#7d7d7d','#6699cc','#ff3333','#cccc33','#ff9900'],
+          sliceVisibilityThreshold: 0
+        };
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart.draw(data, options);
+      }
+    </script>
+     <div id="piechart" style="width: 700px; height: 400px;"></div>
+    <?php 
+} else{?>
+     <div id="piechart"><?php echo __("Order Status Chart Not Available")?></div>
+<?php } ?>
+   

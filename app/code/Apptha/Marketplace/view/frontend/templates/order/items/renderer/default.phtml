@@ -1,0 +1,201 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+
+/** @var  $block \Magento\Sales\Block\Order\Item\Renderer\DefaultRenderer */
+$_item = $block->getItem ();
+$order = $block->getOrder ();
+
+      $sellerId = $_item->getProduct ()->getSellerId ();
+      $isInvoiced = $isShipped = $isBuyerCanceled = $isCanceled = $isRefunded = $isReturned = $isBuyerRefunded = $isBuyerReturned = 0;
+      if (! empty ( $sellerId )) {
+       $sellerOrderDetails = $block->getSellerOrderDetails ( $_item, $order->getId (), $sellerId );
+       $isInvoiced = $sellerOrderDetails->getIsInvoiced ();
+       $isShipped = $sellerOrderDetails->getIsShipped ();
+       
+       $sellerOrderItemDetails = $block->getSellerOrderItemDetails ( $_item, $order->getId (), $sellerId );
+       
+       $isBuyerCanceled = $sellerOrderItemDetails->getIsBuyerCanceled ();
+       $isCanceled = $sellerOrderItemDetails->getIsCanceled ();
+       $isReturned = $sellerOrderItemDetails->getIsReturned ();
+       $isRefunded = $sellerOrderItemDetails->getIsRefunded ();
+       $isBuyerReturned = $sellerOrderItemDetails->getIsBuyerReturned ();
+       $isBuyerRefunded = $sellerOrderItemDetails->getIsBuyerRefunded ();
+      }
+      ?>
+
+<tr
+    id="order-item-row-<?php /* @escapeNotVerified */ echo $_item->getId() ?>">
+    <td class="col name"
+        data-th="<?php echo $block->escapeHtml(__('Product Name')); ?>"><strong
+        class="product name product-item-name"><?php
+        echo $block->escapeHtml ( $_item->getName () )?></strong>
+        <?php if ($_options = $block->getItemOptions()): ?>
+        <dl class="item-options">
+        <?php foreach ($_options as $_option) : ?>
+            <dt><?php echo $block->escapeHtml($_option['label']) ?></dt>
+            <?php if (!$block->getPrintStatus()): ?>
+                <?php $_formatedOptionValue = $block->getFormatedOptionValue($_option)?>
+                <dd>
+                    <?php if (isset($_formatedOptionValue['full_view'])): ?>
+                        <?php /* @escapeNotVerified */ echo $_formatedOptionValue['full_view']?>
+                    <?php else: ?>
+                        <?php /* @escapeNotVerified */ echo $_formatedOptionValue['value']?>
+                    <?php endif; ?>
+                </dd>
+            <?php else: ?>
+                <dd>
+                    <?php echo nl2br($block->escapeHtml((isset($_option['print_value']) ? $_option['print_value'] : $_option['value'])))?>
+                </dd>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        </dl>
+        <?php endif; ?>
+        <?php $addtInfoBlock = $block->getProductAdditionalInformationBlock(); ?>
+        <?php if ($addtInfoBlock) :?>
+            <?php echo $addtInfoBlock->setItem($_item)->toHtml(); ?>
+        <?php endif; ?>
+        <?php echo $block->escapeHtml($_item->getDescription())?>
+    </td>
+    <td class="col sku"
+        data-th="<?php echo $block->escapeHtml(__('SKU')); ?>"><?php /* @escapeNotVerified */ echo $block->prepareSku($block->getSku()) ?></td>
+    <td class="col price"
+        data-th="<?php echo $block->escapeHtml(__('Price')); ?>">
+        <?php echo $block->getItemPriceHtml(); ?>
+    </td>
+    <td class="col qty"
+        data-th="<?php echo $block->escapeHtml(__('Qty')); ?>">
+        <ul class="items-qty">
+        <?php if ($block->getItem()->getQtyOrdered() > 0): ?>
+            <li class="item"><span class="title"><?php /* @escapeNotVerified */ echo __('Ordered'); ?></span>
+                <span class="content"><?php /* @escapeNotVerified */ echo $block->getItem()->getQtyOrdered()*1 ?></span>
+            </li>
+        <?php endif; ?>
+        <?php if ($block->getItem()->getQtyShipped() > 0): ?>
+            <li class="item"><span class="title"><?php /* @escapeNotVerified */ echo __('Shipped'); ?></span>
+                <span class="content"><?php /* @escapeNotVerified */ echo $block->getItem()->getQtyShipped()*1 ?></span>
+            </li>
+        <?php endif; ?>
+        <?php if ($block->getItem()->getQtyCanceled() > 0 || $isCanceled == 1): ?>
+            <li class="item"><span class="title"><?php /* @escapeNotVerified */ echo __('Canceled'); ?></span>
+                <span class="content"><?php
+         /* @escapeNotVerified */
+         if ($isCanceled == 1) {
+          echo $block->getItem ()->getQtyOrdered () * 1;
+         } else {
+          echo $block->getItem ()->getQtyCanceled () * 1;
+         }
+         
+         ?></span></li>
+        <?php endif; ?>
+        <?php if ($block->getItem()->getQtyRefunded() > 0): ?>
+            <li class="item"><span class="title"><?php /* @escapeNotVerified */ echo __('Refunded'); ?></span>
+                <span class="content"><?php
+         /* @escapeNotVerified */
+         echo $block->getItem ()->getQtyRefunded () * 1?></span></li>
+        <?php endif; ?>
+        <?php if ($isReturned == 1): ?>
+            <li class="item"><span class="title"><?php /* @escapeNotVerified */ echo __('Returned'); ?></span>
+                <span class="content"><?php
+         /* @escapeNotVerified */
+         echo $block->getItem ()->getQtyOrdered () * 1?></span></li>
+        <?php endif; ?> 
+        </ul>
+    </td>
+    <td class="col subtotal"
+        data-th="<?php echo $block->escapeHtml(__('Subtotal')); ?>">
+        <?php echo $block->getItemRowTotalHtml(); ?>
+        <?php
+        $isSellerOrderManagement = $this->helper ( 'Apptha\Marketplace\Helper\System' )->getSellerOrderManagement ();
+        $isReturnedorRefunded=$isReturned != 1 && $isRefunded != 1;
+        if ($isSellerOrderManagement == 1 && ! empty ( $sellerId ) && $isCanceled != 1 && $isReturnedorRefunded) {
+         ?>
+        <br> <label><?php echo __('Action').' : '; ?></label>
+        <?php if($isBuyerCanceled == 1){ ?>
+        <span><?php echo __('Cancel request sent'); ?></span>  
+        <?php }elseif($isBuyerRefunded == 1 ){ ?>
+        <span><?php echo __('Refund request sent'); ?></span>
+        <?php }elseif($isBuyerReturned == 1 ){ ?>
+         <span><?php echo __('Return request sent'); ?></span>    
+        <?php }else{ ?>
+        <a href="javascript:void(0);"
+        onclick="document.getElementById('order_item_popup_<?php echo $_item->getId(); ?>').style.display = 'block';">        
+        <?php
+          if ($isInvoiced == 1 || $_item->getQtyOrdered () == $_item->getQtyInvoiced ()) {
+           echo __ ( 'Refund Item' );
+          } elseif ($isShipped == 1 || $_item->getQtyOrdered () == $_item->getQtyShipped ()) {
+           echo __ ( 'Return Item' );
+          } else {
+           echo __ ( 'Cancel Item' );
+          }
+          ?>
+        </a>
+        <?php } ?> 
+        <div class="order_item_action_popup"
+            id="order_item_popup_<?php echo $_item->getId(); ?>"
+            style="display: none;">
+            <span
+                onclick="document.getElementById('order_item_popup_<?php echo $_item->getId(); ?>').style.display = 'none';">X</span>
+            <form action="<?php echo $block->orderItemAction() ?>"  method="post"  id="order_item_action_<?php echo $_item->getId(); ?>" enctype="multipart/form-data">
+                <label><?php echo __('Reason').':'; ?></label>
+                <textarea name="reason" class="input-text required-entry"></textarea>
+                <input type="hidden" name="product_id" value="<?php echo $_item->getProduct()->getId(); ?>" />
+                <input type="hidden" name="order_id" value="<?php echo $order->getId(); ?>" /> <input type="hidden" name="seller_id"
+                    value="<?php echo $sellerId; ?>" />
+                     <input type="hidden" name="action"
+                    value="<?php if ($isInvoiced == 1 || $_item->getQtyOrdered () == $_item->getQtyInvoiced ()) {
+          echo 'refund';
+         } elseif ($isShipped == 1 || $_item->getQtyOrdered () == $_item->getQtyShipped ()) {
+          echo 'return';
+         } else {
+          echo 'cancel';
+         }
+         ?>" /> <input type="submit" class="button" name="submit"
+                    value="<?php echo __('Submit'); ?>" /> <input
+                    type="button"
+                    onclick="document.getElementById('order_item_popup_<?php echo $_item->getId(); ?>').style.display = 'none';"
+                    class="button" name="cancel"
+                    value="<?php echo __('Cancel'); ?>" />
+            </form>
+        </div>
+        <?php } ?>
+        </td>
+</tr>
+<script>
+require([
+    'jquery',
+    'mage/mage'
+], function($){
+    var dataFormOrderItem = $('#order_item_action_<?php echo $_item->getId(); ?>');
+    var ignore = null;
+    dataFormOrderItem.mage('validation', {
+            ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
+        }).find('input:text').attr('autocomplete', 'off');    
+});
+</script>

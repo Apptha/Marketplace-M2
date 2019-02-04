@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ * 
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */ -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left"
+	xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+	<head>
+		<css src="Apptha_Marketplace::css/style.css" />
+        	<script src="Apptha_Marketplace::js/configurable.js" />
+           	<script src="Apptha_Marketplace::js/downloadable.js" />
+    </head>
+	<update handle="customer_account" />
+	<body>
+		<referenceContainer name="content">
+			<block class="Apptha\Marketplace\Block\Product\Add" name="marketplace_product_add" template="product/form.phtml" before="-">
+                 <block class="Apptha\Marketplace\Block\Product\Add" name="marketplace_product_customoptions_js" as="marketplace_product_customoptions_js" template="product/customoptions.phtml"  />
+                 <block class="Apptha\Marketplace\Block\Product\Add" name="marketplace_product_downloadable" as="marketplace_product_downloadable" template="product/downloadable.phtml"  />
+                 <block class="Apptha\Marketplace\Block\Product\Add" name="marketplace_product_downloadable_edit" as="marketplace_product_downloadable_edit" template="product/edit_downloadable.phtml"  />
+                 <block class="Apptha\Marketplace\Block\Product\Add" name="marketplace_product_downloadable_additional" as="marketplace_product_downloadable_additional" template="product/downloadable_additional.phtml"  />
+                 <block class="Apptha\Marketplace\Block\Product\Image" name="marketplace_product_video_add" as="marketplace_product_video_add" template="product/video.phtml"  />
+            </block>
+			<block class="Apptha\Marketplace\Block\Product\Configurable" name="marketplace_product_configurable" template="product/configurable.phtml" />
+			<block class="Apptha\Marketplace\Block\Product\Add" name="marketplace_product_submit" template="product/submit.phtml" />
+		</referenceContainer>
+	</body>
+</page>

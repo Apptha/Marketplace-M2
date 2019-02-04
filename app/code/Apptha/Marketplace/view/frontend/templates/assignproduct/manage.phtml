@@ -1,0 +1,218 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+$searchProductName = $this->getRequest ()->getParam ( 'name' );
+$searchProductStatus = $this->getRequest ()->getParam ( 'status' );
+$searchProductPrice = $this->getRequest ()->getParam ( 'price' );
+$searchProductSku = $this->getRequest ()->getParam ( 'sku' );
+$searchProductType = $this->getRequest ()->getParam ( 'type' );
+$delete = $this->getRequest ()->getParam ( 'multi' );
+$entityIds = $this->getRequest ()->getParam ( 'id' );
+$multisubmit = $this->getRequest ()->getParam ( 'multi_submit' );
+$productDeleteOption = $block->getAssignProductDeleteApproval ();
+$dataHelper = $this->helper ( 'Apptha\Marketplace\Helper\Data' );
+?>
+<div class="product-manage">
+    <div id="filter_div" class="deactive">
+        <form class="form search" action="" id="search-form" method="post">
+ <?php if($productDeleteOption == 1){ ?>
+  <div class="mp_action">
+                <b><?php echo __('Action'); ?> </b>
+                 <select name="multi" class="multi-action" id="multi">
+                    <option name="" value="Select an option"><?php echo __('Select an option'); ?></option>
+                    <option name="delete" value="delete"><?php echo __('Delete'); ?></option>
+                </select>
+                <?php 
+                /**
+                 * Submit form 
+                 * 
+                 */
+                ?>
+                <div class="form_submit_btn">
+                    <button type="submit" class="button multi_submit" onclick="document.getElementById('multi_submit').value='1'; " title="<?php echo __('Submit') ?>" name="multi_submit" id="multi_submit">
+                        <span><span><?php echo __('Submit') ?></span></span>
+                    </button>
+                </div></div>
+            <script>
+         require(["jquery",
+             "mage/calendar"
+         ], function($){
+         $('#search-form').on('keyup keypress', function(e) {
+                 var keyCode = e.keyCode || e.which;
+                 if (keyCode === 13) { 
+                   e.preventDefault();
+                   return false;
+                 }
+               });
+           var selectedoptionValue;
+         $('.multi_submit').click(function() {  
+         selectedoptionValue=$("#multi option:selected").val();
+             if(selectedoptionValue=="delete"){
+                    if($('.assign-product-ids').is(":checked")){
+                         return true;  
+                    }
+                    else{
+                       alert("Please Select Products");
+                       return false;
+                     }
+              }
+             else{
+                    alert("<?php echo __("Please Select Option") ?>");
+                    return false;
+              }
+ });
+});
+    </script>
+    <?php } ?>
+<fieldset class="fieldset">
+                <div class="fieldset_form">
+                    <div class="field name ">
+                        <label class="label" for="name"><span><?php echo __('Name') ?></span></label>
+                        <div class="control">
+                            <input name="name" id="name" title="<?php echo __('Name') ?>" class="input-text" type="text" value="<?php if($searchProductName != "") {echo $searchProductName; } ?>" />
+                        </div>
+                    </div>
+                    <div class="field name ">
+                        <label class="label" for="status"><span><?php echo __('Status') ?></span></label>
+                        <div class="control">
+                            <select name="status" class="select"
+                                id="status">
+                                <option value=""><?php echo __('All'); ?></option>
+                                <option value="1" <?php if($searchProductStatus != "" && $searchProductStatus == '1') {echo 'selected="selected"';}?>><?php echo __('Enabled'); ?></option>
+                                <option value="2"<?php if($searchProductStatus != "" && $searchProductStatus == '2') {echo 'selected="selected"';}?>><?php echo __('Disabled'); ?></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field type ">
+                        <label class="label" for="type"><span><?php echo __('Type') ?></span></label>
+                        <div class="control">
+                            <select name="type" class="select" id="type">
+                                <option value=""><?php echo __('All'); ?></option>
+                                <option value="simple" <?php if($searchProductType != "" && $searchProductType == "simple") {echo 'selected="selected"';}?>><?php echo __('Simple'); ?></option>
+                                <option value="virtual" <?php if($searchProductType != "" && $searchProductType == "virtual") {echo 'selected="selected"';}?>><?php echo __('Virtual'); ?></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field price ">
+                        <label class="label" for="price"><span><?php echo __('Price') ?></span></label>
+                        <div class="control">
+                            <input type="text" name="price" id="price"  class="input-text" value="<?php if($searchProductPrice != "") { echo $searchProductPrice; }?>" />
+                        </div>
+                    </div>
+                    <div class="field sku ">
+                        <label class="label" for="sku"><span><?php echo __('SKU') ?></span></label>
+                        <div class="control">
+                            <input type="text" name="sku" id="sku"  class="input-text"  value="<?php if($searchProductSku != "") { echo $searchProductSku; }?>" />
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" title="<?php echo __('Search') ?>"
+                    class="product-search"><?php echo __('Search');?></button>
+            </fieldset>
+            <div class="product-url">
+                <a
+                    href="<?php echo $block->getNewAssignProductUrl(); ?>"
+                    class="action submit primary"><?php echo __('Assign New Product'); ?></a>
+            </div>
+<?php
+$productCollection = $block->getCollection ();
+if ($productCollection->getSize () > 0) {?>
+      <div class="toolbar top">
+         <?php echo $block->getPagerHtml(); ?>
+      </div>
+            <table>
+                <tr>
+      <?php if($productDeleteOption == 1){ ?><th><?php echo __('#')?></th><?php } ?>
+      <th><?php echo __('Thumbnail'); ?></th>
+                    <th><?php echo __('Name'); ?></th>
+                    <th><?php echo __('SKU'); ?></th>
+                    <th><?php echo __('Type'); ?></th>
+                    <th><?php echo __('Quantity'); ?></th>
+                    <th><?php echo __('Price'); ?></th>
+                    <th><?php echo __('State'); ?></th>
+                    <th><?php echo __('Status'); ?></th>
+                    <th><?php echo __('Action'); ?></th>
+                </tr>
+      <?php
+      foreach ( $productCollection as $product ) {?>     
+      <tr>  
+      <?php if ($productDeleteOption == 1) {?>
+      <td><input type="checkbox" name="id[]" id="id" class="product-ids assign-product-ids" value="<?php echo $product->getId(); ?>" /></td>
+      <?php } ?>    
+      <td>
+      <?php
+        $imagehelper = $this->helper ( 'Magento\Catalog\Helper\Image' );
+        $productImage = $imagehelper->init ( $product, 'category_page_list' )->constrainOnly ( FALSE )->keepAspectRatio ( TRUE )->keepFrame ( FALSE )->resize ( 100 )->getUrl ();
+        ?> 
+      <img src="<?php echo $productImage; ?>"
+                        alt="<?php echo $product->getName();?>" />
+                    </td>
+                    <td><?php  echo $product->getName(); ?></td>
+                    <td><?php echo $product->getSku(); ?></td>
+                    <td><?php echo $product->getTypeId(); ?></td>
+                    <td><?php if($product->getTypeId() != 'configurable'){ echo $this->getProductQty($product->getId()); }else{ echo '-'; }  ?></td>
+                    <td><?php if($product->getTypeId() != 'configurable'){ echo  $dataHelper->getFormattedPrice( $product->getPrice()); }else{ echo '-'; } ?></td> 
+                    <td><?php
+        if ($product->getProductApproval () == 1) {
+            echo __ ( 'Approved' );
+        } else {
+            echo __ ( 'Disapproved' );
+        }
+        ?></td>
+                    <td><?php
+        if ($product->getStatus () == 1) {
+            echo __ ( 'Enabled' );
+        } else {
+            echo __ ( 'Disabled' );
+        }
+        ?></td>
+                    <td><a href="<?php echo $block->getAssignProductEditUrl($product->getId()).'id/'.$product->getId(); ?>"><?php echo __('Edit'); ?></a>
+      <?php if($productDeleteOption){?>
+      <a href="<?php echo $block->getAssignProductDeleteUrl($product->getId()); ?>" onclick="return confirm('<?php
+            /**
+             * confirming message before delete
+             */
+            echo __ ( 'Are you sure want to delete?' );
+            ?>');"><?php echo __('Delete'); ?></a>
+            <?php }?>
+      </td>
+                </tr>
+      <?php } ?>
+      </table>
+            <div class="toolbar-bottom">
+                <div class="toolbar bottom">
+            <?php echo $block->getPagerHtml(); ?>
+         </div>
+            </div>
+   <?php }else{ ?>
+      <p><?php echo __("We couldn't find any records."); ?></p>
+   <?php } ?>
+    </div>
+</form>
+</div>

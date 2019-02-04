@@ -1,0 +1,126 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+?>
+<?php
+$vacationCollection = $block->getVacationCollection();
+$fromDate = date_create($vacationCollection->getFromDate());
+$fromDate = date_format($fromDate,"m/d/Y");
+$toDate = date_create($vacationCollection->getToDate());
+$toDate = date_format($toDate,"m/d/Y");
+
+?>
+<form class="vacationForm" enctype="multipart/form-data"
+    action="<?php  echo $block->getUrl('*/*/save')?>" method="post"
+    id="vacationForm" data-mage-init='{"validation":{}}'>
+    <fieldset class="fieldset"
+        data-hasrequired="<?php  echo __('* Required Fields') ?>">
+        <input type ="hidden" name="vacation_id" value="<?php echo $vacationCollection->getVacationId();?>">
+                <div id="date_range">
+<div class="fields">
+            <div class="field fromdate required">
+                <label for="fromdate" class="label"><span><?php  echo __('From Date') ?></span><i>*</i></label>
+                <div class="control">
+                    <input type="text" id="fromdate" name="from_date" alt="fromdate"
+                          class="input-text" value="<?php echo $fromDate ?>"
+                        data-validate="{required:true}" readonly />
+                </div>
+            </div>
+
+             <div class="field todate required">
+                <label for="todate" class="label"><span><?php  echo __('To Date') ?></span><i>*</i></label>
+                <div class="control">
+                    <input type="text" id="todate" name="to_date" alt="todate"
+                         class="input-text" value="<?php echo $toDate ?>"
+                        data-validate="{required:true}" readonly/>
+                </div>
+            </div>
+        </div>
+                </div>
+        <div class="fields">
+            <div class="field message required">
+                <label for="message" class="label"><span><?php  echo __('Vacation Message') ?></span></label>
+                <div class="control">
+                    <textarea name="vacation_message" id="message"
+                        title="<?php echo __('Message')?>" class="input-text letters-with-basic-punc" cols="5"
+                        rows="3" data-validate="{required:true}"><?php echo $vacationCollection->getVacationMessage()?></textarea>
+                </div>
+            </div>
+            </div>
+                    <div class="fields">
+            <div class="field status required">
+        <div class="vacation_status">
+        <label for="vacation_status" class="label"><span><?php echo __('Vacation Mode') ?></span><i>*</i>
+        </label>
+        <select id="vacation_status" name="vacation_status"
+            title="<?php echo __('Enable Vacation Mode') ?>"
+            class="validate-select" data-validate="{required:true}">
+            <option value="" ><?php echo __('Select Status'); ?></option>
+            <option value="null" <?php if($vacationCollection->getVacationStatus() == 0){ echo 'selected="selected"'; } ?>><?php echo __('Enable'); ?></option>
+            <option value="2"<?php if($vacationCollection->getVacationStatus() == 2){ echo 'selected="selected"'; } ?>><?php echo __('Disable'); ?></option>
+        </select>
+    </div>
+     </div>
+        </div>
+            <div class="fields">
+            <div class="field message required">
+            <button type="submit" class="button validation-passed"
+                title="<?php echo __('Save Profile')?>" name="save_profile"
+                id="save_profile">
+                <span><span><?php echo __('Submit') ?></span></span>
+            </button>
+            </div>
+            </div>
+    </fieldset>
+</form>
+
+<script>
+       require([
+                "jquery",
+                "mage/calendar"
+            ], function($){
+
+    	   var dataForm = $('#vacationForm');
+    	   dataForm.mage('validation', {});
+
+    	   $('#date_range').attr('readonly', true);
+               $("#date_range").dateRange({
+                 buttonText:"<?php echo __('Select Date') ?>",
+                    from:{
+                        id:"fromdate"
+                    },
+                    to:{
+                        id:"todate"
+                    },
+                    minDate: new Date()
+               });
+
+
+            });
+        </script>

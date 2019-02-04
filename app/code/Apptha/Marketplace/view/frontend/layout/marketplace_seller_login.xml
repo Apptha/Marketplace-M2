@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+ -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column"
+	xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<body>
+		<referenceContainer name="content">
+			<!-- customer.form.login.extra -->
+			<container name="seller.login.container" label="Seller Login Container"
+				htmlTag="div" htmlClass="login-container">
+				<block class="Apptha\Marketplace\Block\Seller\Login" name="marketplace_seller_login"
+					template="Apptha_Marketplace::seller/login.phtml">
+					<container name="form.additional.info" as="form_additional_info" />
+				</block>
+				<block class="Magento\Customer\Block\Form\Login\Info" name="seller.new"
+					template="Apptha_Marketplace::seller/newcustomer.phtml" />
+			</container>
+			<block class="Magento\Cookie\Block\RequireCookie" name="require-cookife"
+				template="Magento_Cookie::require_cookie.phtml">
+				<arguments>
+					<argument name="triggers" xsi:type="array">
+						<item name="loginButton" xsi:type="string">.action.login</item>
+					</argument>
+				</arguments>
+			</block>
+		</referenceContainer>
+		<referenceContainer name="form.additional.info">
+			<block class="Magento\Framework\View\Element\Template" name="form_additional_info_customer"
+				template="Magento_Customer::additionalinfocustomer.phtml" />
+            <block class="Magento\Captcha\Block\Captcha" name="captchasellerlogin"
+				after="-">
+				<action method="setFormId">
+					<argument name="formId" xsi:type="string">seller_login</argument>
+				</action>
+				<action method="setImgWidth">
+					<argument name="width" xsi:type="string">230</argument>
+				</action>
+				<action method="setImgHeight">
+					<argument name="width" xsi:type="string">100</argument>
+				</action>
+			</block>
+		</referenceContainer>
+    </body>
+</page>

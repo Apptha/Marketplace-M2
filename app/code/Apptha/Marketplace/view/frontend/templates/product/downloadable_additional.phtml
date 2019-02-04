@@ -1,0 +1,118 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<table style="display:none;">
+<tr id="marketplace_download_sample_row_CCC">
+<th><label><?php echo __('Title'); ?></label> <span class="required"></span></th>
+        <td>
+            <input type="hidden" class="__delete__" name="downloadable[sample][CCC][is_delete]" value="">
+            <input type="hidden" name="downloadable[sample][CCC][sample_id]" value="CCC">
+            <input type="text" class="required-entry input-text" name="downloadable[sample][CCC][title]" value="">
+        </td>
+        <th><label><?php echo __('File'); ?></label></th>
+        <td>
+            <div class="files-wide">
+                <div class="marketplace_row">
+                    <label for="downloadable_sample_CCC_file_type">
+                        <input type="radio" class="radio validate-one-required-by-name" id="downloadable_sample_CCC_file_type" name="downloadable[sample][CCC][type]" value="file" checked="checked">
+                        <?php echo 'File'; ?>:</label>
+                    <input type="file" class="validate-downloadable-file" id="downloadable_sample_CCC_file_save" name="sample_CCC" value="">
+                    <div id="downloadable_sample_CCC_file">
+                        <div class="no-display" id="downloadable_sample_CCC_file-template">
+                        </div>
+                    </div></div>
+                <div class="row">
+                    <label for="downloadable_sample_CCC_url_type">
+                        <input type="radio" class="radio validate-one-required-by-name" id="downloadable_sample_CCC_url_type" name="downloadable[sample][CCC][type]" value="url">
+                        <?php echo 'URL'; ?>:</label> <input type="text" class="validate-downloadable-url input-text" name="downloadable[sample][CCC][sample_url]" value="">
+                </div>
+                <div>
+                    <span id="downloadable_sample_CCC_container"></span>
+                </div>
+            </div>
+        </td>
+        <th><label class="nobr"><?php echo __('Sort Order'); ?></label></th>
+        <td class="a-center">
+            <input type="text" name="downloadable[sample][CCC][sort_order]" value="" class="input-text sort marketplace_sort_order">
+        </td>
+        <th>&nbsp;</th>
+        <td>
+            <button onclick="removeMarketPlaceDownloadableSamplesRow(this)" type="button" class="button">
+                <span><span><span><?php echo __('Delete'); ?></span></span></span></button>
+        </td>
+    </tr>
+</table>
+<!--Dynamically downloadable products Links row-->
+<table style="display:none;">
+    <tr id="marketplace_download_link_row_CCC">
+        <td class="marketplace_download_info_td">
+            <table border="0" cellspacing="0" cellpadding="0" width="100%" class="marketplace_download_info_table">
+                <tr><th><label><?php echo __('Title'); ?></label><span class="required"></span></th><td>
+                        <input type="hidden" class="__delete__" name="downloadable[link][CCC][is_delete]" value="">
+                        <input type="hidden" name="downloadable[link][CCC][link_id]" value="CCC">
+                        <input type="text" class="required-entry input-text" name="downloadable[link][CCC][title]" value="">
+                    </td></tr>
+                <tr><th><label><?php echo __('Price'); ?></label></th><td class="input-price">
+                        <input type="text" id="downloadable_link_CCC_price_value" class="input-text validate-number link-prices" name="downloadable[link][CCC][price]" value="0">
+                        <p><label> [<?php echo '$'; ?>]</label></p>
+                    </td></tr>
+                <tr><th><label class="nobr"><?php echo __('Max. Downloads'); ?></label></th><td>
+                        <input type="text" id="downloadable_link_CCC_downloads" name="downloadable[link][CCC][number_of_downloads]" class="input-text downloads" value="0">
+                        <p>
+                            <input type="checkbox" class="checkbox" id="downloadable_link_CCC_is_unlimited" name="downloadable[link][CCC][is_unlimited]" value="1" <?php echo 'checked="checked"'; ?>>
+                            <label for="downloadable_link_CCC_is_unlimited"><?php echo __('Unlimited'); ?></label>
+                        </p></td></tr>
+                <tr><th><label><?php echo __('Shareable'); ?></label></th><td><select id="downloadable_link _CCC_shareable" name="downloadable[link][CCC][is_shareable]">
+                            <option value="1"><?php echo __('Yes'); ?></option>
+                            <option value="CCC"><?php echo __('No'); ?></option>
+                            <option value="2" selected="selected"><?php echo __('Use config'); ?></option>
+                        </select>
+                    </td></tr>
+
+                <tr><th><label><?php echo __('File'); ?></label></th><td>
+                        <div class="files-wide">
+                            <div class="marketplace_row">
+                                <label for="downloadable_link_CCC_file_type">
+                                    <input type="radio" class="radio validate-one-required-by-name" id="downloadable_link_CCC_file_type" name="downloadable[link][CCC][type]" value="file" checked="checked">
+                                    <?php echo __('File'); ?>:
+                                </label>
+                                <input type="file" class="validate-downloadable-file" id="downloadable_sample_link_CCC_file_save" name="links_CCC" value="">
+                            </div><div class="row">
+                                <label for="downloadable_link_CCC_url_type">
+                                    <input type="radio" class="radio validate-one-required-by-name" id="downloadable_link_CCC_url_type" name="downloadable[link][CCC][type]" value="url">
+                                    <?php echo 'URL'; ?>:</label><input type="text" class="validate-downloadable-url input-text" name="downloadable[link][CCC][link_url]" value="">
+                            </div>
+                        </div>
+                    </td></tr>
+                <tr><th><label class="nobr"><?php echo __('Sort Order'); ?></label></th><td>
+                        <input type="text" name="downloadable[link][CCC][sort_order]" value="" class="input-text sort"></td></tr>
+                <tr><th>&nbsp;</th><td>
+                        <button id="downloadable_link_CCC_delete_button" onclick="removeMarketPlaceDownloadableLinksRow(this);"  type="button" class="scalable button delete-link-item">
+                            <span><span><span> <?php echo __('Delete'); ?></span></span></span></button></td></tr>
+            </table>
+        </td>
+    </tr>
+</table>

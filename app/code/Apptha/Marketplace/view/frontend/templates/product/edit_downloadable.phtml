@@ -1,0 +1,661 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+
+/**
+ * Checking whether product add/edit
+ */
+
+$productId = $this->getRequest ()->getParam ( 'product_id' );
+
+/**
+ * Initilize product data
+*/
+
+$product = $block->getProductData($productId);
+
+
+
+/**
+ * Marketplace downloadable product information container
+ */
+    /**
+     * Checking whether product type as downloadable or not
+     * by confirming type is equal to downloadable
+     */
+$type = $product->getTypeId ();
+
+    if ($type == 'downloadable') {
+    /**
+     * End if for downloadable products
+     */
+
+        /**
+        * Initialising empty values for variables like
+        * samples title, links title, links purchased separately
+        */
+        $samplesTitle = $linksTitle = $linksPurchasedSeparately = '';
+        /**
+         * Get the samples title
+         */
+        $samplesTitle = $product->getSamplesTitle ();
+        /**
+         * Get the links title
+         */
+        $linksTitle = $product->getLinksTitle ();
+        /**
+         * Get the links purchased separately value
+         */
+        $linksPurchasedSeparately = $product->getLinksPurchasedSeparately ();
+        ?>
+    <div id="marketplace_downloadable_product_div"
+class="fieldset marketplace-downloadable-products marketplace_downloadable_product_div">
+<h4 class="legend"><?php
+/**
+ * Display downloadable information
+ */
+echo __('Downloadable Information'); ?></h4>
+<ul class="form-list">
+<li class="mp_dp_head"><?php echo __('Samples'); ?></li>
+<li class="fields mp_dp_fields">
+<div class="headings">
+<span class="label"><label for="name"><?php echo __('Title'); ?></label>
+</span> <span class="value"> <input type="text" class="input-text"
+name="product[samples_title]"
+value="<?php
+        if (isset ( $samplesTitle )) {
+            echo $samplesTitle;
+        }
+        ?>">
+</span>
+<!--                            <span class="scope-label">[<?php echo __('STORE VIEW'); ?>]</span>       -->
+</div>
+<div class="marketplace-sample">
+<table cellspacing="0" class="data border">
+<thead>
+<tr class="headings">
+<th><label><?php echo __('Title'); ?><span
+class="required"></span></label></th>
+<th><label><?php echo __('File'); ?></label></th>
+<th><label class="nobr"><?php echo __('Sort Order'); ?></label></th>
+<th>&nbsp;</th>
+</tr>
+</thead>
+<tbody id="sample_items_body" class="sample_items_body">
+
+<?php
+        $downloadableSample = \Magento\Framework\App\ObjectManager::getInstance ()->get ( 'Magento\Downloadable\Model\Sample')->getCollection ()->addProductToFilter ( $product->getId () )->addTitleToResult ( $product->getStoreId () );
+        /**
+         * Initialise sample count as zero
+         */
+        $sampleCount = 0;
+        foreach ( $downloadableSample as $sample ) {
+            /**
+            * Initialise empty values for variables like
+            * sample title, sample type, sample file, sample order
+            */
+            $sampleTitle = $sampleType = $sampleFile = $sampleOrder = '';
+            /**
+             * Get the sample title
+             */
+            $sampleTitle = $sample->getTitle ();
+            /**
+             * Get the sample type
+             */
+            $sampleType = $sample->getSampleType ();
+            /**
+             * Get the samples file
+             */
+            $sampleFile = $sample->getSampleFile ();
+            /**
+             * Get the sort order
+             */
+            $sampleOrder = $sample->getSortOrder ();
+            /**
+             * Get the samples url
+             */
+            $sampleUrl = $sample->getSampleUrl ();
+            ?>
+
+        <tr
+id="<?php echo 'marketplace_download_sample_row_' . $sampleCount; ?>">
+<td><input type="hidden" class="__delete__"
+name="<?php echo 'downloadable[sample][' . $sampleCount . '][is_delete]'; ?>"
+value=""> <input type="hidden"
+name="<?php echo 'downloadable[sample][' . $sampleCount . '][sample_id]'; ?>"
+value="<?php
+            echo $sampleCount;
+            ?>"> <input type="text" class="required-entry input-text"
+name="<?php echo 'downloadable[sample][' . $sampleCount . '][title]'; ?>"
+value="<?php
+/**
+ * Check the sample title has been set
+ * if so display the sample title as value
+ */
+            if (isset ( $sampleTitle )) {
+                echo $sampleTitle;
+            }
+            ?>"> <input type="hidden"
+name="<?php echo 'downloadable[sample][' . $sampleCount . '][sample_file]'; ?>"
+value="<?php
+/**
+ * Check the sample file has been set
+ * if so display sample file as value
+ */
+            if (isset ( $sampleFile )) {
+                echo $sampleFile;
+            }
+            ?>"></td>
+<td>
+<div class="files-wide">
+<div class="marketplace_row">
+<div
+id="<?php echo 'downloadable_sample_' . $sampleCount . '_file_save-old'; ?>"
+class="file-row-info">
+<span class="file-info"><b><span class="file-info-name"><?php
+            /**
+            * Confirming sample file has been set
+            * if so display file name
+            */
+            if (isset ( $sampleFile )) {
+                echo $sampleFile;
+            }
+            ?></span></b> <span class="file-info-size"> </span></span>
+</div>
+<label
+for="<?php echo 'downloadable_sample_' . $sampleCount . '_file_type'; ?>">
+<input type="radio"
+class="radio validate-one-required-by-name"
+id="<?php echo 'downloadable_sample_' . $sampleCount . '_file_type'; ?>"
+name="<?php
+            echo 'downloadable[sample][' . $sampleCount . '][type]';
+            ?>"
+value="file"
+<?php
+            if ($sampleType == 'file') {
+                echo 'checked="checked"';
+            }
+            ?>>
+<?php echo __('File'); ?>:</label> <input type="file"
+class="validate-downloadable-file"
+id="<?php echo 'downloadable_sample_' . $sampleCount . '_file_save'; ?>"
+name="<?php
+            echo 'sample_' . $sampleCount;
+            ?>" value=""
+onchange="hideOldFileName(this.id)">
+
+<div
+id="<?php echo 'downloadable_sample_' . $sampleCount . '_file'; ?>">
+<div class="no-display"
+id="<?php echo 'downloadable_sample_' . $sampleCount . '_file-template'; ?>">
+</div>
+</div>
+</div>
+<div class="row">
+<label
+for="<?php echo 'downloadable_sample_' . $sampleCount . '_url_type'; ?>">
+<input type="radio"
+class="radio validate-one-required-by-name"
+id="<?php echo 'downloadable_sample_' . $sampleCount . '_url_type'; ?>"
+name="<?php
+            echo 'downloadable[sample][' . $sampleCount . '][type]';
+            ?>"
+value="url"
+<?php
+            if ($sampleType == 'url') {
+                echo 'checked="checked"';
+            }
+            ?>>
+<?php echo __('URL'); ?>:</label> <input type="text"
+class="validate-downloadable-url input-text"
+name="<?php
+            echo 'downloadable[sample][' . $sampleCount . '][sample_url]';
+            ?>"
+value="<?php
+            /**
+            * Check the sample url has been set
+            * if it set then assign the sample downloadable url as value
+            */
+            if (isset ( $sampleUrl )) {
+                echo $sampleUrl;
+            }
+            ?>">
+</div>
+<div>
+<span
+id="<?php echo 'downloadable_sample_' . $sampleCount . '_container'; ?>"></span>
+</div>
+</div>
+</td>
+<td class="a-center"><input type="text"
+name="<?php echo 'downloadable[sample][' . $sampleCount . '][sort_order]'; ?>"
+value="<?php
+            /**
+            * confirm the sample order has been set
+            * if it so assing the sample order as value
+            */
+            if (isset ( $sampleOrder )) {
+                echo $sampleOrder;
+            }
+            ?>"
+class="input-text sort marketplace_sort_order"></td>
+<td>
+<button
+onclick="removeMarketPlaceDownloadableSamplesRow(this)"
+type="button" class="scalable button">
+<span><span><span><?php
+/**
+ * Display Delete option
+ */
+echo __('Delete'); ?></span></span></span>
+</button>
+</td>
+</tr>
+<?php
+            $sampleCount = $sampleCount + 1;
+        }
+        /**
+         * End foreach for downloadable sample data
+         */
+        ?>
+        </tbody>
+<tfoot>
+<tr>
+<td colspan="100" class="a-right">
+<input type="hidden" id="downloadable_sample_count_value" value="<?php echo $sampleCount;?>"/>
+<button id="add_sample_item" name="sample_items_body"
+title="<?php echo __('Add New Row'); ?>" type="button"
+class="button scalable add add-select-row"
+onclick="updateMarketPlaceDownloadableSamplesRow(this.name)">
+<span><span><?php
+/**
+ * Display add new row option to user
+ */
+echo __('Add New Row'); ?></span></span>
+</button>
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</li>
+<li class="mp_dp_head"><?php
+/**
+ * Display download option
+ */
+echo __('Download'); ?></li>
+<li class="fields mp_dp_fields">
+<div class="headings">
+<span class="label"><label for="name"><?php echo __('Title'); ?></label></span>
+<span class="value"><input type="text" class="input-text downloadable_links_title"
+id="downloadable_links_title" name="product[links_title]"
+value="<?php
+         /**
+         * Check the links title has been set
+         * if it set assign links title value as product links_title
+         */
+        if (isset ( $linksTitle )) {
+            echo $linksTitle;
+        }
+        ?>"></span>
+<div class="clear"></div>
+<span class="label"><label for="name"><?php echo __('Links can be purchased separately'); ?></label></span>
+<select name="product[links_purchased_separately]"
+id="downloadable_link_purchase_type" class="downloadable_link_purchase_type" title=""><option
+value="1"
+<?php
+         /**
+        * Check the links purchased separately is set
+        * and links purchased separately is equal to 1
+        * then make the option value 1 as selected
+         */
+        if (isset ( $linksPurchasedSeparately ) && $linksPurchasedSeparately == 1) {
+            echo 'selected="selected"';
+        }
+        ?>><?php echo __('Yes'); ?></option>
+<option value="0"
+<?php
+        if (isset ( $linksPurchasedSeparately ) && $linksPurchasedSeparately == 0) {
+            echo 'selected="selected"';
+        }
+        ?>><?php echo __('No'); ?></option></select>
+<!--                        [<?php echo __('GLOBAL'); ?>]-->
+<div class="clear"></div>
+</div>
+<table width="100%" cellspacing="CCC">
+<tbody id="link_items_body">
+<?php
+        /**
+        * Get the downloadable link
+        */
+        $downloadableLink = \Magento\Framework\App\ObjectManager::getInstance ()->get ( 'Magento\Downloadable\Model\Link')->getCollection ()->addProductToFilter ( $product->getId () )->addTitleToResult ( $product->getStoreId () )->addPriceToResult ( $product->getStore ()->getWebsiteId () );
+
+        $linkCount = 0;
+
+        foreach ( $downloadableLink as $link ) {
+            /**
+            * Get the link title
+            */
+            $linkTilte = $link->getTitle ();
+            /**
+             * Get the number of downloads
+             */
+            $numberOfDownloads = $link->getNumberOfDownloads ();
+            /**
+             * Get the shareable status
+             */
+            $isShareableVar = $link->getIsShareable ();
+            /**
+             * Get the sort order
+             */
+            $sortOrder = $link->getSortOrder ();
+            /**
+             * Get link url
+             */
+            $linkUrl = $link->getLinkUrl ();
+            /**
+             * Get link sample url
+             */
+            $linkSampleUrl = $link->getSampleUrl ();
+            /**
+             * Get link type
+             */
+            $linkType = $link->getLinkType ();
+            /**
+             * Get sample type
+             */
+            $linkSampleType = $link->getSampleType ();
+            $linkPrice = $link->getPrice ();
+            /**
+             * Get link file
+             */
+            $linkFile = $link->getLinkFile ();
+            /**
+             * Get link sample file
+             */
+            $linkSampleFile = $link->getSampleFile ();
+            ?>
+        <tr
+id="<?php echo 'marketplace_download_link_row_' . $linkCount; ?>">
+<td>
+<table border="0" cellspacing="0" cellpadding="0" width="100%"
+class="marketplace_download_info_table">
+<tr>
+<th><label><?php echo __('Title'); ?></label><span
+class="required"></span></th>
+<td><input type="hidden" class="__delete__"
+name="<?php
+            echo 'downloadable[link][' . $linkCount . '][is_delete]';
+            ?>"
+value=""> <input type="hidden"
+name="<?php echo 'downloadable[link][' . $linkCount . '][link_id]'; ?>"
+value="<?php
+            echo $linkCount;
+            ?>"> <input type="hidden"
+name="<?php echo 'downloadable[link][' . $linkCount . '][link_file]'; ?>"
+value="<?php
+            if (isset ( $linkFile )) {
+                echo $linkFile;
+            }
+            ?>"> <input type="hidden"
+name="<?php echo 'downloadable[link][' . $linkCount . '][link_sample_file]'; ?>"
+value="<?php
+            if (isset ( $linkSampleFile )) {
+                echo $linkSampleFile;
+            }
+            ?>"> <input type="text" class="required-entry input-text"
+name="<?php echo 'downloadable[link][' . $linkCount . '][title]'; ?>"
+value="<?php
+            if (isset ( $linkTilte )) {
+                echo $linkTilte;
+            }
+            ?>"></td>
+</tr>
+<tr>
+<th><label><?php
+/**
+ * Display product price information
+ */
+echo __('Price'); ?></label></th>
+<td class="input-price"><input type="text"
+id="<?php echo 'downloadable_link_' . $linkCount . '_price_value'; ?>"
+class="input-text validate-number link-prices"
+name="<?php
+            echo 'downloadable[link][' . $linkCount . '][price]';
+            ?>"
+value="<?php
+            if (isset ( $linkPrice )) {
+                echo $linkPrice;
+            }
+            ?>">
+<p> [<?php echo $block->getBaseCurrency(); ?>]</p>
+</td>
+</tr>
+<tr>
+<th><label class="nobr"><?php
+/**
+ * show the maximum downloads
+ */
+echo __('Max. Downloads'); ?></label></th>
+<td><input type="text"
+id="<?php echo 'downloadable_link_' . $linkCount . '_downloads'; ?>"
+name="<?php
+            echo 'downloadable[link][' . $linkCount . '][number_of_downloads]';
+            ?>"
+class="input-text downloads"
+value="<?php
+            /**
+            * Check the number of downloads has been set
+            * if so then assingn number of downloads as value
+            */
+            if (isset ( $numberOfDownloads )) {
+                echo $numberOfDownloads;
+            }
+            ?>">
+<p>
+<input type="checkbox" class="checkbox"
+id="<?php echo 'downloadable_link_' . $linkCount . '_is_unlimited'; ?>"
+name="<?php
+            echo 'downloadable[link][' . $linkCount . '][is_unlimited]';
+            ?>"
+value="1"
+<?php
+            /**
+            * Check the number of downloads has been set
+            * and number of download is equal to zero
+            */
+            if (isset ( $numberOfDownloads ) && $numberOfDownloads == 0) {
+                echo 'checked="checked"';
+            }
+            ?>> <label
+for="<?php echo 'downloadable_link_' . $linkCount . '_is_unlimited'; ?>"><?php
+            echo __ ( 'Unlimited' );
+            ?></label>
+</p></td>
+</tr>
+<tr>
+<th><label><?php
+/**
+ * show the shareable option for the product
+ */
+$valueZero = $valueOne = $valueTwo = '';
+if (isset ( $isShareableVar ) && $isShareableVar == 0) {
+$valueZero = 'selected="selected"';
+}
+if (isset ( $isShareableVar ) && $isShareableVar == 1) {
+$valueOne = 'selected="selected"';
+}
+if (isset ( $isShareableVar ) && $isShareableVar == 2) {
+$valueTwo = 'selected="selected"';
+}
+echo __('Shareable'); ?></label></th>
+<td><select
+id="<?php echo 'downloadable_link_' . $linkCount . '_shareable'; ?>"
+name="<?php
+            echo 'downloadable[link][' . $linkCount . '][is_shareable]';
+            ?>">
+<option value="1"
+<?php echo $valueOne; ?>>
+<?php echo __('Yes'); ?></option>
+<option value="0"
+<?php echo $valueZero;
+            ?>><?php echo  __('No'); ?></option>
+<option value="2"
+<?php echo $valueTwo;
+            ?>><?php echo  __('Use config'); ?></option>
+</select></td>
+</tr>
+
+<tr>
+<th><label><?php echo __('File'); ?></label></th>
+<td>
+<div class="files-wide">
+<div class="marketplace_row">
+<div
+id="<?php echo 'downloadable_sample_link_' . $linkCount . '_file_save-old'; ?>"
+class="file-row-info">
+<span class="file-info"><b><span class="file-info-name"><?php
+            /**
+            * Check link of file has been set
+            * if it is display the file link
+            */
+            if (isset ( $linkFile )) {
+                echo $linkFile;
+            }
+            ?></span></b><span class="file-info-size"></span></span>
+</div>
+<label
+for="<?php echo 'downloadable_link_' . $linkCount . '_file_type'; ?>">
+<input type="radio"
+class="radio validate-one-required-by-name"
+id="<?php echo 'downloadable_link_' . $linkCount . '_file_type'; ?>"
+name="<?php
+            echo 'downloadable[link][' . $linkCount . '][type]';
+            ?>"
+value="file"
+<?php
+            if (isset ( $linkType ) && $linkType == 'file') {
+                echo 'checked="checked"';
+            }
+            ?>>
+        <?php echo __('File'); ?>:
+            </label> <input type="file"
+class="validate-downloadable-file"
+id="<?php echo 'downloadable_sample_link_' . $linkCount . '_file_save'; ?>"
+name="<?php
+            echo 'links_' . $linkCount;
+            ?>" value=""
+onchange="hideOldFileName(this.id)">
+</div>
+<div class="row">
+<label
+for="<?php echo 'downloadable_link_' . $linkCount . '_url_type'; ?>">
+<input type="radio"
+class="radio validate-one-required-by-name"
+id="<?php echo 'downloadable_link_' . $linkCount . '_url_type'; ?>"
+name="<?php
+            echo 'downloadable[link][' . $linkCount . '][type]';
+            ?>"
+value="url"
+<?php
+            if (isset ( $linkType ) && $linkType == 'url') {
+                echo 'checked="checked"';
+            }
+            ?>>
+        <?php echo __('URL'); ?>:</label><input type="text"
+class="validate-downloadable-url input-text"
+name="<?php
+            echo 'downloadable[link][' . $linkCount . '][link_url]';
+            ?>"
+value="<?php
+            if (isset ( $linkUrl )) {
+                echo $linkUrl;
+            }
+            ?>">
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<th><label class="nobr"><?php echo __('Sort Order'); ?></label>
+
+<td><input type="text"
+name="<?php echo 'downloadable[link][' . $linkCount . '][sort_order]'; ?>"
+value="<?php
+            if (isset ( $sortOrder )) {
+                echo $sortOrder;
+            }
+            ?>"
+class="input-text sort"></td>
+</tr>
+<tr>
+<th>&nbsp;</th>
+<td>
+<button
+id="<?php echo 'downloadable_link_' . $linkCount . '_delete_button'; ?>"
+onclick="removeMarketPlaceDownloadableLinksRow(this);"
+type="button" class="scalable button">
+<span><span><span> <?php echo __('Delete'); ?></span></span></span>
+</button>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+
+
+<?php
+            $linkCount = $linkCount + 1;
+        }
+        /**
+         * End foreach for downloadable link data
+         */
+        ?>
+
+        </tbody>
+<tfoot>
+<tr>
+<td colspan="8" class="a-right">
+<input type="hidden" id="downloadable_link_count_value" value="<?php echo $linkCount;?>"/>
+<button id="add_link_item" class="button" title="Add New Row"
+type="button" name="link_items_body"
+onclick="updateMarketPlaceDownloadableLinksRow(this.name)">
+<span><span><span><?php
+/**
+ * Show option for adding new row to customer
+ */
+echo __('Add New Row'); ?></span></span></span>
+</button>
+</td>
+</tr>
+</tfoot>
+</table>
+</li>
+</ul>
+<div class="clear"></div>
+</div>
+<?php } ?>

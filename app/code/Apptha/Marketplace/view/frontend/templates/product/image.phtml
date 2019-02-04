@@ -1,0 +1,462 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<script src="<?php echo $block->getViewFileUrl('Apptha_Marketplace::js/configurableimage.js'); ?>"></script>
+<?php
+
+/**
+ * Get options array
+ */
+$options = $this->getRequest ()->getParam ( 'options' );
+
+$productId = $this->getRequest ()->getParam ( 'product_id' );
+
+/**
+ * Split array based on attribute code
+ */
+$attributeOptions = $block->getAttributeBasedOptions ( $options );
+$attributeCodes = $attributeOptions ['attribute_code'];
+$options = $attributeOptions ['options'];
+?>
+<?php
+/**
+ * For Configurable Images
+ */
+?>
+<div id="bulk_price_qty_error_msg" style="display: none;">
+    <strong><?php echo __('Please fill the required fields'); ?></strong>
+</div>
+<div id="type_price_qty_error_msg" style="display: none;">
+    <strong><?php echo __('Please check the given input value(s)'); ?></strong>
+</div>
+<label class="label"><span><?php echo __('Images'); ?></span></label>
+<ul>
+    <li><input id="image_all" name="configurable_image"
+        class="configurable_image" value="image_all" title="<?php echo __('Apply single set of images to all SKUs'); ?>"
+        type="radio"> <label for="image_all"><?php echo __('Apply single set of images to all SKUs'); ?></label>
+    </li>
+    <li><input id="image_unique" name="configurable_image"
+        class="configurable_image" value="image_unique"
+        title="<?php echo __('Apply unique images by attribute to each SKU'); ?>"type="radio">
+        <label for="image_unique"><?php echo __('Apply unique images by attribute to each SKU'); ?></label>
+    </li>
+    <li><input checked="checked" id="image_skip"  name="configurable_image" class="configurable_image"
+        value="image_skip" title="<?php echo __('Skip image uploading at this time'); ?>"
+        type="radio"> <label for="image_skip"><?php echo __('Skip image uploading at this time'); ?></label>
+    </li>
+</ul>
+
+<input type="hidden" id="configurable_image_upload_ajax_url"
+    class="images_list" name="configurable_image_upload_ajax_url"
+    value="<?php echo $block->getConfigurableImageUploadAjaxUrl(); ?>" />
+
+<div id="image_unique_content" style="display: none;">
+    <label for="image_select_unique"><?php echo __('Select attribute'); ?></label>
+    <select id="image_select_unique" class="image_select_unique"
+        name="image_select_unique">
+        <option value=""><?php echo __('Select'); ?></option>
+<?php foreach ( $attributeCodes as $attributeCode ) {?>
+<option value="<?php echo $attributeCode; ?>"><?php echo $block->getAttributeData($attributeCode)->getFrontendLabel(); ?></option>
+<?php
+}
+?>
+</select>
+
+<?php foreach ( $attributeCodes as $attributeCode ) {
+ $attributeOptionsDatas = $block->getAttributeData ( $attributeCode )->getOptions ();?>
+<div class="image_unique_value"
+        id="image_unique_content_<?php echo $attributeCode; ?>"
+        style="display: none;">
+<?php
+ foreach ( $attributeOptionsDatas as $attributeOptionData ) {
+  if (isset ( $options [$attributeCode] ) && $attributeOptionData->getValue () != '' && $attributeOptionData->getLabel () != '' && in_array ( $attributeOptionData->getValue (), $options [$attributeCode] )) {
+   ?>
+<form  action="<?php echo $block->getConfigurableImageUploadAjaxUrl(); ?>"
+            method="POST" enctype="multipart/form-data"
+            class="configurable_image_upload_form"
+            id="image_upload_form_<?php echo $attributeOptionData->getValue(); ?>">
+            <input type="hidden"
+                name="image_options['<?php echo $attributeOptionData->getValue(); ?>']"
+                value="<?php echo $attributeCode; ?>"> <input
+                type="hidden"
+                name="image_option_value_<?php echo $attributeOptionData->getValue(); ?>"
+                class="image_option_value_id"
+                value="<?php echo $attributeOptionData->getValue(); ?>"> <label
+                for="upload_product_images_<?php echo $attributeOptionData->getValue(); ?>"
+                class="label"><span><?php echo $attributeOptionData->getLabel(); ?></span></label>
+
+            <div
+                id="images_list_<?php echo $attributeOptionData->getValue(); ?>"
+                class="images_list">
+                <div class="image_holder image-placeholder">
+                    <input type="file"
+                        class="upload_product_images_file"
+                        name="product_images[]"
+                        id="upload_product_images_<?php echo $attributeOptionData->getValue(); ?>"
+                        multiple>
+                    <p class="image-placeholder-text"><?php echo __('Click here to add images.'); ?></p>
+                </div>
+            </div>
+            <div class="cssload-jumping"
+                id="image_upload_ajax_loader_<?php echo $attributeOptionData->getValue(); ?>"
+                style="display: none;">
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <input style="display: none;" type="submit" value="submit">
+        </form>
+<?php
+  }
+
+ }
+ ?>
+</div>
+<?php
+}
+?>
+</div>
+
+<div id="image_all_content" style="display: none;">
+    <label for="image_all_value"><?php echo __('Image'); ?></label>
+    <form
+        action="<?php echo $block->getConfigurableImageUploadAjaxUrl(); ?>"
+        method="POST" enctype="multipart/form-data"
+        class="configurable_image_upload_form"
+        id="configurable_image_upload_form">
+        <label for="configurable_upload_product_images" class="label"><span><?php echo __('Images') ?></span></label>
+        <input type="hidden" name="configurable_image_option_value"
+            class="image_option_value_id" value="all">
+
+        <div id="images_list_all" class="images_list_all">
+            <div class="image_holder image-placeholder">
+                <input type="file" class="upload_product_images_file"
+                    name="product_images[]"
+                    id="upload_product_images_all" multiple>
+                <p class="image-placeholder-text"><?php echo __('Click here to add images.'); ?></p>
+            </div>
+        </div>
+        <div class="cssload-jumping" id="image_upload_ajax_loader_all"
+            style="display: none;">
+            <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <input style="display: none;" type="submit" value="submit">
+    </form>
+</div>
+
+<input type="hidden" id="configurable_summary_ajax_url"
+    name="configurable_summary_ajax_url"
+    value="<?php echo $block->getConfigurableSummaryAjaxUrl(); ?>" />
+<form action="<?php echo $block->getConfigurableSummaryAjaxUrl(); ?>"
+    method="POST" enctype="multipart/form-data"
+    class="configurable_product_bulk_form"
+    id="configurable_product_bulk_form">
+<?php
+/**
+ * For storing image data
+ */
+?>
+<div>
+        <input type="hidden" value="" id="value_image_type"
+            name="configurable_image" /> <input type="hidden" value=""
+            id="value_image_select_unique" name="image_select_unique" />
+        <input type="hidden" value="" id="configurable_product_price"
+            name="configurable_product_price" /> <input type="hidden"
+            value="" id="configurable_sku" name="configurable_sku" /> <input
+            type="hidden" value="<?php echo $productId; ?>"
+            name="product_id" />
+
+        <div id="uploaded_images_for_configurable_product"></div>
+    </div>
+
+<?php
+/**
+ * For Configurable Price
+ */
+?>
+<label class="label"><span><?php echo __('Price'); ?></span></label>
+    <ul>
+        <li><input id="price_all" name="configurable_price"class="configurable_price" value="price_all" title="<?php echo __('Apply single price to all SKUs'); ?>"
+            type="radio"> <label for="price_all"><?php echo __('Apply single price to all SKUs'); ?></label>
+        </li>
+        <li><input id="price_unique" name="configurable_price"
+            class="configurable_price" value="price_unique"  title="<?php echo __('Apply unique prices by attribute to each SKU'); ?>" type="radio">
+             <label for="price_unique"><?php echo __('Apply unique prices by attribute to each SKU'); ?></label>
+        </li>
+        <li><input checked="checked" id="price_skip"
+            name="configurable_price" class="configurable_price" value="price_skip"
+            title="<?php echo __('Skip price at this time'); ?>" type="radio">
+            <label for="price_skip"><?php echo __('Skip price at this time'); ?></label>
+        </li>
+    </ul>
+<?php
+
+/**
+ *
+ * Select Attribute
+ */
+?>
+    <div id="price_unique_content" style="display: none;">
+        <label for="price_select_unique"><?php echo __('Select attribute'); ?></label><em>*</em>
+        <select id="price_select_unique" class="price_select_unique"  name="price_select_unique">
+            <option value=""><?php echo __('Select'); ?></option>
+<?php
+foreach ( $attributeCodes as $attributeCode ) {
+ ?>
+<option value="<?php echo $attributeCode; ?>"><?php echo $block->getAttributeData($attributeCode)->getFrontendLabel(); ?></option>
+<?php
+}
+?>
+</select>
+
+<?php
+/**
+ * Get all attribute details
+ */
+?>
+<?php
+foreach ( $attributeCodes as $attributeCode ) {
+ ?>
+<input type="hidden" value="<?php echo $attributeCode; ?>" name="all_attributes[]" />
+<input type="hidden"  value="<?php echo $block->getAttributeData($attributeCode)->getAttributeId(); ?>"name="all_attributes_ids[]" />
+<input type="hidden"value="<?php echo $block->getAttributeData($attributeCode)->getFrontendLabel(); ?>" name="label_attributes[<?php echo $attributeCode; ?>]" />
+<?php
+}
+?>
+<?php
+foreach ( $attributeCodes as $attributeCode ) {
+ $attributeOptions = $block->getAttributeData ( $attributeCode )->getOptions ();?>
+<div class="price_unique_value" id="price_unique_content_<?php echo $attributeCode; ?>"  style="display: none;">
+<?php
+ foreach ( $attributeOptions as $attributeOption ) {
+ if (isset ( $options [$attributeCode] ) && $attributeOption->getValue () != ''  && in_array ( $attributeOption->getValue (), $options [$attributeCode] )) {
+ ?>
+<label  for="price_unique_value_<?php echo $attributeOption->getValue(); ?>"><?php echo $attributeOption->getLabel(); ?></label><em>*</em>
+            <input  class="price_unique_value_for_validate_<?php echo $attributeCode; ?>"
+                type="text"
+                id="price_unique_value_<?php echo $attributeOption->getValue(); ?>"
+                name="price_unique_value[<?php echo $attributeCode; ?>][<?php echo $attributeOption->getValue(); ?>]"
+                value="">
+<?php echo ' ['.$block->getPriceBaseCurrency().'] '; ?>
+<?php
+
+   /**
+    * Values for all attribute(s) and value(s) for prepare configurable save data
+    */
+   ?>
+<input type="hidden" value="<?php echo $attributeCode; ?>"
+                name="all_options[<?php echo $attributeOption->getValue(); ?>]" />
+            <input type="hidden"
+                value="<?php echo $attributeOption->getLabel(); ?>"
+                name="label_options[<?php echo $attributeOption->getValue(); ?>]" />
+<?php
+  }
+
+ }
+ ?>
+</div>
+<?php
+}
+?>
+</div>
+
+    <div id="price_all_content" style="display: none;">
+        <label for="price_all_value"><?php echo __('Price'); ?></label><em>*</em>
+        <input class="price_all_value_for_validate" type="text"
+            id="price_all_value" name="price_all_value" value="" />
+<?php echo ' ['.$block->getPriceBaseCurrency().'] '; ?>
+</div>
+
+
+<?php
+/**
+ * For Configurable Quantity
+ */
+?>
+<label class="label"><span><?php echo __('Quantity'); ?></span></label>
+    <ul>
+        <li><input id="qty_all" name="configurable_qty"
+            class="configurable_qty" value="qty_all"
+            title="<?php echo __('Apply single quantity to each SKUs'); ?>"
+            type="radio"> <label for="qty_all"><?php echo __('Apply single quantity to each SKUs'); ?></label>
+        </li>
+        <li><input id="qty_unique" name="configurable_qty"
+            class="configurable_qty" value="qty_unique"
+            title="<?php echo __('Apply unique quantity by attribute to each SKU'); ?>"
+            type="radio"> <label for="qty_unique"><?php echo __('Apply unique quantity by attribute to each SKU'); ?></label>
+        </li>
+        <li><input checked="checked" id="qty_skip"
+            name="configurable_qty" class="configurable_qty"
+            value="qty_skip"
+            title="<?php echo __('Skip quantity at this time'); ?>"
+            type="radio"> <label for="qty_skip"><?php echo __('Skip quantity at this time'); ?></label>
+        </li>
+    </ul>
+
+    <div id="qty_unique_content" style="display: none;">
+        <label for="qty_select_unique"><?php echo __('Select attribute'); ?></label><em>*</em>
+        <select id="qty_select_unique" class="qty_select_unique"
+            name="qty_select_unique">
+            <option value=""><?php echo __('Select'); ?></option>
+<?php
+foreach ( $attributeCodes as $attributeCode ) {
+ ?>
+<option value="<?php echo $attributeCode; ?>"><?php echo $block->getAttributeData($attributeCode)->getFrontendLabel(); ?></option>
+<?php
+}
+?>
+</select>
+
+<?php
+foreach ( $attributeCodes as $attributeCode ) {
+ $attributeOptions = $block->getAttributeData ( $attributeCode )->getOptions ();
+ ?>
+<div class="qty_unique_value"
+            id="qty_unique_content_<?php echo $attributeCode; ?>"
+            style="display: none;">
+<?php
+
+ foreach ( $attributeOptions as $attributeOption ) {
+  if (isset ( $options [$attributeCode] ) && $attributeOption->getValue () != '' && $attributeOption->getLabel () != '' && in_array ( $attributeOption->getValue (), $options [$attributeCode] )) {
+   ?>
+<label
+                for="qty_unique_value_<?php echo $attributeOption->getValue(); ?>"><?php echo $attributeOption->getLabel(); ?></label><em>*</em>
+            <input
+                class="qty_unique_value_for_validate_<?php echo $attributeCode; ?>"
+                type="text"
+                id="qty_unique_value_<?php echo $attributeOption->getValue(); ?>"
+                name="qty_unique_value[<?php echo $attributeCode; ?>][<?php echo $attributeOption->getValue(); ?>]"
+                value="">
+<?php
+  }
+ }
+ ?>
+</div>
+<?php
+}
+?>
+</div>
+
+    <div id="qty_all_content" style="display: none;">
+        <label for="qty_all_value"><?php echo __('Quantity'); ?></label><em>*</em>
+        <input class="qty_all_value_for_validate" type="text"
+            id="qty_all_value" name="qty_all_value" value="" />
+    </div>
+</form>
+
+<script>
+require([
+        "jquery",
+        "mage/calendar"
+        ], function($){
+
+  // Image
+
+
+  $(".configurable_image_upload_form").on('submit',(function(e){
+   e.preventDefault();
+   var optionIdValue = $(this).find('.image_option_value_id').val();
+   $('#image_upload_ajax_loader_'+optionIdValue).show();
+        $.ajax({
+            url: $('#configurable_image_upload_ajax_url').val(),
+            type: 'POST',
+            success: function (transport) {
+            $('#image_upload_ajax_loader_'+optionIdValue).hide();
+            $('#images_list_'+optionIdValue).append(transport);
+            },
+            data: new FormData(this),
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+        }));
+
+  $(".upload_product_images_file").change(function() {
+  $(this).closest("form").submit();
+  });
+
+  $('#configurable_product_bulk_form').on('submit',(function(e){
+  e.preventDefault();
+
+  $('#configurable_product_price').val($("#price").val());
+  $('#configurable_sku').val($("#sku").val());
+
+  $('#uploaded_images_for_configurable_product').html();
+  if($('#configurable_product_bulk_form').valid()){
+
+  if($('#value_image_type').val() == 'image_all'){
+  $( "#image_all_content .hidden_uploaded_image_path" ).each(function( index ) {
+  $('#uploaded_images_for_configurable_product').append($(this).clone().prop('name','images_path_all[]'));
+  });
+
+  var baseConfigurableImageValue = $(".base_image_container input[name=base_image]:checked").val();
+  if(baseConfigurableImageValue != "undefined"){
+  $('#uploaded_images_for_configurable_product').append('<input type="hidden" value="'+baseConfigurableImageValue+'" name="base_image_all" >');
+  }
+
+  }
+  if($('#value_image_type').val() == 'image_unique'){
+  $('#uploaded_images_for_configurable_product').html('');
+  var value_image_select_unique = $('#value_image_select_unique').val();
+  var image_unique_id = 'image_unique_content_'+value_image_select_unique+' .hidden_uploaded_image_path';
+
+  $( "#"+image_unique_id).each(function( index ) {
+  imageOptionId = $(this).closest('form').find('.image_option_value_id').val();
+  $('#uploaded_images_for_configurable_product').append($(this).clone().prop('name','configurable_images_path['+imageOptionId+'][]'));
+  });
+
+  $(".base_image_container input[name=base_image]:checked").each(function(){
+  var baseConfigurableImageValue = $(this).val();
+  var imageOptionValue = $(this).closest('form').find('.image_option_value_id').val();
+  $('#uploaded_images_for_configurable_product').append('<input type="hidden" value="'+baseConfigurableImageValue+'" name="base_image['+imageOptionValue+']" >');
+  });
+   }
+
+}
+  $('#configurable-product-loader').show();
+      $.ajax({
+          url: $('#configurable_summary_ajax_url').val(),
+          type: 'POST',
+          success: function (transport) {
+          $('#summary-content').html(transport);
+       $('#configurable-product-loader').hide();
+          },
+          data: new FormData(this),
+          cache: false,
+          contentType: false,
+          processData: false
+      });
+
+  }));
+
+    $('#images_list_all').on('click', '.image_close', function(e) {
+        $(this).parents("span:first").remove();
+        });
+
+    $('.images_list').on('click', '.image_close', function(e) {
+        $(this).parents("span:first").remove();
+        });
+
+});
+</script>

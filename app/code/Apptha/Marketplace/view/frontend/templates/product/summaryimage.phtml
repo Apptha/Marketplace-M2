@@ -1,0 +1,74 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+/**
+ * Image Unique
+ *
+ */
+$baseImage=$this->getData('baseimage');
+$mediaImageUrl=$this->getData('mediaimageurl');
+$value=$this->getData('value');
+$i=$this->getData('imgincrement');
+$imagesPath=$this->getData('imagesPath');
+
+if (isset ( $baseImage [$value] )) {?>
+<img class="base_image_section"
+                src="<?php echo $mediaImageUrl.DIRECTORY_SEPARATOR.$baseImage[$value]; ?>"
+                alt="<?php echo $baseImage[$value]; ?>" height="200"
+                width="200"> <input type="hidden"
+                value="<?php echo $baseImage[$value]; ?>"
+                name="configurable_product[<?php echo $i; ?>][base_path][<?php echo $value; ?>]">
+<?php
+    }
+
+    if (isset ( $imagesPath [$value] )) {
+     foreach ( $imagesPath [$value] as $pathValue ) {
+      ?>
+<input type="hidden" value="<?php echo $pathValue; ?>"
+                name="configurable_product[<?php echo $i; ?>][image_path][<?php echo $value; ?>][]">
+<?php
+     }
+    }
+/**
+ * ImageAll
+ *
+ */
+    $baseImageAll=$this->getDetails('baseimageAll');
+    $mediaImageUrl=$this->getDetails('mediaimageurl');
+    $i=$this->getDetails('imgincrement');
+    $imagesPathAll=$this->getDetails('imagesPathAll');?>
+    <input type="hidden" value="<?php echo $baseImageAll; ?>"
+                    name="configurable_product[<?php echo $i; ?>][base_path][all]">
+    <?php
+    if (count ( $imagesPathAll ) >= 1) {
+    foreach ( $imagesPathAll as $imagesPathAllValue ) {
+        ?>
+    <input type="hidden" value="<?php echo $imagesPathAllValue; ?>"
+                    name="configurable_product[<?php echo $i; ?>][image_path][all][]">
+    <?php
+        }
+    }

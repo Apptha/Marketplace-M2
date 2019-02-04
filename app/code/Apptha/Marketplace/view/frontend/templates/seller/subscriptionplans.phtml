@@ -1,0 +1,118 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+
+/**
+ * Get action url
+ */
+$subscriptionplans = $block->getCollection ();
+if (count ( $subscriptionplans ) >= 1) {
+
+ /**
+  * Get subscribed plan details
+  */
+ $subscriptionProfileValue = $block->getSubscriptionProfileData ();
+
+ if (count ( $subscriptionProfileValue )) {
+  echo '<div class="sub-success">';
+  echo __ ( 'You have subscribed for' ) . ' ' . $subscriptionProfileValue->getPlanName () . __ ( 'You have paid' ) . ' ' . round ( $subscriptionProfileValue->getFee (), 2 ) . ' ' . $subscriptionProfileValue->getBaseCurrencyCode () . ' ';
+  echo __ ( 'as subscription fee. Your plan start date is' ) . ' ' . date ( 'jS F Y', strtotime ( $subscriptionProfileValue->getStartedAt () ) ) . ' ';
+  echo __ ( 'and it will expire on' ) . ' ' . date ( 'jS F Y', strtotime ( $subscriptionProfileValue->getEndedAt () ) ) . '.<br/>';
+  echo __ ( 'Product Count' ) . ': ';
+  if ($subscriptionProfileValue->getMaxProductCount () == 'unlimited') {
+   echo ucfirst ( $subscriptionProfileValue->getMaxProductCount () );
+  } else {
+   echo $subscriptionProfileValue->getMaxProductCount ();
+  }
+  echo '</div>';
+  echo '<div class="sub-note">';
+  echo __ ( 'Note: If you will subscribe any other below plan the current plan will be automatically deactivated.' );
+  echo '</div>';
+ }
+ foreach ( $subscriptionplans as $subscriptionplan ) {
+  ?>
+<div class="subscribe-plane">
+    <form action="<?php echo $block->getSellerSubscriptionUrl(); ?>"
+        method="POST" enctype="multipart/form-data"
+        class="subscription_plans"
+        id="subscription_plan_<?php echo $subscriptionplan->getId(); ?>">
+        <h1><?php echo $subscriptionplan->getPlanName(); ?></h1>
+        <div>
+            <span>
+<?php echo $subscriptionplan->getPeriodFrequency(); ?>
+</span>
+<?php if($subscriptionplan->getPeriodFrequency() > 1){ ?>
+<span><?php echo $subscriptionplan->getSubscriptionPeriodType().'(s)'; ?></span>
+<?php }else{ ?>
+<span><?php echo $subscriptionplan->getSubscriptionPeriodType(); ?></span>
+<?php } ?>
+</div>
+        <div>
+<?php echo __('Product Count').':   '; ?>
+<?php
+
+  if ($subscriptionplan->getMaxProductCount () == 'unlimited') {
+   echo __ ( 'Unlimited' );
+  } else {
+   echo $subscriptionplan->getMaxProductCount ();
+  }
+  ?>
+</div>
+        <div>
+<?php
+  $baseCurrencyCode = $block->getBaseCurrencyCode ();
+  echo round ( $subscriptionplan->getFee (), 2 ) . " [$baseCurrencyCode]";
+  ?>
+<input type="hidden"
+                id="plan_id_<?php echo $subscriptionplan->getId();  ?>"
+                name="plan_id"
+                value="<?php echo $subscriptionplan->getId();  ?>">
+        </div>
+        <input class="subscribe_submit" type="submit" name="submit"
+            value="<?php echo __('Subscribe'); ?>" /> <span
+            class="subscription_loader_for_redirect"
+            style="display: none;">...</span>
+
+    </form>
+</div>
+<?php
+ }
+} else {
+ ?>
+<p>
+<?php echo __('There is no subscription activated. Kindly contact admin for further process.'); ?>
+</p>
+<?php
+}
+?>
+<script>
+require(['jquery','mage/mage'],function($){
+$('.subscribe_submit').click(function(e){
+$(this).next('.subscription_loader_for_redirect').show();
+});
+});
+</script>

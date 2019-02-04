@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+ -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+	<body>
+		<referenceBlock name="apptha_marketplace_payments.grid.container">
+			<block class="Magento\Backend\Block\Widget\Grid" name="apptha_marketplace_payments.grid"
+				as="grid">
+				<arguments>
+					<argument name="id" xsi:type="string">paymentsGrid</argument>
+					<argument name="dataSource" xsi:type="object">Apptha\Marketplace\Model\ResourceModel\Seller\Collection</argument>
+					<argument name="default_sort" xsi:type="string">id</argument>
+					<argument name="default_dir" xsi:type="string">desc</argument>
+					<argument name="save_parameters_in_session" xsi:type="boolean">true</argument>
+					<argument name="use_ajax" xsi:type="boolean">true</argument>
+					<argument name="grid_url" xsi:type="url" path="*/*/grid">
+						<param name="_current">1</param>
+					</argument>
+				</arguments>
+				<block class="Magento\Backend\Block\Widget\Grid\ColumnSet"
+					name="apptha_marketplace_payments.grid.columnSet" as="grid.columnSet">
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="customer_id">
+						<arguments>
+							<argument name="header" xsi:type="string" translate="true">Seller
+								ID</argument>
+							<argument name="index" xsi:type="string">customer_id</argument>
+						</arguments>
+					</block>
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="store_name">
+						<arguments>
+							<argument name="header" xsi:type="string" translate="true">Store
+								Name</argument>
+							<argument name="index" xsi:type="string">store_name</argument>
+						</arguments>
+					</block>
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="seller_name">
+						<arguments>
+							<argument name="header" xsi:type="string" translate="true">Seller
+								Name</argument>
+							<argument name="index" xsi:type="string">customer_id</argument>
+							<argument name="renderer" xsi:type="string">Apptha\Marketplace\Block\Adminhtml\Seller\Grid\Renderer\Name</argument>
+							<argument name="filter" xsi:type="string"></argument>
+							<argument name="sortable" xsi:type="string"></argument>
+						</arguments>
+					</block>
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="Email">
+						<arguments>
+							<argument name="header" xsi:type="string" translate="true">Seller
+								Email</argument>
+							<argument name="index" xsi:type="string">customer_id</argument>
+							<argument name="renderer" xsi:type="string">Apptha\Marketplace\Block\Adminhtml\Seller\Grid\Renderer\Email</argument>
+							<argument name="filter" xsi:type="string"></argument>
+							<argument name="sortable" xsi:type="string"></argument>
+						</arguments>
+					</block>
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="Payment">
+						<arguments>
+							<argument name="header" xsi:type="string" translate="true">Payment
+								Method</argument>
+							<argument name="index" xsi:type="string">customer_id</argument>
+							<argument name="renderer" xsi:type="string">Apptha\Marketplace\Block\Adminhtml\Payments\Grid\Renderer\Payments</argument>
+							<argument name="filter" xsi:type="string"></argument>
+							<argument name="sortable" xsi:type="string"></argument>
+						</arguments>
+					</block>
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="received_amount">
+						<arguments>
+							<argument name="header" xsi:type="string" translate="true">Total
+								Paid Amount</argument>
+							<argument name="index" xsi:type="string">received_amount</argument>
+						</arguments>
+					</block>
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="remaining_amount">
+						<arguments>
+							<argument name="header" xsi:type="string" translate="true">Pending
+								Amount</argument>
+							<argument name="index" xsi:type="string">remaining_amount</argument>
+						</arguments>
+					</block>
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="Pay">
+						<arguments>
+							<argument name="header" xsi:type="string" translate="true">Action</argument>
+							<argument name="index" xsi:type="string">customer_id</argument>
+							<argument name="renderer" xsi:type="string">Apptha\Marketplace\Block\Adminhtml\Payments\Grid\Renderer\Pay</argument>
+							<argument name="filter" xsi:type="string"></argument>
+							<argument name="sortable" xsi:type="string"></argument>
+						</arguments>
+					</block>
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="View">
+						<arguments>
+							<argument name="header" xsi:type="string" translate="true">View
+								All Payments</argument>
+							<argument name="index" xsi:type="string">customer_id</argument>
+							<argument name="renderer" xsi:type="string">Apptha\Marketplace\Block\Adminhtml\Payments\Grid\Renderer\View</argument>
+							<argument name="filter" xsi:type="string"></argument>
+							<argument name="sortable" xsi:type="string"></argument>
+						</arguments>
+					</block>
+				</block>
+			</block>
+		</referenceBlock>
+	</body>
+</page>

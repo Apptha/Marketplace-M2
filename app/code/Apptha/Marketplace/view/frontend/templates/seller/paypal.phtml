@@ -1,0 +1,87 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+
+$actionUrl = $block->getActionUrl ();
+$merchantPayPalId = $block->getMerchantPayPalId ();
+$planId = $this->getRequest ()->getParam ( 'plan_id' );
+$subscriptionPlansModel = $block->getSubscriptionPlansData ( $planId );
+$fee = $subscriptionPlansModel->getFee ();
+$subscriptionPlanName = $subscriptionPlansModel->getPlanName ();
+$periodFrequency = $subscriptionPlansModel->getPeriodFrequency ();
+if ($subscriptionPlansModel->getSubscriptionPeriodType () == 'month') {
+ $subscriptionPeriodType = 'M';
+} else {
+ $subscriptionPeriodType = 'Y';
+}
+$baseCurrencyCode = $block->getBaseCurrencyCode ();
+$customerId = $block->getCustomerId ();
+$invoiceId = $customerId . substr ( $subscriptionPlanName, 0, 4 ) . rand ( 1, 100000000000 );
+$this->saveSubscriptionProfileData ( $planId, $invoiceId, $baseCurrencyCode );
+
+$returnUrl = $this->getUrl ( 'marketplace/seller/subscriptionreturn', array (
+    'customerid' => $customerId,
+    'invoice' => $invoiceId,
+    'planid' => $planId,
+    'planamount' => $fee
+) );
+$notifyUrl = $this->getUrl ( 'marketplace/seller/subscriptionnotify' );
+?>
+<div class="redirect-paypal">
+    <div><?php echo __('You are redirecting to paypal payment gateway')?></div>
+    <div><?php echo __('Your payment amount is ').round($fee,2)." [$baseCurrencyCode]"; ?><span
+            class="subscription_loader_for_redirect">...</span>
+    </div>
+</div>
+<form action="<?php echo $actionUrl; ?>" method="post" name="subscribe"
+    id="subscribe">
+    <input type="hidden" name="business"
+        value="<?php echo $merchantPayPalId; ?>" /> <input type="hidden"
+        name="cmd" value="_xclick-subscriptions" /> <input type="hidden"
+        name="item_name" value="<?php echo $subscriptionPlanName; ?>" />
+    <input type="hidden" name="item_number"
+        value="<?php echo $planId; ?>" /> <input type="hidden"
+        name="customer_id" value="<?php echo $customerId; ?>" /> <input
+        type="hidden" name="invoice" value="<?php echo $invoiceId; ?>" />
+    <input type="hidden" name="return" value="<?php echo $returnUrl; ?>" />
+    <input type="hidden" name="notify_url"
+        value="<?php echo $notifyUrl; ?>" /> <input type="hidden"
+        name="currency_code" value="<?php echo $baseCurrencyCode; ?>" />
+    <input name="bn" value="Contus_Subscribe_SP_IN" type="hidden" /> <input
+        type="hidden" name="a3" value="<?php echo round($fee,2); ?>" />
+    <input type="hidden" name="p3"
+        value="<?php echo $periodFrequency; ?>" /> <input type="hidden"
+        name="t3" value="<?php echo $subscriptionPeriodType; ?>" /> <input
+        type="hidden" value="" name="image_url">
+</form>
+<script type="text/javascript">
+require(['jquery','mage/mage'],function($){
+$(document).ready(function(){
+$('#subscribe').submit();
+});
+});
+</script>

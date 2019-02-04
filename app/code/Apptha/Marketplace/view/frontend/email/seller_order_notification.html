@@ -1,0 +1,19 @@
+<!--@subject New Order Notification @-->
+
+{{template config_path="design/email/header_template"}}
+<table>
+	<tr>
+		<td valign="top">
+			<p style="font-size: 12px; line-height: 16px; margin: 0 0 16px 0;">
+				Hi {{var seller_name}},<br /> <br /> Kindly check out the details
+				on the latest product[s] purchased.<br /> <br /> Buyer Name: {{var
+				buyer_name}} <br /> Email id: {{var buyer_email}}<br /> Order id:
+				#{{var increment_id}}<br />
+			</p> <br />
+		<br /> {{layout handle="marketplace_order_items" order_id=$order_id
+			seller_id=$seller_id area="frontend"}}
+
+		</td>
+	</tr>
+</table>
+{{template config_path="design/email/footer_template"}}

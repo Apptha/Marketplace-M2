@@ -1,0 +1,97 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<div id="marketplace_downloadable_product_div" style="display:none;" class="fieldset marketplace-downloadable-products marketplace_downloadable_product_div">
+            <?php
+            /**
+             * Downloadable information
+             */
+            ?>
+                <h4 class="legend"><?php echo __('Downloadable Information'); ?></h4>
+                <ul class="form-list">
+                    <li class="mp_dp_head"><?php echo __('Samples'); ?></li>
+                    <li class="fields mp_dp_fields">
+                        <div class="headings">
+                            <span class="label"><label for="name"><?php echo __('Title'); ?></label>
+                            </span>
+                            <span class="value">
+                                <input type="text" class="input-text" name="product[samples_title]" value="Samples">
+                            </span>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="marketplace-sample" style="padding:0px;">
+                            <table cellspacing="0" class="data border">
+                                <tbody id="sample_items_body" class="sample_items_body">
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="100" class="a-right">
+                                        <?php
+                                        /**
+                                         * Display Add new Row option
+                                         */
+                                        ?>
+                                            <button id="add_sample_item" name="sample_items_body"  title="<?php echo 'Add New Row'; ?>" type="button" class="button scalable add add-select-row" onclick="addMarketPlaceDownloadableSamplesRow(this.name)">
+                                                <span><span><?php echo __('Add New Row'); ?></span></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </li>
+                    <?php
+                    /**
+                     * Show download option
+                     */
+                    ?>
+                    <li class="mp_dp_head"><?php echo __('Download'); ?></li>
+                    <li class="fields mp_dp_fields">
+                        <div class="headings">
+                            <span class="label"><label for="name"><?php 'Title'; ?></label></span>
+                            <span class="value"><input type="text" class="input-text downloadable_links_title" id="downloadable_links_title" name="product[links_title]" value="Download"></span>
+                            <div class="clear"></div>
+                            <span class="label"><label for="name"><?php echo __('Links can be purchased separately'); ?></label></span>
+                            <select name="product[links_purchased_separately]" id="downloadable_link_purchase_type" class="downloadable_link_purchase_type" title=""><option value="1"><?php echo 'Yes'; ?></option><option value="0" selected="selected"><?php
+                             echo 'No'; ?></option></select>
+                            <div class="clear"></div>
+                        </div>
+                        <!--[<?php echo 'GLOBAL'; ?>]-->
+                        <table width="100%" cellspacing="CCC">
+                            <tbody id="link_items_body" class="link_items_body">
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="8" class="a-right">
+                                        <button id="add_link_item" class="button" title="Add New Row" type="button"  name="link_items_body" onclick="addMarketPlaceDownloadableLinksRow(this.name)">
+                                            <span><span><span><?php echo __('Add New Row'); ?></span></span></span></button></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </li>
+                </ul>
+                <div class="clear"></div>
+            </div>

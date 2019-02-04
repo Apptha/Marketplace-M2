@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+! -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+  <default>
+    <marketplace>
+      <seller>
+        <admin_approval_template>marketplace_seller_admin_approval_template</admin_approval_template>
+        <admin_disapproval_template>marketplace_seller_admin_disapproval_template</admin_disapproval_template>
+        <contact_admin_template>marketplace_seller_contact_admin_template</contact_admin_template>
+        <contact_seller_template>marketplace_seller_contact_seller_template</contact_seller_template>
+      </seller>
+      <review>
+        <admin_approval_template>marketplace_review_admin_approval_template</admin_approval_template>
+        <admin_disapproval_template>marketplace_review_admin_disapproval_template</admin_disapproval_template>
+        <admin_notification_template>marketplace_review_admin_notification_template</admin_notification_template>
+      </review>
+      <subscription>
+        <sellersuccess_notification_template>marketplace_subscription_sellersuccess_notification_template</sellersuccess_notification_template>
+        <admin_notification_template>marketplace_subscription_admin_notification_template</admin_notification_template>
+        <seller_notification_template>marketplace_subscription_seller_notification_template</seller_notification_template>
+      </subscription>
+      <product>
+        <approval_template>marketplace_product_approval_template</approval_template>
+        <disapproval_template>marketplace_product_disapproval_template</disapproval_template>
+      </product>
+      <order>
+        <notification_template>marketplace_order_notification_template</notification_template>
+        <item_request_template>marketplace_order_item_request_template</item_request_template>
+        <item_cancel_return_template>marketplace_order_item_cancel_return_template</item_cancel_return_template>
+      </order>
+    </marketplace>
+    <captcha translate="label">
+      <frontend>
+        <areas>
+          <seller_create>
+              <label>Seller Create</label>
+          </seller_create>
+           <seller_login>
+              <label>Seller Login</label>
+           </seller_login>
+        </areas>
+      </frontend>
+    </captcha>
+    <customer>
+            <captcha>
+                <always_for>
+                    <seller_create>1</seller_create>
+                </always_for>
+            </captcha>
+    </customer>
+    <carriers>
+      <apptha>
+        <active>1</active>
+        <model>Apptha\Marketplace\Model\Carrier\Shipping</model>
+        <name>Apptha Seller Shipping</name>
+        <price>0</price>
+        <title>Seller Shipping</title>
+        <type>store</type>
+        <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
+      </apptha>
+    </carriers>
+  </default>
+</config>

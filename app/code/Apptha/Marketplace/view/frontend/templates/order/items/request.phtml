@@ -1,0 +1,112 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+?>
+<?php
+$orderId = $block->getOrderId ();
+$productId = $block->getProductId ();
+$sellerId = $block->getSellerId ();
+/**
+ * Get order and order items details
+ */
+$sellerOrder = $this->getOrderDetails ( $orderId, $sellerId );
+$sellerOrderItem = $this->getOrderItemDetails ( $orderId, $sellerId, $productId );
+$currencySymbol = $orderCurrencyCode = '';
+$orderCurrencyCode = $sellerOrder->getOrderCurrencyCode ();
+if (! empty ( $orderCurrencyCode )) {
+ $currencySymbol = $block->getCurrencySymbol ( $orderCurrencyCode );
+ if (empty ( $currencySymbol )) {
+  $currencySymbol = $orderCurrencyCode;
+ }
+}
+?>
+<div class="table-wrapper order-items">
+    <table class="data table table-order-items" id="my-orders-table">
+        <thead>
+            <tr>
+                <th style="padding: 8px 10px; border: 1px solid #666;"
+                    class="col name"><?php echo __('Product Name');?></th>
+                <th style="padding: 8px 10px; border: 1px solid #666;"
+                    class="col sku"><?php echo __('SKU');?></th>
+                <th style="padding: 8px 10px; border: 1px solid #666;"
+                    class="col price"><?php echo __('Price');?></th>
+                <th style="padding: 8px 10px; border: 1px solid #666;"
+                    class="col qty"><?php echo __('Qty');?></th>
+                <th style="padding: 8px 10px; border: 1px solid #666;"
+                    class="col subtotal"><?php echo __('Subtotal');?></th>
+            </tr>
+        </thead>
+        <tbody>
+<?php
+$productData = $sellerOrderItem->getData ();
+$decodedOptions = json_decode ( ($productData ['options']), true );
+?>
+                <tr id="<?php echo $orderId?>">
+                <td style="padding: 8px 10px; border: 1px solid #666;"
+                    class="col name" data-th="Product Name"><strong
+                    class="product name product-item-name"><?php echo $productData['product_name'];?><br />
+        <?php
+        
+        if (isset ( $decodedOptions ['options'] )) {
+         $options = $decodedOptions ['options'];
+         foreach ( $options as $option ) {
+          ?><h4><?php  echo $option['label'];?></h4>
+         <?php echo $option['value'];?><br /><?php
+         }
+        }
+        
+        ?></strong></td>
+                <td style="padding: 8px 10px; border: 1px solid #666;"
+                    class="col sku" data-th="SKU"><?php echo $productData['product_sku'];?></td>
+                <td style="padding: 8px 10px; border: 1px solid #666;"
+                    class="col price" data-th="Price">
+                    <span  class="price-excluding-tax" data-label="Excl. Tax">
+                        <span class="cart-price"> <span class="price"><?php echo $currencySymbol. round($productData['product_price'],2);?></span>
+                    </span>
+                </span></td>
+                <td style="padding: 8px 10px; border: 1px solid #666;"
+                    class="col qty" data-th="Qty">
+                    <ul class="items-qty"
+                        style="margin-left: 0; padding-left: 0; list-style: none">
+                        <li class="item"
+                            style="list-style: none; margin-left: 0;">
+                            <span class="title"><?php echo __('Ordered');?></span>
+                            <span class="content"><?php echo round($productData['product_qty'],2);?></span>
+                        </li>
+                    </ul>
+                </td>
+                <td style="padding: 8px 10px; border: 1px solid #666;"
+                    class="col subtotal" data-th="Subtotal">
+                    <span class="price-excluding-tax" data-label="Excl. Tax">
+                        <span class="cart-price"> <span class="price"><?php echo $currencySymbol. round($productData['product_price']*$productData['product_qty'],2);?></span>
+                    </span>
+                </span></td>
+        </tbody>
+    </table>
+</div>

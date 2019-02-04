@@ -1,0 +1,280 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+! -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Backend/etc/system_file.xsd">
+  <system>
+    <tab id="apptha" translate="label" sortOrder="1">
+      <label>Marketplace</label>
+    </tab>
+    <section id="marketplace" translate="label" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+      <label>Settings</label>
+      <tab>apptha</tab>
+      <resource>Apptha_Marketplace::system_config</resource>
+      <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>General Settings</label>
+        <field id="enable_in_frontend" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Activate Marketplace </label>
+          <comment>Enable/ Disable Marketplace.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="title" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enter Title </label>
+          <comment>Title which appears on frontend </comment>
+          <depends>
+            <field id="enable_in_frontend">1</field>
+          </depends>
+        </field>
+        <field id="googlemap" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enter Google Map API </label>
+          <comment>Enter Google Map API for Seller Profile Page </comment>
+          <depends>
+            <field id="enable_in_frontend">1</field>
+          </depends>
+        </field>
+      </group>
+      <group id="seller" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Seller Settings</label>
+        <field id="seller_approval" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Need Admin Approval</label>
+          <comment>Enable auto approval of sellers </comment>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="seller_commission" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label> Seller Commission(%) </label>
+          <validate>validate-digits-range digits-range-0-100</validate>
+          <comment>Enter global commission for sellers </comment>
+        </field>
+        <field id="seller_link" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Display Seller Profile Link in Product Detail Page</label>
+          <comment> Display seller link in product page </comment>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="contact_admin" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Contact Admin</label>
+          <comment>Enable contact admin functionality in frontend</comment>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="seller_lowstock" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Low Stock Notification</label>
+          <comment>To update low stock value Store -> Configuration -> Catalog -> Inventory -> Product Stock Options Update 'Notify For Quantity Below' field. </comment>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="admin_approval_template" translate="label comment" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Select Admin Approval Email Template For Seller</label>
+          <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+        </field>
+        <field id="admin_disapproval_template" translate="label comment" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Select Admin Disapproval Email Template For Seller</label>
+          <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+        </field>
+        <field id="contact_admin_template" translate="label comment" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Select Contact Admin Email Template</label>
+          <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+        </field>
+        <field id="contact_seller_template" translate="label comment" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Select Contact Seller Email Template</label>
+          <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+        </field>
+      </group>
+      <group id="product" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Product Settings</label>
+        <field id="product_approval" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Product Auto Approval</label>
+          <comment>Enable auto approval of product </comment>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="type" translate="label" type="multiselect" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Select Product Types</label>
+          <comment>Select product type</comment>
+          <source_model>Apptha\Marketplace\Model\Config\Source\Producttype</source_model>
+        </field>
+        <field id="custom_options" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enable Product Custom Options</label>
+          <comment>Enable product custom options while adding the product </comment>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="approval_template" translate="label comment" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Select Product Approval Template</label>
+          <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+        </field>
+        <field id="disapproval_template" translate="label comment" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Select Product Disapproval Template</label>
+          <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+        </field>
+        <field id="delete_option" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enable Product delete option for sellers</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="bulk_upload" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Bulk upload option for sellers</label>
+          <comment>Enable bulk upload of products(using csv and zip file) </comment>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="assign_product" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enable assign product for sellers</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="custom_attributes" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enable custom attributes option</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="product_video" translate="label" type="select" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enable product video</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+          <comment>Please add youtube API key in the following path. Stores -> Configuration -> Catalog -> Catalog -> Product Video -> Youtube API Key</comment>
+        </field>
+      </group>
+      <group id="order" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Order Management</label>
+        <field id="seller_order" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enable Seller Order Management</label>
+          <comment>Enable to allow order management for sellers(invoice,shipment,cancel and refund)</comment>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="notification_template" translate="label comment" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Select Seller New Order Notification Email Template</label>
+          <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+        </field>
+        <field id="item_request_template" translate="label comment" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Select Buyer Order Item Cancel/Refund/Return Request Email Template</label>
+          <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+        </field>
+        <field id="item_cancel_return_template" translate="label comment" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Select Seller Order Item Cancel/Return Email Template</label>
+          <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+        </field>
+      </group>
+      <group id="review" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Seller Review Settings</label>
+        <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Activate Seller Review </label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="approval" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Review Auto Approval</label>
+          <comment>Enable auto approval of Seller Review </comment>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="notification" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Enable Review Approval Notification</label>
+          <comment>Notification email will be sent to customer and seller</comment>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="admin_notification_template" translate="label comment" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Select Admin Notification Email Template For Seller Review</label>
+          <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+        </field>
+        <field id="admin_approval_template" translate="label comment" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Select Admin Approval Email Template For Seller Review</label>
+          <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+        </field>
+        <field id="admin_disapproval_template" translate="label comment" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Select Admin Disapproval Email Template For Seller Review</label>
+          <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+        </field>
+      </group>
+      <group id="subscription" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Seller Subscription Settings</label>
+        <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Activate Seller Subscription</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="merchant_paypal_id" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Merchant Paypal Id</label>
+        </field>
+        <field id="sandbox_mode" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="3">
+          <label>Enable Sandbox Mode</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="notification" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Enable Subscription Notifications</label>
+          <comment>Notification email will be sent to admin and seller</comment>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="sellersuccess_notification_template" translate="label comment" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Select Subscription Successful Notification Email Template For Seller</label>
+          <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+        </field>
+        <field id="admin_notification_template" translate="label comment" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Select Subscription Successful Notification Email Template For Admin</label>
+          <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+        </field>
+        <field id="seller_notification_template" translate="label comment" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Select Subscription Expired Notification Email Template For Seller</label>
+          <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+        </field>
+      </group>
+    </section>
+    <section id="carriers" translate="label" type="text" sortOrder="320" showInDefault="1" showInWebsite="1" showInStore="1">
+      <group id="apptha" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label> Apptha Seller Shipping</label>
+        <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Enabled</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="name" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Method Name</label>
+        </field>
+        <field id="price" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Price</label>
+          <validate>validate-number validate-zero-or-greater</validate>
+          <comment>Price for Admin product(s)/per item</comment>
+        </field>
+        <field id="title" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Title</label>
+        </field>
+        <field id="type" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+          <label>Shipping Type</label>
+          <source_model>Apptha\Marketplace\Model\Config\Source\Shippingtype</source_model>
+          <comment>The shipping price will be calculated depands on seller store/product(s).</comment>
+        </field>
+        <field id="specificerrmsg" translate="label" type="textarea" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Displayed Error Message</label>
+        </field>
+      </group>
+    </section>
+  </system>
+</config>

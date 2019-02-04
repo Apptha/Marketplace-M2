@@ -1,0 +1,434 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+?>
+<?php
+/**
+ * Checking whether product add/edit
+ */
+$nationalShippingAmount = $internationalShippingAmount = '';
+$productId = $this->getRequest ()->getParam ( 'id' );
+$product = $block->getProductData ( $productId );
+$productType = $product->getTypeId ();
+$isInStock = 1;
+$productCategoryIds = $mediaGallery = array ();
+$assignprodSku = $assignprodPrice = $assignprodDesc = $assignprodDesc = $assignprodQty = $isInStock = '';
+if (! empty ( $productId )) {
+ $productData = $block->getProductData ( $productId );
+ $nationalShippingAmount = $productData->getNationalShippingAmount ();
+ $internationalShippingAmount = $productData->getInternationalShippingAmount ();
+ $assignprodDetails = $block->getAssignProductDetails ( $productId );
+ $assignprodSku = $assignprodDetails ['sku'];
+ $assignprodPrice = $assignprodDetails ['price'];
+ $assignprodDesc = $assignprodDetails ['desc'];
+ $assignprodQty = $assignprodDetails ['qty'];
+ $isInStock = $assignprodDetails ['is_in_stock'];
+}
+?>
+<form class="form product form-product"
+    action="<?php echo $block->getEditAssignProductUrl() ?>"
+    method="post" id="edit_assign_product" enctype="multipart/form-data"
+    autocomplete="off">
+    <input type="hidden" name="product_id" />
+    <fieldset class="fieldset create info">
+        <legend class="legend">
+            <span><?php echo __('Product Details') ?></span>
+        </legend>
+        <br>
+        <div class="field required">
+<?php
+/**
+ * To add Sku for Product
+ * Field:Sku
+ */
+?>
+<input type="hidden" id="prod-id" name="prod-id"
+                value="<?php echo $productId; ?>" /> <label for="sku"
+                class="label"><span><?php echo __('SKU') ?></span></label>
+            <div class="control">
+                <input type="text" name="assignprod[sku]" id="prod-sku"
+                    title="<?php echo __('SKU') ?>" class="input-text"
+                    value="<?php echo $assignprodSku;?>"
+                    data-validate="{required:true}"> <input
+                    type="hidden" id="currentsku" />
+                <div for="sku" generated="true"
+                    class="available name-error" id="name-error"></div>
+                <div class="sku-update-loader cssload-jumping">
+                    <span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <input type="hidden" id="sku_successmessage"
+                    value="<?php echo __('SKU is available');?>" /> <input
+                    type="hidden" id="sku_errormessage"
+                    value="<?php echo __('SKU is not available');?>" />
+            </div>
+<?php
+/**
+ * To add Price for Product
+ * Field:price
+ */
+?>
+<?php if($productType!="configurable"){?>
+<label for="price" class="label"><span><?php echo __('Price') ?></span></label>
+            <div class="control">
+                <input type="text" name="assignprod[price]"
+                    id="prod-price"
+                    value="<?php echo $assignprodPrice; ?>"
+                    title="<?php echo __('Price') ?>" class="input-text"
+                    data-validate="{required:true,'validate-greater-than-zero':true}">
+            </div>
+<?php
+ /**
+  * To add stock data for Product
+  * Field:qty,is in stock
+  */
+ ?>
+    <label for="qty" class="label"><span><?php echo __('Quantity') ?></span></label>
+            <div class="control">
+                <input type="text" name="assignprod[qty]" id="prod-qty"
+                    value="<?php echo $assignprodQty?>"
+                    title="<?php echo __('Quantity') ?>"
+                    class="input-text"
+                    data-validate="{'required':true,'validate-number':true}">
+            </div>
+<?php
+ /**
+  * Set in/out of stock
+  */
+ ?>
+<select id="prod-is-in-stock" name="assignprod[is-in-stock]"
+                title="<?php echo __('Tax Class') ?>"
+                class="validate-select">
+                <option value="1"
+                    <?php
+ 
+ if ($isInStock == 1 || empty ( $isInStock )) {
+  echo 'selected="selected"';
+ }
+ ?>><?php echo __('In Stock'); ?></option>
+                <option
+                    <?php
+ 
+ if ($isInStock == 0) {
+  echo 'selected="selected"';
+ }
+ ?>
+                    value="0"><?php echo __('Out of Stock'); ?></option>
+            </select>
+        </div>
+<?php }?>
+<?php
+
+/**
+ * To add Information for Product
+ * Field:information
+ */
+?>
+
+<label for="product_information" class="label"><span><?php echo __('Product Information') ?></span></label>
+        <div class="control">
+            <textarea id="prod-description"
+                name="assignprod[description]" rows="2" cols="15"><?php echo $assignprodDesc;?></textarea>
+        </div>
+ <?php
+ /**
+  * Submission of form
+  */
+ ?>
+
+</fieldset>
+
+<?php
+/**
+ * Configurable Products
+ */
+?>
+<?php
+
+if ($productType == "configurable") {
+ $childrenIds = array ();
+ $baseConfigId = $product->getAssignProductId ();
+ $attributes = $block->getAssignProductAttributes ( $product );
+ $productAttributes = $block->getProductUsedAttributes ( $product );
+ $products = $block->getAssociatedProducts ( $product );
+ $associatedProducts = $products->getData ();
+ ?>
+<h2><?php echo __("Edit Associated Variants");?></h2>
+
+    <table>
+        <tr>
+            <th></th>
+            <th><?php echo __('Price')?></th>
+            <th><?php echo __('Qty')?></th>
+<?php foreach($attributes as $productAttributeCode){?>
+<th>
+<?php echo  $productAttributeCode->getProductAttribute()->getAttributeCode();?>
+</th>
+<?php }?>
+   </tr>
+<?php
+ $ids = $baseSimpleProductIds = array ();
+ if (! empty ( $associatedProducts )) {
+  foreach ( $associatedProducts as $associatedProduct ) {
+   $asscprod = $block->getProductData ( $associatedProduct ['entity_id'] );
+   $asscProdName = $asscprod->getName ();
+   $asscProdSku = $asscprod->getSku ();
+   $asscProdPrice = $asscprod->getPrice ();
+   $ids [] = $id = $associatedProduct ['entity_id'];
+   $stockData = $block->getProductStockDataQty ( $id );
+   $qty = $stockData->getQty ();
+   $baseSimpleProductIds [] = $asscprod->getConfigAssignSimpleId ();
+   ?>
+<tr>
+            <td><input type="checkbox" name="variant[]" class="variant"
+                value="<?php echo $id;?>" /></td>
+            <td><input type="text" name="price[<?php echo $id;?>]"
+                value="<?php echo $asscProdPrice;?>"
+                data-validate="{required:true,'validate-greater-than-zero':true}" /></td>
+            <td><input type="text" name="qty[<?php echo $id;?>]"
+                value="<?php echo $qty;?>"
+                data-validate="{required:true,'validate-greater-than-zero':true}" /></td>
+   <?php foreach($productAttributes as $proAttribute){?>
+<td>
+<?php echo $_attributeValue = $asscprod->getResource ()->getAttribute ( $proAttribute )->getFrontend ()->getValue ( $asscprod );?>
+</td>
+<?php }?>
+</tr>
+<?php
+  }
+  $baseproduct = $block->getProductData ( $baseConfigId );
+  $baseProducts = $block->getAssociatedProducts ( $baseproduct );
+  $childProducts = $baseProducts->getData ();
+  foreach ( $childProducts as $childProduct ) {
+   $childrenIds [] = $childProduct ['entity_id'];
+  }
+  $result = array_diff ( $childrenIds, $baseSimpleProductIds );
+ ?>
+<?php foreach ( $result as $resultProduct ) {
+    $resProd = $block->getProductData ( $resultProduct );
+    ?>
+        <tr>
+            <td><input type="checkbox" name="variant[]" class="variant"
+                value="<?php echo $resultProduct;?>" /></td>
+            <td><input type="text"
+                name="price[<?php echo $resultProduct;?>]"
+                data-validate="{required:true,'validate-greater-than-zero':true}" /></td>
+            <td><input type="text"
+                name="qty[<?php echo $resultProduct;?>]"
+                data-validate="{required:true,'validate-greater-than-zero':true}" /></td>
+   <?php foreach($productAttributes as $proAttribute){?>
+<td>
+<?php echo $_attributeValue = $resProd->getResource ()->getAttribute ( $proAttribute )->getFrontend ()->getValue ( $resProd ); ?>
+</td>
+<?php }?>
+</tr>
+<?php }?>
+<?php
+ }
+ $ids = array_unique ( $ids );
+ ?>
+</table>
+    <script>
+require([
+         'jquery',
+         'mage/mage'
+     ], function($){
+var arrayFromPHP = <?php echo json_encode($ids); ?>;
+$.each(arrayFromPHP, function(i, val){
+
+   $("input[value='" + val + "']").prop('checked', true);
+
+});
+
+$('td input[type="checkbox"]').change(function () {
+  $(this).closest('tr').find('input[type="text"]').prop('disabled', !this.checked);
+}).change();
+  $("#edit_assign_product").submit(function(){
+  var checked = $("#edit_assign_product input:checked").length > 0;
+  if (!checked){
+      alert("<?php echo __('Please check at least one Combination') ?>");
+      return false;
+  }
+}); 
+   
+});
+
+</script>
+<?php
+}
+?>
+
+<?php
+$isSellerProductShipping = $this->isSellerProductShipping ();
+if ($isSellerProductShipping == 1) {
+ ?>
+<div>
+        <label for="national_shipping_amount" class="label"><span><?php echo __('National Shipping Amount') ?></span><em
+            style="color: red; font-weight: normal; font-family: 'Open Sans', sans-serif; font-size: 12px;">*</em></label>
+        <input type="text" name="national_shipping_amount"  id="national_shipping_amount"
+            value="<?php echo $nationalShippingAmount; ?>" title="<?php echo __('National Shipping Amount') ?>"
+            class="input-text" data-validate="{required:true,'validate-greater-than-zero':true}">
+    </div>
+    <div>
+        <label for="international_shipping_amount" class="label"><span><?php echo __('International Shipping Price') ?></span><em
+            style="color: red; font-weight: normal; font-family: 'Open Sans', sans-serif; font-size: 12px;">*</em></label>
+        <input type="text" name="international_shipping_amount"  id="international_shipping_amount"
+            value="<?php echo $internationalShippingAmount; ?>" title="<?php echo __('International Shipping Amount') ?>"
+            class="input-text"
+            data-validate="{required:true,'validate-greater-than-zero':true}">
+    </div>
+<?php  } ?>
+
+   <div class="actions-toolbar">
+        <div class="primary">
+            <button id="btn_save_assign_product" type="submit"
+                class="action submit primary"
+                title="<?php echo __('Save') ?>">
+                <span><?php echo __('Save') ?></span>
+            </button>
+        </div>
+    </div>
+
+    <input type="hidden" id="sku_validate_url" name="sku_validate_url"
+        value="<?php echo $block->getSkuValidateAjaxUrl(); ?>" />
+    <script>
+require([
+    'jquery',
+    'mage/mage'
+], function($){
+$('.sku-update-loader').hide();
+    var dataForm = $('#edit_assign_product');
+    var ignore = null;
+    var productsku;
+    var skuAvailableFlag;
+    dataForm.mage('validation', {
+            ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
+        }).find('input:text').attr('autocomplete', 'off');
+   
+    $('#btn_save_edit_assign_product').on('click', function(e) {
+    $('#edit_assign_product').submit();
+    });
+
+    
+  var skuAvailableFlag=0;
+    $('#prod-sku').keyup(function(){ 
+    $('.sku-update-loader').show();
+        productsku= $('#prod-sku').val(); 
+        if(productsku.length!==0){
+          $('#prod-sku').removeClass("mage-error");
+          $('#sku-error').css("display", "none");
+           if(currentsku!=productsku  ){    
+           $.ajax({
+            type: "POST",
+            url: $('#sku_validate_url').val(),
+            data: {sku: productsku},
+            success: function(transportdata){ 
+             if(transportdata==0){
+                skuAvailableFlag=0;
+                $('.available').html($('#sku_successmessage').val());   
+                $('.available').css("color", "green");
+                $('.available').css("font-size", "1.2rem"); 
+                $("#btn_save_edit_assign_product").prop("disabled", false);
+               } 
+             else{
+               $('.available').html($('#sku_errormessage').val()); 
+               $('.available').css("color", "#e02b27");
+               $('.available').css("font-size", "1.2rem"); 
+               $('#sku').addClass("mage-error");
+               skuAvailableFlag=1;  
+              } 
+              $('.sku-update-loader').hide();
+                }
+            });  
+      }  
+        }
+       
+         if(productsku.length==0){
+            $('.available').css("display", "none"); 
+            $('.sku-update-loader').hide();
+         } 
+        else{
+            $('.available').css("display", "block"); 
+        }                              
+  });
+
+$("#edit_assign_product").submit(function(){
+
+   if(skuAvailableFlag == 0){
+            return true;    
+            }else{
+            $('#prod-sku').focus();    
+            return false; 
+            }
+           
+    }); 
+
+ 
+});
+</script>
+    <script>
+require([
+    'jquery',
+    'mage/adminhtml/wysiwyg/tiny_mce/setup'
+], function(jQuery){
+var config = '',
+    editor;
+jQuery.extend(config, {
+    settings: {
+        theme_advanced_buttons1 : 'bold,italic,|,justifyleft,justifycenter,justifyright,|,',
+        theme_advanced_buttons2: null,
+        theme_advanced_buttons3: null,
+        theme_advanced_buttons4: null,
+        theme_advanced_statusbar_location: null
+    },
+    files_browser_window_url: false
+});
+editor = new tinyMceWysiwygSetup(
+    'prod-description',
+    config
+);
+editor.turnOn();
+jQuery('#prod-description')
+    .addClass('wysiwyg-editor')
+    .data(
+        'wysiwygEditor',
+        editor
+    );});
+
+require([
+    'jquery',
+    'mage/mage'
+], function($){
+   var dataForm = $('#edit_assign_product');
+    var ignore = null;
+    dataForm.mage('validation', {
+            ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
+        }).find('input:text').attr('autocomplete', 'off');
+
+});
+</script>

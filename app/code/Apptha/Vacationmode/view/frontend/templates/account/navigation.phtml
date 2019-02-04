@@ -1,0 +1,71 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+?>
+<?php
+$sellerGroupId = $customerId = $customerGroupId = $status = '';
+$urlInterface = \Magento\Framework\App\ObjectManager::getInstance ()->get ( 'Magento\Framework\UrlInterface' );
+$currentUrl = $urlInterface->getCurrentUrl ();
+$helper = $this->helper ( 'Apptha\Marketplace\Helper\Objectmanager' );
+$customerSession = $helper->customerSession ();
+$customerDatas = $customerSession->getCustomer ();
+if ($customerSession->isLoggedIn ()) {
+    $customerId = $customerSession->getId ();
+    $customerGroupId = $customerDatas->getGroupId ();
+    $helper = $this->helper ( 'Apptha\Marketplace\Helper\Objectmanager' );
+    $sellerGroupData = $helper->customerSessionGroup ( $customerGroupId );
+    $sellerGroupId = $sellerGroupData->getId ();
+    $status = $helper->sellerStatus ( $customerId );
+}
+?>
+ <?php
+$helper = $this->helper ( 'Apptha\Marketplace\Helper\Objectmanager' );
+$requestInterface = $helper->actionController ();
+$routeName = $requestInterface->getRouteName ();
+$action = $requestInterface->getActionName();
+if ($routeName != 'catalog' && $customerGroupId == $sellerGroupId && $routeName != 'catalogsearch' ) {
+    ?>
+  <?php
+    $seller = $this->helper ( 'Apptha\Vacationmode\Helper\Data' );
+    $isVacationModeEnabled = $seller->getVacationMode ();
+    if ($isVacationModeEnabled) {
+        ?>
+<div class="block block-collapsible-nav" <?php if($routeName !='marketplace' && $routeName !='vacationmode' && $action !='view'){?>style="margin-bottom:-75px;<?php }?>">
+     <div class="content block-collapsible-nav-content"
+          id="block-collapsible-navigation">
+          <ul class="nav items">
+               <li
+                    class="nav item <?php if($currentUrl==$block->getUrl('vacationmode/seller/vacationmode')){?>current<?php }?>"><a
+                    href="<?php echo $block->getUrl('vacationmode/seller/vacationmode') ?>"><?php echo __('Vacation Mode'); ?></a></li>
+                            <li class="nav item"><span class="delimiter"></span></li>
+          </ul>
+     </div>
+</div>
+<?php }?>
+<?php }?>

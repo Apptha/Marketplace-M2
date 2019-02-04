@@ -1,0 +1,271 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+/**
+ * Checking for configurable status
+ */
+$status = 0;
+$productTypes = $block->getProductTypes ();
+if (in_array ( 'configurable', $productTypes )) {
+ $status = 1;
+}
+if ($status == 1) {
+
+ $productId = $this->getRequest ()->getParam ( 'product_id' );
+ $typeId = '';
+ if (! empty ( $productId )) {
+  $productData = $block->getConfigurableProductData ( $productId );
+  $typeId = $productData->getTypeId ();
+ }
+ $blockObj= $block->getLayout()->createBlock('Apptha\Marketplace\Block\Product\Manage');
+ $minimumQuantity = $blockObj->getStockItem();
+ $productDeleteOption = $blockObj->getProductDeleteApproval ();
+ ?>
+<?php
+
+ /**
+  * This template files contains configurable product form
+  */
+ ?>
+<div id="marketplace-configurble-product-content"
+    class="fieldset marketplace-configurble-product"
+    <?php if(count($productTypes) != 1 && $typeId != 'configurable'){?>style="display: none;" <?php } ?>>
+    <input type="hidden" value="<?php echo ($typeId == 'configurable')?1:0;?>" id="is_configurable_product"  name="is_configurable_product">
+    <input type="hidden" id="current_product_id" value="<?php echo $productId; ?>" name="product_id" />
+    <h2 class="legend"><?php echo __('Configurations'); ?></h2>
+    <div class="note" data-role="product-create-configuration-info">
+<?php echo __('Configurable products allow customers to choose options (Ex: shirt color).'); ?>
+<?php echo __('You need to create a simple product for each configuration (Ex: a product for each color).'); ?>
+</div>
+    <button id="btn_configurable_product" type="button"
+        class="action submit primary"
+        title="<?php echo __('Create Configurations'); ?>">
+        <span><?php echo __('Create Configurations'); ?></span>
+    </button>
+    <div id="configurable_variant_error" style="display: none; color: red;"><?php echo __('Kindly create configurations before save this product'); ?></div>
+    <div id="current_variants" style="display: none;"> <strong><?php echo __('Current Variations'); ?></strong>
+    </div>
+    <div id="existing_configurable_section_content_form"  class="configurable_section_content_form">
+<?php
+
+ if (! empty ( $productId ) && $typeId == 'configurable') {
+  $productAttributes = $productData->getTypeInstance ( true )->getConfigurableAttributes ( $productData );
+  ?>
+<strong><?php echo __('Current Variations'); ?></strong>
+        <table>
+            <tr>
+                <th><?php echo __('Images'); ?></th>
+                <th><?php echo __('SKU'); ?></th>
+                <th><?php echo __('Quantity'); ?></th>
+<?php foreach($productAttributes as $productAttribute){ ?>
+<th><?php
+   echo $block->getConfigurableProductAttributeLabel ( $productAttribute->getProductAttribute ()->getAttributeCode () );
+   ?></th>
+<?php } ?>
+<th><?php echo __('Price'); ?></th>
+<th><?php echo __('Actions'); ?></th>
+            </tr>
+<?php
+  /**
+   * Getting used product data's
+   */
+  $usedProductDatas = $block->getUsedAssociatedProductData ( $productData );
+  $mediaImageUrl = $block->getSimpleProductMediaImageUrl ();
+  foreach ( $usedProductDatas as $usedProductData ) {
+   $simpleProductData = $block->getConfigurableProductData ( $usedProductData );
+   ?>
+<tr>
+                <td class="cs-image"><input type="hidden" value="1" id="configurable_associated_product_flag" />
+<?php
+   $simpleProductImage = $simpleProductData->getImage ();
+   if (! empty ( $simpleProductImage ) && $simpleProductImage != 'undefined') {
+    ?>
+           <img   src="<?php echo $mediaImageUrl.DIRECTORY_SEPARATOR.$simpleProductImage; ?>"alt="<?php echo $simpleProductImage; ?>" height="200" width="200">
+<?php } ?>
+</td>
+                <td><?php echo $simpleProductData->getSku(); ?></td>
+                <td>
+<?php  
+$availableQuantity = $block->getQtyForConfigurableAssoicatedProduct($simpleProductData->getId()); 
+if($availableQuantity >= $minimumQuantity){
+    echo $availableQuantity;
+        } else{
+            echo $availableQuantity;?> <div class="stock available"><span><?=  __('Low stock') ?></span></div>
+       <?php } ?>
+</td>
+<?php foreach($productAttributes as $productAttribute){ ?>
+<td><?php
+    $optionId = $simpleProductData->getData ( $productAttribute->getProductAttribute ()->getAttributeCode () );
+    $attributeData = $simpleProductData->getResource ()->getAttribute ( $productAttribute->getProductAttribute ()->getAttributeCode () );
+    $data=array('optionid'=>$optionId,'attributedata'=>$attributeData);
+    echo $this->getLayout()->createBlock("Apptha\Marketplace\Block\Product\Configurable")->setData($data)->setTemplate("Apptha_Marketplace::product/configurableattributes.phtml")->toHtml();
+   ?></td>
+<?php } ?>
+<td><?php
+   echo round ( $simpleProductData->getPrice (), 2 );
+   echo ' [' . $block->getAssociatedVariantsBaseCurrency () . '] ';
+   ?></td>
+   <td><a
+                        href="<?php echo $block->getPrductEditUrl($simpleProductData->getId()); ?>">
+                        <span><?php echo __('Edit'); ?></span></a>
+
+      <?php if($productDeleteOption){?>
+      <a
+                        href="<?php echo $blockObj->getProductDeleteUrl($simpleProductData->getId()); ?>"
+                        onclick="return confirm('<?php
+            /**
+             * confirming message before delete
+             */
+            echo __ ( 'Are you sure want to delete?' );
+            ?>');"><span><?php echo __('Delete'); ?></span></a>
+            <?php }?>
+      </td>
+                </tr>
+<?php  } ?>
+</table>
+<?php } ?>
+</div>
+    <div id="configurable_section_content_form"
+        class="configurable_section_content_form"></div>
+</div>
+<div id="configurable-product-form" class="configurable-product-form"
+    style="display: none;">
+    <div class="cpf_inner">
+<?php
+ /**
+  * Create Product Configurations
+  */
+ ?>
+<h2 class="legend"><?php echo __('Create Product Configurations'); ?></h2>
+        <div id="select-attributes-error" style="display: none;"><?php echo __('Please select attribute(s)'); ?></div>
+        <div id="attribute-options-error"
+            style="display: none; color: red;"><?php echo __('Select options for all attributes'); ?></div>
+        <div class="steps-wizard">
+            <div class="steps-wizard-navigation">
+                <ul class="configurable-product-status nav-bar">
+                    <li id="select-attribute-status" class="active"><span><?php echo __('Select Attributes'); ?></span></li>
+                    <li id="attribute-values-status"><span><?php echo __('Attribute Values'); ?></span></li>
+                    <li id="bulk-images-price-status"><span><?php echo __('Bulk Images & Price'); ?></span></li>
+                    <li id="summary-status"><span><?php echo __('Summary'); ?></span></li>
+                </ul>
+                <div class="nav-bar-outer-actions">
+                    <span id="btn_configurable_product_cancel"
+                        style="color: #006bb4;"><?php echo __('Cancel'); ?></span>
+                    <div class="action-wrap action-wrap-next">
+                        <button disabled="disabled"
+                            id="btn_configurable_product_back"
+                            type="button" class="action submit primary"
+                            title="<?php echo __('Back'); ?>">
+                            <span><?php echo __('Back'); ?></span>
+                        </button>
+                    </div>
+                    <button id="btn_configurable_product_next"
+                        type="button"
+                        class="action submit primary action-default action-primary action-next-step"
+                        title="<?php echo __('Next'); ?>">
+                        <span><?php echo __('Next'); ?></span>
+                    </button>
+                    <button id="btn_configurable_product_generate"
+                        type="button" style="display: none;"
+                        class="action submit primary"
+                        title="<?php echo __('Generate Product'); ?>">
+                        <span><?php echo __('Generate Product'); ?></span>
+                    </button>
+                </div>
+                <div class="attributes_content">
+<?php
+ /**
+  * Select Attributes
+  */
+ ?>
+<div id="select-attribute">
+                        <form action="<?php echo $block->getConfigurableOptionsUrl(); ?>"  method="POST" enctype="multipart/form-data"  class="configurable_attribute_form"  id="configurable_attribute_form">
+                            <input type="hidden"   id="current_configurable_product_id"  value="<?php echo $productId; ?>" name="product_id" />
+<?php
+ if (! empty ( $productId )) {
+  ?>
+<p>
+<?php echo __("You can't remove or add an attribute(s)."); ?>
+</p>
+<?php } ?>
+<label class="label"><span><?php echo __('Select Attributes'); ?></span></label>
+                            <div id="select-attributes-list"></div>
+                        </form>
+                    </div>
+
+<?php
+ /**
+  * Attribute Values
+  */
+ ?>
+                      <div id="attribute-values" style="display: none;">
+                        <form   action="<?php echo $block->getConfigurableOptionsUrl(); ?>" method="POST" enctype="multipart/form-data"  class="configurable_attribute_form"  id="configurable_options_form">
+                            <label class="label"><span><?php echo __('Attribute Values'); ?></span></label>
+                            <div id="attribute-values-list"></div>
+                            <input type="hidden" name="product_id"  value="<?php echo $productId; ?>" />
+                        </form>
+                    </div>
+
+<?php
+ /**
+  * Bulk Images & Price
+  */
+ ?>
+                    <div id="bulk-images-price" style="display: none;">
+                        <label class="label"><span><?php echo __('Bulk Images, Price, and Quantity'); ?></span></label>
+                        <div id="bulk-images-list"></div>
+                        <input type="hidden"  name="configurable_product_id"  value="<?php echo $productId; ?>" />
+                    </div>
+
+<?php
+ /**
+  * Summary
+  */
+ ?>
+                    <div id="summary" style="display: none;">
+                        <label class="label"><span><?php echo __('Summary'); ?></span></label>
+                        <div id="summary-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="configurable-product-loader" style="display: none;" class="cssload-jumping">
+            <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <input type="hidden" id="variants_generate_flag" value="">
+    </div>
+<?php
+ /**
+  * Js code for configurable product
+  */
+ ?>
+    </div>
+<?php } ?>
+<input type="hidden" value="<?php echo $block->getConfigurableAttributesUrl(); ?> "name="configurable_attributes_ajax_url"id="configurable_attributes_ajax_url" />
+<input type="hidden" value="<?php echo $block->getConfigurableOptionsUrl(); ?> "name="configurable_options_ajax_url" id="configurable_options_ajax_url" />
+<input type="hidden" value="<?php echo $block->getConfigurableBulkUrl(); ?>" name="configurable_bulk_ajax_url" id="configurable_bulk_ajax_url" />
+<input type="hidden" value="<?php echo $block->getAttributeSetId(); ?>" name="default_attribute_set_id" id="default_attribute_set_id" />

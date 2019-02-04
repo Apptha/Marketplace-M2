@@ -1,0 +1,182 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+use Magento\Framework\App\Action\Action;
+$productCollection = $block->getAllProducts ();
+$vacationCollection = $block->getVacationDetails ();
+$dataHelper = $this->helper( 'Apptha\Marketplace\Helper\Data' );
+?>
+<div
+    class="allproducts block widget block-products-list grid seller_store_product">
+    <div class="products wrapper grid products-grid">
+    <?php
+    if(count($productCollection) && !$vacationCollection->getVacationMessage()){
+    ?>
+        <ol class="products list items product-items">
+   <?php
+   foreach ( $productCollection as $product ) :
+    $productPrice = number_format ( $product->getPrice (), 2, '.', '' );
+    $productId = $product->getId ();
+    $imagehelper = $this->helper ( 'Magento\Catalog\Helper\Image' );
+    $productImage = $imagehelper->init ( $product, 'category_page_list' )->constrainOnly ( FALSE )->keepAspectRatio ( TRUE )->keepFrame ( FALSE )->resize ( 240, 300 )->getUrl ();
+    ?>
+    <li class="item product product-item">
+                <div class="product-item-info"
+                    data-container="product-grid">
+                    <div class="product-img-block">
+                        <a href="<?php echo $product->getProductUrl()?>"
+                            class="product photo product-item-photo"
+                            tabindex="-1"> <span
+                            class="product-image-container"
+                            style="width: 240px;"> <span
+                                class="product-image-wrapper"
+                                style="padding-bottom: 125%;"> <img
+                                    class="product-image-photo"
+                                    src="<?php echo $productImage;?>"
+                                    alt="<?php echo $product->getName();?>"
+                                    width="240" height="300"></span>
+                            </span>
+                        </a>
+                        <a href="<?php /* @escapeNotVerified */ echo $product->getProductUrl() ?>">
+                            <div class="pro-overlay"></div>
+                        </a>
+                    </div>
+                    <div class="product details product-item-details">
+                        <strong class="product name product-item-name">
+                            <a class="product-item-link"
+                            href="<?php echo $product->getProductUrl()?>">
+                 <?php echo  $product->getName();?>
+                </a>
+                        </strong>
+                        <div class="price-box price-final_price"
+                            data-role="priceBox" data-product-id="1">
+                            <span
+                                class="price-container price-final_price tax weee">
+                                <span id="product-price-1"
+                                data-price-amount="<?php echo $productPrice;?>"
+                                data-price-type="finalPrice"
+                                class="price-wrapper "> <span
+                                    class="price"><?php
+    if (! empty ( $product->getSpecialPrice () )) {
+     echo $dataHelper->getFormattedPrice ( $product->getSpecialPrice () );
+    } else {
+     echo $block->getProductPrice ( $product );
+    }
+    ?></span>
+                            </span>
+
+                            </span>
+                        </div>
+                </div>
+                    </div>
+
+                    <div class="product-item-inner">
+                            <div class="product actions product-item-actions">
+                                <div class="actions-primary">
+         <?php if ($product->isSaleable()): ?>
+         <?php
+
+     $postParams = $block->getAddToCartPostParams ( $product );
+
+     ?>
+   <form data-role="tocart-form"
+                                        action="<?php /* @escapeNotVerified */ echo $postParams['action']; ?>"
+                                        method="post">
+                                        <input type="hidden"
+                                            name="product"
+                                            value="<?php /* @escapeNotVerified */ echo $postParams['data']['product']; ?>">
+                                        <input type="hidden"
+                                            name="<?php /* @escapeNotVerified */ echo Action::PARAM_NAME_URL_ENCODED; ?>"
+                                            value="<?php /* @escapeNotVerified */ echo $postParams['data'][Action::PARAM_NAME_URL_ENCODED]; ?>">
+                                            <?php echo $block->getBlockHtml('formkey')?>
+                                            <button type="submit"
+                                            title="<?php echo $block->escapeHtml(__('Add to Cart')); ?>"
+                                            class="action tocart primary">
+                                            <span><?php /* @escapeNotVerified */ echo __('Add to Cart') ?></span>
+                                        </button>
+                                    </form>
+                                         <?php else: ?>
+                                        <?php if ($product->getIsSalable()): ?>
+                                            <div class="stock available">
+                                        <span><?php /* @escapeNotVerified */ echo __('In stock') ?></span>
+                                    </div>
+                                        <?php else: ?>
+                                            <div
+                                        class="stock unavailable">
+                                        <span><?php /* @escapeNotVerified */ echo __('Out of stock') ?></span>
+                                    </div>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+   </div>
+                                <div data-role="add-to-links"
+                                    class="actions-secondary">
+                                    <?php if ($this->helper('Magento\Wishlist\Helper\Data')->isAllow()): ?>
+                                        <a href="#"
+                                        class="action towishlist"
+                                        title="<?php echo $block->escapeHtml(__('Add to Wish List')); ?>"
+                                        aria-label="<?php echo $block->escapeHtml(__('Add to Wish List')); ?>"
+                                        data-post='<?php /* @escapeNotVerified */ echo $this->helper('Magento\Wishlist\Helper\Data')->getAddParams($product);?>'
+                                        data-action="add-to-wishlist"
+                                        role="button"> <span><?php /* @escapeNotVerified */ echo __('Add to Wish List') ?></span>
+                                    </a>
+                                    <?php endif; ?>
+                                    <?php
+    $compareHelper = $this->helper ( 'Magento\Catalog\Helper\Product\Compare' );
+    ?>
+                                    <a href="#" class="action tocompare"
+                                        title="<?php echo $block->escapeHtml(__('Add to Compare')); ?>"
+                                        aria-label="<?php echo $block->escapeHtml(__('Add to Compare')); ?>"
+                                        data-post='<?php /* @escapeNotVerified */ echo $compareHelper->getPostDataParams($product); ?>'
+                                        role="button"> <span><?php /* @escapeNotVerified */ echo __('Add to Compare') ?></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+            </li>
+          <?php endforeach;?>
+                            </ol>
+         <?php if ($block->getPagerHtml()): ?>
+        <div class="order-products-toolbar toolbar bottom"><?php echo $block->getPagerHtml(); ?></div>
+    <?php endif ?>
+    <?php } else if($vacationCollection->getVacationMessage()) { ?>
+    <div class="vacation-mode"><span><?php echo __('Seller was on vacation mode till:&nbsp;'.$vacationCollection->getToDate());?></span>
+    <br/>
+    <span><?php echo __('Vacation Message:&nbsp;'.$vacationCollection->getVacationMessage());?></span></div>
+    <span class="noproducts"><?php /* @escapeNotVerified */ echo __('No products to display') ?></span>
+<?php } else {?>
+    <span class="noproducts"><?php /* @escapeNotVerified */ echo __('No products to display') ?></span>
+    <?php }?>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+        {
+            "[data-role=tocart-form], .form.map.checkout": {
+                "catalogAddToCart": {}
+            }
+        }
+        </script>

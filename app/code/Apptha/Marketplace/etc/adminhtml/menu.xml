@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+! -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Backend/etc/menu.xsd">
+  <menu>
+    <add id="Apptha_Marketplace::main_menu" title="Marketplace" module="Apptha_Marketplace" sortOrder="20" dependsOnModule="Apptha_Marketplace" resource="Apptha_Marketplace::main_menu" />
+    <add id="Apptha_Marketplace::manage_sellers" title="Manage Sellers" module="Apptha_Marketplace" sortOrder="2" parent="Apptha_Marketplace::main_menu" action="marketplaceadmin/sellers/index" resource="Apptha_Marketplace::manage_sellers" />
+    <add id="Apptha_Marketplace::manage_products" title="Manage Products" module="Apptha_Marketplace" sortOrder="3" parent="Apptha_Marketplace::main_menu" action="marketplaceadmin/products/index" resource="Apptha_Marketplace::manage_products" />
+    <add id="Apptha_Marketplace::manage_transactions" title="Manage Seller Orders" module="Apptha_Marketplace" sortOrder="4" parent="Apptha_Marketplace::main_menu" action="marketplaceadmin/transactions/index" resource="Apptha_Marketplace::manage_transactions" />
+    <add id="Apptha_Marketplace::manage_payments" title="Manage Seller Payments" module="Apptha_Marketplace" sortOrder="5" parent="Apptha_Marketplace::main_menu" action="marketplaceadmin/payments/index" resource="Apptha_Marketplace::manage_payments" />
+    <add id="Apptha_Marketplace::manage_review" title="Manage Seller Review" module="Apptha_Marketplace" sortOrder="6" parent="Apptha_Marketplace::main_menu" action="marketplaceadmin/review/index" resource="Apptha_Marketplace::manage_review" />
+    <add id="Apptha_Marketplace::manage_subscriptionplans" title="Manage Seller Subscription Plans" module="Apptha_Marketplace" sortOrder="7" parent="Apptha_Marketplace::main_menu" action="marketplaceadmin/subscriptionplans/index" resource="Apptha_Marketplace::manage_subscriptionplans" />
+    <add id="Apptha_Marketplace::manage_subscriptionprofiles" title="Manage Subscribed Profiles" module="Apptha_Marketplace" sortOrder="8" parent="Apptha_Marketplace::main_menu" action="marketplaceadmin/subscriptionprofiles/index" resource="Apptha_Marketplace::manage_subscriptionprofiles" />
+    <add id="Apptha_Marketplace::settings" title="Settings" module="Apptha_Marketplace" sortOrder="9" parent="Apptha_Marketplace::main_menu" action="adminhtml/system_config/edit/section/marketplace" resource="Apptha_Marketplace::settings" />
+  </menu>
+</config>

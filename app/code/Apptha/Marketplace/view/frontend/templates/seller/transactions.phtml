@@ -1,0 +1,87 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<div class="order-manage">
+   <?php
+   $transactionCollection = $block->getCollection ();
+   if ($transactionCollection->getSize () > 0) {
+    ?>
+      <div class="toolbar top"><?php echo $block->getPagerHtml(); ?></div>
+    <div class="table-wrapper orders-history">
+        <table class="data table table-order-items history"  id="my-orders-table">
+            <caption class="table-caption"><?php echo __('Orders');?></caption>
+            <tr><th><?php echo __('Invoice Id #');?></th>
+                <th><?php echo __('Date');?></th>
+                <th><?php echo __('Paid Amount');?></th>
+                <th><?php echo __('Payment Mode');?></th>
+                <th><?php echo __('Comment');?></th>
+                <th><?php echo __('Acknowledge');?></th></tr>
+  <?php foreach ($transactionCollection as $transaction){ ?>
+                       <tr>
+                <td><?php echo $transaction->getInvoice();?></td>
+                <td><?php
+     $createdAt = $transaction->getCreatedAt ();
+     $modifiedDate = new DateTime ( $createdAt );
+     $createdAt = $modifiedDate->format ( 'm/d/Y' );
+     echo $createdAt;
+     ?></td>
+                <td><?php
+     $currencySymbol = $block->getCurrencySymbol ();
+     echo $currencySymbol . round ( $transaction->getPaidAmount (), 2 );
+     ?></td>
+                <td><?php echo $transaction->getPaymentType();?></td>
+                <td><?php echo $transaction->getComment();?></td>
+                <td>
+                        <?php if($transaction->getIsAck() == 0){ ?>
+                        <a
+                    href="<?php echo $block->getUrl('marketplace/seller/transactions/id/'.$transaction->getId())?>"
+                    class="action view"> <span><?php echo __('Acknowledge');?></span>
+                </a>
+                        <?php }else{ ?>
+                        <span><?php
+
+      $modifiedDate = new DateTime ( $transaction->getAckAt () );
+      $ackAt = $modifiedDate->format ( 'm/d/Y' );
+      echo $ackAt;
+      ?></span>
+                        <?php } ?>
+                       </td>
+            </tr>
+         <?php }?>
+      </table>
+        <div class="toolbar-bottom">
+            <div class="toolbar bottom">
+            <?php echo $block->getPagerHtml(); ?>
+         </div>
+        </div>
+    </div>
+   <?php
+
+} else {
+    echo __ ( 'No Records were Found' );
+}
+?>
+</div>

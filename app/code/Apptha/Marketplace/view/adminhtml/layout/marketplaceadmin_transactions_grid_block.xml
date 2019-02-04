@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+ -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+	<body>
+		<referenceBlock name="apptha_marketplace_transactions.grid.container">
+			<block class="Magento\Backend\Block\Widget\Grid" name="apptha_marketplace_transactions.grid"
+				as="grid">
+				<arguments>
+					<argument name="id" xsi:type="string">transactionsGrid</argument>
+					<argument name="dataSource" xsi:type="object">Apptha\Marketplace\Model\ResourceModel\Order\Collection</argument>
+					<argument name="default_sort" xsi:type="string">id</argument>
+					<argument name="default_dir" xsi:type="string">desc</argument>
+					<argument name="save_parameters_in_session" xsi:type="boolean">true</argument>
+					<argument name="use_ajax" xsi:type="boolean">true</argument>
+					<argument name="grid_url" xsi:type="url" path="*/*/grid">
+						<param name="_current">1</param>
+					</argument>
+				</arguments>
+
+				<block class="Magento\Backend\Block\Widget\Grid\ColumnSet"
+					name="apptha_marketplace_transactions.grid.columnSet" as="grid.columnSet">
+					<arguments>
+						<argument name="rowUrl" xsi:type="array">
+							<item name="path" xsi:type="string">sales/order/view</item>
+							<item name="extraParamsTemplate" xsi:type="array">
+								<item name="order_id" xsi:type="string">getOrderId</item>
+							</item>
+						</argument>
+					</arguments>
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="order_id">
+						<arguments>
+							<argument name="header" xsi:type="string" translate="true">Order
+								ID</argument>
+							<argument name="index" xsi:type="string">order_id</argument>
+						</arguments>
+					</block>
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="increment_id">
+						<arguments>
+							<argument name="header" xsi:type="string" translate="true">Increment
+								ID</argument>
+							<argument name="index" xsi:type="string">increment_id</argument>
+						</arguments>
+					</block>
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="order_currency_code">
+						<arguments>
+							<argument name="header" xsi:type="string" translate="true">Currency
+								Code</argument>
+							<argument name="index" xsi:type="string">order_currency_code</argument>
+						</arguments>
+					</block>
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="eller_product_total">
+						<arguments>
+							<argument name="header" xsi:type="string" translate="true">Seller
+								Product Total</argument>
+							<argument name="index" xsi:type="string">seller_product_total</argument>
+						</arguments>
+					</block>
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="commission">
+						<arguments>
+							<argument name="header" xsi:type="string" translate="true">Commission</argument>
+							<argument name="index" xsi:type="string">commission</argument>
+						</arguments>
+					</block>
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="seller_amount">
+						<arguments>
+							<argument name="header" xsi:type="string" translate="true">Seller
+								Amount</argument>
+							<argument name="index" xsi:type="string">seller_amount</argument>
+						</arguments>
+					</block>
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="Status">
+						<arguments>
+							<argument name="header" xsi:type="string" translate="true">Status</argument>
+							<argument name="index" xsi:type="string">status</argument>
+						</arguments>
+					</block>
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="Seller">
+						<arguments>
+							<argument name="header" xsi:type="string" translate="true">Seller</argument>
+							<argument name="index" xsi:type="string">seller_id</argument>
+							<argument name="renderer" xsi:type="string">Apptha\Marketplace\Block\Adminhtml\Seller\Grid\Renderer\Name</argument>
+						</arguments>
+					</block>
+					<block class="Magento\Backend\Block\Widget\Grid\Column" as="edit"
+						acl="Apptha_Marketplace::manage_sellers">
+						<arguments>
+							<argument name="id" xsi:type="string">edit</argument>
+							<argument name="header" xsi:type="string" translate="true">Action</argument>
+							<argument name="type" xsi:type="string">action</argument>
+							<argument name="getter" xsi:type="string">getOrderId</argument>
+							<argument name="filter" xsi:type="boolean">false</argument>
+							<argument name="sortable" xsi:type="boolean">false</argument>
+							<argument name="index" xsi:type="string">stores</argument>
+							<argument name="is_system" xsi:type="boolean">true</argument>
+							<argument name="actions" xsi:type="array">
+								<item name="view_action" xsi:type="array">
+									<item name="caption" xsi:type="string" translate="true">View</item>
+									<item name="url" xsi:type="array">
+										<item name="base" xsi:type="string">sales/order/view</item>
+									</item>
+									<item name="field" xsi:type="string">order_id</item>
+								</item>
+							</argument>
+
+						</arguments>
+					</block>
+				</block>
+			</block>
+		</referenceBlock>
+	</body>
+</page>

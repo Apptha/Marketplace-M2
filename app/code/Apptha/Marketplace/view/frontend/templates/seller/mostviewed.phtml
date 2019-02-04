@@ -1,0 +1,71 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<div class="order-manage">
+<div class="table-wrapper orders-history">
+<span class="order-title"><?php echo __('Most Viewed Products');?></span>
+<table class="data table table-order-items history"
+id="my-orders-table">
+<caption class="table-caption"><?php echo __('Most Viewed Products');?></caption>
+<tr>
+<th><?php echo __('Product Name');?></th>
+<th><?php echo __('Price');?></th>
+<th><?php echo __('No of Views');?></th>
+</tr>
+  <?php
+  try  {
+  $items = $this->getMostViewedCollection();
+  $count = count($items->getData());
+
+  $count = '0';
+  $items = $items->getData();
+  foreach ( $items as $item ) {
+      $product_id = $item['entity_id'];
+      $helper = $this->helper( 'Apptha\Marketplace\Helper\Objectmanager' );
+      $product = $helper->loadProduct($product_id);
+      if($count <='4'){
+        $productName = $product->getName();
+        $productViews = $item['views'];
+        $productPrice = $product->getPrice();
+        ?>
+<tr>
+<td><?php echo $productName;?></td>
+<td><?php echo $productPrice;?></td>
+<td><?php echo $productViews; ?></td>
+</tr>
+            <?php $count = $count+1;
+      }
+  }?>
+   <?php
+} catch (Exception $e) { ?>
+    <tr> <td colspan="3" align="center"> <?php echo __ ( 'No Records were Found' ); ?> </td> </tr>
+<?php
+}
+?>
+</table>
+<div class="toolbar-bottom"></div>
+</div>
+</div>

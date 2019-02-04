@@ -1,0 +1,30 @@
+<!--@subject Your Item {{var actiontype}} successfully @-->
+
+{{template config_path="design/email/header_template"}}
+<!-- pathe of template header-->
+
+<!-- here $myvar1 , $myvar2, $myvar3, $myvar4, $myvar5, $myvar6 are variables in which we
+                                     asssign values when we use this template for send mail-->
+
+<!-- you can Modify content of template according to your requirement-->
+<table>
+	<tr>
+		<td valign="top">
+			<p style="font-size: 12px; line-height: 16px; margin: 0 0 16px 0;">
+				Hi {{var receivername}},<br />
+				<br /> Your order has been {{var actiontype}} by the {{var
+				sellername}}.<br />
+				<br /> {{var requestperson}} Name: {{var requestperson_name}} <br />
+				Email id: {{var requestperson_email}}<br /> Order id: #{{var
+				increment_id}}
+
+			</p> <b>{{var actiontype}} product(s) in the order : </b><br /> {{layout
+			handle="marketplace_order_items_request" order_id=$order_id
+			product_id=$product_id seller_id=$seller_id area="frontend"}}
+
+
+
+		</td>
+	</tr>
+</table>
+{{template config_path="design/email/footer_template"}}

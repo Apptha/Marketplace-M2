@@ -1,0 +1,500 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+$sellerProfileDetails = $block->getSellerProfile ();
+$sellerDetails = $sellerProfileDetails ['seller_details'];
+$countryDatas = $sellerProfileDetails ['country_list'];
+$logoImage = $sellerProfileDetails ['logo_image'];
+$bannerImage = $sellerProfileDetails ['banner_image'];
+$objectModelManager = \Magento\Framework\App\ObjectManager::getInstance ();
+?>
+<h2><?php echo __('Store Information');?></h2>
+<form class="form form-edit-account " enctype="multipart/form-data"
+action="<?php  echo $block->getUrl('*/*/saveprofile')?>" method="post"
+id="seller_profile_validate" data-mage-init='{"validation":{}}'>
+<fieldset class="fieldset"
+data-hasrequired="<?php  echo __('* Required Fields') ?>">
+<div class="fields">
+<div class="field store_name required">
+<label for="store_name" class="label"><span><?php  echo __('Store Name') ?></span></label>
+<div class="control">
+<input type="text" name="store_name" alt="store_name"
+id="store_name"
+value="<?php echo $sellerDetails->getStoreName();?>"
+class="input-text" data-validate="{required:true}" />
+</div>
+</div>
+</div>
+
+<div class="fields">
+<div class="field contact required">
+<label for="contact" class="label"><span><?php  echo __('Contact Number') ?></span></label>
+<div class="control">
+<input type="text" name="contact"
+value="<?php echo $sellerDetails->getContact();?>" alt="Contact"
+id="contact" class="input-text" data-validate="{required:true}" />
+<div id="phoneerror"></div>
+</div>
+</div>
+</div>
+
+
+<div class="fields">
+<div class="field address required">
+<label for="address" class="label"><span><?php  echo __('Address') ?></span></label>
+<div class="control">
+<textarea type="text" id="address" name="address" title="address"
+class="input-text address" data-validate="{required:true}"><?php echo strip_tags($sellerDetails->getAddress());?></textarea>
+
+</div>
+</div>
+</div>
+<div class="fields">
+<div class="field state required">
+<label for="state" class="label"><span><?php  echo __('State') ?></span></label>
+<div class="control">
+<input type="text" name="state" alt="state"
+value="<?php echo $sellerDetails->getState();?>" id="state"
+class="input-text"
+data-validate="{required:true,'validate-state':true}">
+</div>
+<div id="stateerror"></div>
+</div>
+</div>
+
+<div class="field country required">
+<label for="country" class="label"><span><?php /* @escapeNotVerified */ echo __('Country') ?></span></label>
+<div class="control">
+<select name="country" id="country" class="country" title="Country"
+data-validate="{'validate-select':true}">
+<option value=""><?php echo __("--Please Select--");?></option>
+                 <?php foreach ($countryDatas as $country) { ?>
+                 <option value="<?php echo $country['country_id']; ?>"
+<?php echo   $sellerDetails->getCountry() == $country['country_id'] ? ' selected="selected"' : ''; ?>>
+                <?php
+$countryModel = $objectModelManager->get ( 'Magento\Directory\Model\Country' );
+$country = $countryModel->loadByCode ( $country ['country_id'] );
+echo $country->getName ();
+?>
+                </option>
+                <?php } ?>
+              </select>
+</div>
+</div>
+
+      <?php
+/**
+ * Checking whether seller store shipping enable or not
+ */
+$isSellerStoreShipping = $this->isSellerStoreShipping ();
+if ($isSellerStoreShipping == 1) {
+?>
+
+      <label class="seo"><h3><?php echo __('Shipping Amount');?></h3></label>
+<div class="fields">
+<div class="field shipping_Amount required">
+<label for="national_shipping_Amount" class="label"><span><?php echo __('National Shipping Amount') ?></span></label>
+<div class="control">
+<input type="text" name="national_shipping_amount"
+alt="national_shipping_amount"
+value="<?php echo round($sellerDetails->getNationalShippingAmount(),2);?>"
+id="national_shipping_amount" class="input-text"
+data-validate="{required:true,'validate-greater-than-zero':true}">
+<span>[<?php echo ' '.$block->getBaseCurrencyCode().' '; ?>]</span>
+</div>
+</div>
+</div>
+<div class="fields">
+<div class="field shipping_Amount required">
+<label for="international_shipping_Amount" class="label"><span><?php echo __('International Shipping Amount') ?></span></label>
+<div class="control">
+<input type="text" name="international_shipping_amount"
+alt="international_shipping_amount"
+value="<?php echo round($sellerDetails->getInternationalShippingAmount(),2);?>"
+id="international_shipping_amount" class="input-text"
+data-validate="{required:true,'validate-greater-than-zero':true}">
+<span>[<?php echo ' '.$block->getBaseCurrencyCode().' '; ?>]</span>
+</div>
+</div>
+</div>
+<span>
+      <?php echo __('Shipping Amount based on / per product'); ?>
+      </span>
+      <?php } ?>
+
+
+      <div class="fields">
+<div class="field company_description">
+<label for="company_description" class="label"><span><?php  echo __('Company Description') ?></span></label>
+<textarea type="text" id="company_description"
+name="company_description" title="company_description"
+class="input-text companydesc wysiwyg-editor" aria-hidden="true"><?php echo strip_tags($sellerDetails->getDesc());?>
+       </textarea>
+</div>
+</div>
+<div class="field_store_logos">
+<label for="store_logo"><?php echo __('Store Logo'); ?>  </label>
+<div class="store_logos">
+<input type="file" name="store_logo" class="store_logo"
+id="store_logo" />
+<div class="clear"></div>
+<span class="market_place_image_sizes"><?php echo __('Upload image size 150 X 110'); ?></span>
+<div style="clear: both;"></div>
+<?php if($sellerDetails->getLogoName()!=''){?>
+<img src="<?php echo $logoImage.$sellerDetails->getLogoName(); ?>"
+alt="store logo" class="store_img" />
+<div style="clear: both;"></div>
+<input type="checkbox" name="remove_logo" value="1"> <?php echo __('Remove'); ?>
+<?php }?>
+</div>
+</div>
+<div id="errorlogomsg"></div>
+
+<div class="field_store_banner">
+<label for="store_banner"><?php echo __('Store Banner'); ?>  </label>
+<div class="store_banner">
+<input type="file" name="store_banner" class="store_banner"
+id="store_banner" />
+<div class="clear"></div>
+<span class="market_place_image_sizes"><?php echo __('Upload image size 1100 X 230'); ?></span>
+<div style="clear: both;"></div>
+<?php if($sellerDetails->getBannerName()!=''){?>
+<img src="<?php echo $bannerImage.$sellerDetails->getBannerName(); ?>"
+alt="store banner" class="store_img" />
+<div style="clear: both;"></div>
+<input type="checkbox" name="remove_banner" value="1"> <?php echo __('Remove'); ?>
+<?php }?>
+</div>
+</div>
+<div id="errorbannermsg"></div>
+<div class="socialmedia">
+<label class="seo"><h3><?php echo __('Social Media');?></h3></label>
+<div class="fields">
+<div class="field twitter_id">
+<label for="twitter_id" class="label"><span><?php  echo __('Twitter Page Url') ?></span></label>
+<div class="control">
+<input type="text"
+placeholder="Ex: https://www.twitter.com/example"
+name="twitter_id" alt="Twitter Id"
+value="<?php echo $sellerDetails->getTwitterId();?>"
+id="twitter_id" class="input-text"
+data-validate="{'validate-url':true}">
+</div>
+</div>
+</div>
+
+<div class="fields">
+<div class="field facebook_id">
+<label for="facebook_id" class="label"><span><?php  echo __('Facebook Page Url') ?></span></label>
+<div class="control">
+<input type="text"
+placeholder="Ex: https://www.facebook.com/example"
+name="facebook_id" alt="facebook_id" id="facebook_id"
+value="<?php echo $sellerDetails->getFacebookId();?>"
+class="input-text"
+data-validate="{'validate-url':true}">
+</div>
+</div>
+</div>
+
+<div class="fields">
+<div class="field linked_id">
+<label for="linked_id" class="label"><span><?php  echo __('Linkedin Page Url') ?></span></label>
+<div class="control">
+<input type="text"
+placeholder="Ex: https://www.linkedin.com/company/example"
+value="<?php echo $sellerDetails->getLinkedId();?>"
+class="input-text" name="linked_id" alt="linked_id"
+id="linked_id"
+data-validate="{'validate-url':true}">
+</div>
+</div>
+</div>
+
+<div class="fields">
+<div class="field google_id">
+<label for=" google_id" class="label"><span><?php  echo __('Google Plus Page Url') ?></span></label>
+<div class="control">
+<input type="text"
+placeholder="Ex: https://plus.google.com/s/example"
+name="google_id" alt="google_id" id="google_id"
+value="<?php echo $sellerDetails->getGoogleId();?>"
+class="input-text"
+data-validate="{'validate-url':true}">
+</div>
+</div>
+</div>
+</div>
+<div class="fields">
+<label class="seo"><h3><?php echo __('SEO Management');?></h3></label>
+<div class="field meta_keyword ">
+<label for="meta_keyword" class="label"><span><?php  echo __('Meta Keywords') ?></span></label>
+<textarea id="meta_keyword" name="meta_keyword" rows="5" cols="60"
+class="input-text "><?php echo $sellerDetails->getMetaKeywords();?></textarea>
+</div>
+</div>
+
+<div class="fields">
+<div class="field meta_description ">
+<label for="meta_description" class="label"><span><?php  echo __('Meta Description') ?></span></label>
+<textarea id="meta_description" name="meta_description" rows="5"
+cols="60" class="input-text "><?php echo $sellerDetails->getMetaDescription();?></textarea>
+</div>
+</div>
+
+<div class="fields">
+<label class="payment_hint required"><h3><?php echo __('Process Payment via Bank/Paypal Account');?></h3></label>
+<div class="field payment-snipt required">
+
+<div class="input-box market_place_payment_process required">
+<label for="bank_pay" class="label"><?php echo __('Bank Payment'); ?>
+</label> <i><?php echo __('[Please enter your Account number, Bank Name with Branch and IFSC code]');?></i>
+<textarea name="bank_payment" id="bank_payment" class="input-text"><?php echo $sellerDetails->getBankPayment();?></textarea>
+</div>
+<div class="clear"></div>
+<div class="input-box market_place_payment_process required">
+<label for="paypal_pay"><?php echo __('Paypal Id');?> </label>
+<input type="email" name="paypal_id" id="paypal_id"
+value="<?php echo $sellerDetails->getPaypalId();?>" value=""
+class="input-text ">
+<div class="validation-advice" id="advice-required-entry-paypal_id"></div>
+</div>
+</div>
+</div>
+<input type="hidden" name="store_url"
+value="<?php echo $sellerDetails->getStoreUrl(); ?>" />
+<div class="fields">
+<div class="field meta_keyword ">
+<input id="show_profile_link" onclick="updateShowProfileLink()"
+type="checkbox" name="show_profile"
+value="<?php echo $sellerDetails->getShowProfile();?>"
+<?php if($sellerDetails->getShowProfile() == 1){ echo 'checked';} ?> />
+<label for="show_profile_link">Display your profile link in product
+detail page</label>
+</div>
+</div>
+<button type="submit" class="button validation-passed"
+title="Save Profile" name="save_profile" id="save_profile">
+<span><span>Save Profile</span></span>
+</button>
+</fieldset>
+</form>
+<script>
+require([
+    'jquery',
+    'mage/adminhtml/wysiwyg/tiny_mce/setup'
+], function(jQuery){
+
+var config = '',
+    editor;
+
+jQuery.extend(config, {
+    settings: {
+        theme_advanced_buttons1 : 'bold,italic,|,justifyleft,justifycenter,justifyright,|,',
+        theme_advanced_buttons2: null,
+        theme_advanced_buttons3: null,
+        theme_advanced_buttons4: null,
+        theme_advanced_statusbar_location: null
+    },
+    files_browser_window_url: false
+});
+              editor = new tinyMceWysiwygSetup(
+    'company_description',
+    config
+);
+                           editor.turnOn();
+                           jQuery('#company_description')
+    .addClass('wysiwyg-editor')
+    .data(
+        'wysiwygEditor',
+        editor
+    );
+ });
+</script>
+<script type="text/javascript">
+
+     function updateShowProfileLink(){
+        if(document.getElementById("show_profile_link").checked){
+        document.getElementById("show_profile_link").value = 1;
+        }else{
+        document.getElementById("show_profile_link").value = 0;
+        }
+        }
+
+      var logoFlag=1;
+      var bannerFlag=1;
+      var errFlag = false;
+      require([
+         'jquery',
+         'mage/mage'
+     ], function($){
+   $('#errorlogomsg').hide();
+   $('#errorbannermsg').hide();
+   $("#phoneerror").hide();
+   $("#store_logo").change(function(){
+        var _URL = window.URL || window.webkitURL;
+        var file = $(this)[0].files[0];
+        img = new Image();
+        img.src = _URL.createObjectURL(file);
+        img.onload = function() {
+        imgwidth = this.width;
+        imgheight = this.height;
+        if (imgwidth < 150) {
+           $("#store_logo").focus();
+               $('#errorlogomsg').show();
+               document.getElementById("errorlogomsg").innerHTML = "<?php echo __('Please upload image in the mentioned size.')?>";
+               $('#errorlogomsg').css("color","#e02b27");
+               logoFlag=0;
+              return false;
+           }
+        if (imgheight < 110) {
+           $("#store_logo").focus();
+               $('#errorlogomsg').show();
+               document.getElementById("errorlogomsg").innerHTML = "<?php echo __('Please upload image in the mentioned size.')?>";
+               $('#errorlogomsg').css("color","#e02b27");
+               logoFlag=0;
+              return false;
+           }
+        }
+       if (!/(\.bmp|\.png|\.gif|\.jpg|\.jpeg)$/i.test(this.value)) {
+       $("#store_logo").focus();
+           $('#errorlogomsg').show();
+           document.getElementById("errorlogomsg").innerHTML = "<?php echo __('Invalid file format')?>";
+           $('#errorlogomsg').css("color","#e02b27");
+           logoFlag=0;
+          return false;
+       }
+        logoFlag=1;
+       $('#errorlogomsg').hide();
+     return true;
+   });
+
+   $("#store_banner").change(function(){
+        var _URL = window.URL || window.webkitURL;
+        var file = $(this)[0].files[0];
+        img = new Image();
+        img.src = _URL.createObjectURL(file);
+        img.onload = function() {
+        imgwidth = this.width;
+        imgheight = this.height;
+        if (imgwidth < 1100 ) {
+           $("#store_banner").focus();
+           $('#errorbannermsg').show();
+           document.getElementById("errorbannermsg").innerHTML = "<?php echo __('Please upload image in the mentioned size.')?>";
+           $('#errorbannermsg').css("color","#e02b27");
+            bannerFlag=0;
+          return false;
+           }
+        if (imgheight < 230) {
+           $("#store_banner").focus();
+           $('#errorbannermsg').show();
+           document.getElementById("errorbannermsg").innerHTML = "<?php echo __('Please upload image in the mentioned size.')?>";
+           $('#errorbannermsg').css("color","#e02b27");
+            bannerFlag=0;
+          return false;
+           }
+        }
+       if (!/(\.bmp|\.png|\.gif|\.jpg|\.jpeg)$/i.test(this.value)) {
+       $("#store_banner").focus();
+           $('#errorbannermsg').show();
+           document.getElementById("errorbannermsg").innerHTML = "<?php echo __('Invalid file format')?>";
+           $('#errorbannermsg').css("color","#e02b27");
+            bannerFlag=0;
+          return false;
+   }
+       bannerFlag=1;
+       $('#errorbannermsg').hide();
+      return true;
+   });
+
+   $("#seller_profile_validate").submit(function(){
+
+   var telephoneNumber = $("#contact").val();
+   var test_phone_number = /^(?=.*[0-9])[- +()0-9]+$/;
+   var test_phone_number1 = /^\+[1-9]{1}[0-9]{3,14}$/;
+   if(!test_phone_number.test(telephoneNumber) ){
+     $("#phoneerror").html("<?php echo __('Please fill correct telephone number'); ?>");
+ $("#phoneerror").css("color", "#e02b27");
+         $("#phoneerror").css("font-size", "1.2rem");
+           errFlag = true;
+     }else{
+   errFlag = false;
+   }
+
+      var state = $("#state").val();
+   var state_regex = /^[a-zA-Z ]*$/;
+   if(!state_regex.test(state) ){
+     $("#stateerror").html("<?php echo __('Please fill correct state'); ?>");
+ $("#stateerror").css("color", "#e02b27");
+         $("#stateerror").css("font-size", "1.2rem");
+
+           stateFlag = true;
+
+     }
+      else{
+   stateFlag = false;
+       }
+
+   if(stateFlag==1){
+ $("#state").focus();
+ return false;
+}
+
+    if(bannerFlag == 1 && logoFlag==1 && errFlag==false && stateFlag==false){
+   return true;
+         }
+         else if(bannerFlag == 0){
+        $("#store_banner").focus();
+            return false;
+         }
+         else if(logoFlag ==0){
+         $("#store_logo").focus();
+         return false;
+         }
+         else if(errFlag == true){
+         $("#contact").focus();
+         $("#phoneerror").show();
+         return false;
+         }
+         else{
+         $("#store_logo").focus();
+         return false;
+         }
+  });
+});
+</script>
+<script>
+require([
+    'jquery',
+    'mage/mage'
+], function($){
+   var dataForm = $('#seller_profile_validate');
+    var ignore = null;
+    dataForm.mage('validation', {
+            ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
+        }).find('input:text').attr('autocomplete', 'off');
+
+});
+</script>

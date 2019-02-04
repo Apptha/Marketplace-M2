@@ -1,0 +1,99 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+$objectModelManager = \Magento\Framework\App\ObjectManager::getInstance ();
+$customerId = $block->getRequest ()->getParam ( 'id' );
+$sellerDatas = $objectModelManager->get ( 'Apptha\Marketplace\Model\Seller' );
+$sellerDetails = $sellerDatas->load ( $customerId, 'customer_id' );
+$customerObj = $objectModelManager->create('Magento\Customer\Model\Customer')->load($customerId);
+$logoName = $sellerDetails->getLogoName ();
+$bannerName = $sellerDetails->getBannerName ();
+$sellerContact = $sellerDetails->getContact ();
+$sellerStoreName = $sellerDetails->getStoreName ();
+$sellerEmail = $customerObj->getEmail ();
+$sellerDesc = $sellerDetails->getDesc ();
+$sellerFacebookId = $sellerDetails->getFacebookId ();
+$sellerTwitterId = $sellerDetails->getTwitterId ();
+$sellerGoogleId = $sellerDetails->getGoogleId ();
+$sellerLinkedId = $sellerDetails->getLinkedId ();
+$sellerState = $sellerDetails->getState ();
+$sellerCountry = $sellerDetails->getCountry ();
+$logoImage = $objectModelManager->get ( 'Magento\Store\Model\StoreManagerInterface' )->getStore ()->getBaseUrl ( \Magento\Framework\UrlInterface::URL_TYPE_MEDIA ) . 'Marketplace/Seller/Resized';
+$bannerImage = $objectModelManager->get ( 'Magento\Store\Model\StoreManagerInterface' )->getStore ()->getBaseUrl ( \Magento\Framework\UrlInterface::URL_TYPE_MEDIA ) . 'Marketplace/Sellerbanner/Resized';
+
+?>
+<div class="mp_profiles_container">
+    <div class="seller_store_banner">
+        <p class="mp_profiles_banner">
+         <?php if($bannerName!=""){?>
+           <img src="<?php echo $bannerImage.$bannerName;?>"
+                alt="store banner" class="market_place_store_img_banner">
+           <?php } else{?>
+           <img
+                src="<?php echo $block->getViewFileUrl('Apptha_Marketplace::images/no-banner-image.png');?>">
+
+      <?php  }?>
+        </p>
+    </div>
+    <div class="mp_profiles-info-wrapper">
+        <p class="mp_profiles_logo">
+        <?php if($logoName!=""){?>
+           <img src="<?php echo $logoImage.$logoName;?>"
+                alt="store logo" class="market_place_store_img_logo">
+           <?php } else{?>
+           <img
+                src="<?php echo $block->getViewFileUrl('Apptha_Marketplace::images/no-store-logo.png');?>">
+
+      <?php  }?>
+       </p>
+        <div class="sellers_store_info">
+            <div class="contact-wrapper">
+                <span class="contact-number"><a><?php echo $sellerContact;?></a></span>
+                <span class="contact-mail"><a
+                    href="mailto:<?php echo $sellerEmail;?>"><?php echo $sellerEmail;?></a></span>
+            </div>
+            <h2><?php echo ucfirst($sellerStoreName); ?></h2>
+        </div>
+        <div class="social-media-wrapper">
+        <?php if(!empty($sellerLinkedId)){?>
+            <a href="<?php echo $sellerLinkedId?>" target="_blank" title="LinkedIn" class="linked-in">&nbsp;</a> 
+                <?php } if(!empty($sellerFacebookId)){?>
+            <a href="<?php echo $sellerFacebookId?>" target="_blank" title="Facebook" class="facebook">&nbsp;</a> 
+            <?php } if(!empty($sellerTwitterId)){?>
+            <a href="<?php echo $sellerTwitterId?>" target="_blank" title="twitter" class="twitter">&nbsp;</a> 
+            <?php } if(!empty($sellerGoogleId)){?>
+            <a href="<?php echo $sellerGoogleId?>" target="_blank" title="GooglePlus" class="gplus">&nbsp;</a>
+            <?php }?>
+        </div>
+    </div>
+</div>
+<?php if($sellerDesc){?>
+<div class="mp_profiles_desc">
+    <p class="mp_profiles_desc">
+     <?php echo strip_tags($sellerDesc);?></p>
+</div>
+<?php } ?>

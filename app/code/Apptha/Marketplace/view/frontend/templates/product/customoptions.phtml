@@ -1,0 +1,637 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+/**
+ * Check the product custom options is equal to 1
+ */
+$productId = $this->getRequest ()->getParam ( 'product_id' );
+$optionCount = $selectSubOptionCount = 0;
+$productCustomOptionsEnable = $block->getProductCustomOptions ();
+if ($productCustomOptionsEnable == 1) {
+ ?>
+<div class="fieldset marketplace-custom-option">
+        <h2 class="legend"><?php echo __('Custom Options'); ?></h2>
+        <!-- Custom option add button -->
+        <div class="right" id="marketplace_custom_option">
+            <button id="marketplace_new_custom_option "
+                class="button marketplace_new_custom_option"
+                type="button" onclick="addMarketPlaceCustomOption()">
+                <span><span><?php
+ /**
+  * Give provision to add new
+  */
+ echo __ ( 'Add New Option' );
+ ?></span></span>
+            </button>
+        </div>
+        <div class="clear"></div>
+        <!-- Displaying All options list -->
+        <!-- Marketplace custom option container -->
+        <div id="marketplace_custom_option_list"
+            class="marketplace_custom_option_list">
+            <?php
+ /**
+  * Display product custom option, If it's exist
+  * Assign the option count, child option count
+  */
+ $optionCount = 1;
+ $childOptionCountValue = 1;
+ $selectSubOptionCount = 0;
+ $productOptions = array ();
+
+ /**
+  * Get Product options
+  */
+ if (! empty ( $productId )) {
+  $productData = $block->getProductData ( $productId );
+  $productOptions = $productData->getOptions ();
+ }
+ /**
+  * Check the product options is not empty
+  * if it is get the value of
+  * option title
+  * option type
+  * option is require value
+  * option sort order
+  */
+  foreach ( $productOptions as $o ) {
+
+    $optionTitle = $optionTypeData = $optionIsRequire = $optionSortOrder = '';
+    $optionTitle = $o->getTitle ();
+    $optionTypeData = $o->getType ();
+    $optionIsRequire = $o->getIsRequire ();
+    $optionSortOrder = $o->getSortOrder ();
+    ?>
+                <div class="dont-remove market_place_option-box">
+                <!-- Div for removing custom option -->
+                <table id="product_option_<?php echo $optionCount; ?>"
+                    class="option-header form-list" cellpadding="0"
+                    cellspacing="0">
+                    <input type="hidden"   id="product_option_<?php echo $optionCount; ?>_is_delete"
+                    name="product[options][<?php echo $optionCount; ?>][is_delete]"  value="">
+                    <input type="hidden"  id="product_option_<?php echo $optionCount; ?>_previous_type"
+                        name="product[options][<?php echo $optionCount; ?>][previous_type]"
+                        value="">
+                    <input type="hidden"
+                        id="product_option_<?php echo $optionCount; ?>_previous_group"
+                        name="product[options][<?php echo $optionCount;?>][previous_group]"
+                        value="">
+                    <input type="hidden"
+                        id="product_option_<?php echo $optionCount; ?>_id"
+                        name="product[options][<?php echo $optionCount;  ?>][id]"
+                        value="<?php echo $optionCount;  ?>">
+                    <input type="hidden"
+                        id="product_option_<?php echo $optionCount; ?>_option_id"
+                        name="product[options][<?php echo $optionCount; ?>][option_id]"
+                        value="0">
+                    <thead>
+                        <tr>
+                            <th class="opt-title"><label
+                                class="required"><em>*</em> <?php
+    /**
+     * Display Title
+     */
+    echo __ ( 'Title' );
+    ?></label></th>
+                            <th class="opt-type"><label class="required"><em>*</em> <?php
+    /**
+     * Display Input type
+     */
+    echo __ ( 'Input Type' );
+    ?></label></th>
+                            <th class="opt-req"><label><?php echo __('Is Required'); ?></label></th>
+                            <th class="a-right"><button
+                                    id="delete_product_option_<?php echo $optionCount; ?>"
+                                    title="<?php
+    /**
+     * Display Delete Option
+     */
+    echo __ ( 'Delete Option' );
+    ?>"
+                                    type="button"
+                                    class="button scalable delete delete-product-option "
+                                    onclick="removeMarketPlaceCustomOption(this)"
+                                    style="">
+                                    <span><span><?php echo __('Delete Option'); ?></span></span>
+                                </button></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text"
+                                class="required-entry input-text"
+                                id="product_option_<?php echo $optionCount; ?>_title"
+                                name="product[options][<?php echo $optionCount; ?>][title]"
+                                value="<?php   echo $optionTitle; ?>"></td>
+                            <td>
+<?php
+    $field = $area = $file = $dropDown = $radio = $checkbox = $multiple = $date = $dateTime = $time = '';
+    $optionArray=array('field','area','file','radio','checkbox','multiple','date','time');
+    if(in_array($optionTypeData,$optionArray)){
+     $$optionTypeData='selected';
+    }
+
+    /**
+     * option type as dropdown.
+     */
+    $optionTypeData == 'drop_down'?$dropDown = 'selected':'';
+    /**
+     * option type as date time.
+     */
+    $optionTypeData == 'date_time'?$dateTime = 'selected':'';
+
+
+    ?>
+<select   onchange="changeMarketPlaceCustomOption(this,<?php echo $optionCount; ?>)"
+                                name="product[options][<?php echo $optionCount;?>][type]"
+                                id="product_option_<?php  echo $optionCount; ?>_type"
+                                class="select validate-select" title="">
+                                    <option value="">-- <?php echo __('Please select'); ?> --</option>
+                                    <optgroup   label="<?php echo __('Text'); ?>">
+                                        <option value="field"   <?php echo $field;  ?>><?php echo __('Field'); ?></option>
+                                        <option value="area"<?php echo $area; ?>><?php echo __('Area'); ?></option>
+                                    </optgroup>
+                                    <optgroup label="<?php echo __('File'); ?>">
+                                        <option value="file"<?php echo $file;  ?>><?php echo __('File'); ?></option>
+                                    </optgroup>
+                                    <optgroup label="<?php echo __('Select'); ?>">
+                                        <option value="drop_down" <?php echo $dropDown;  ?>><?php echo __('Drop-down'); ?></option>
+                                        <option value="radio"<?php echo $radio;  ?>><?php echo __('Radio Buttons'); ?></option>
+                                        <option value="checkbox" <?php echo $checkbox;  ?>><?php echo __('Checkbox'); ?></option>
+                                        <option value="multiple"<?php echo $multiple;  ?>><?php echo __('Multiple Select'); ?></option>
+                                    </optgroup>
+                                    <optgroup label="<?php echo __('Date'); ?>">
+                                        <option value="date"  <?php echo $date;  ?>><?php echo __('Date'); ?></option>
+                                        <option value="date_time" <?php echo $dateTime;  ?>><?php echo __('Date'); ?> &amp; <?php echo __ ( 'Time' );?></option>
+                                        <option value="time" <?php echo $time;  ?>><?php echo __('Time'); ?></option>
+                                    </optgroup>
+                            </select>
+                            </td>
+                            <td class="opt-req">
+
+                            <?php
+                            $data=array('optioncount'=>$optionCount,'optionrequire'=>$optionIsRequire);
+                            echo $this->getLayout()->createBlock("Apptha\Marketplace\Block\Product\Add")->setData($data)->setTemplate("Apptha_Marketplace::product/editcustomoptions.phtml")->toHtml();
+
+                            ?>
+
+                           </td>
+
+                            <td>&nbsp;</td>
+                        </tr>
+                    </tbody>
+                </table>
+                    <?php
+    /**
+     * Check option type is equal to drop down
+     * or option type is equal to radio
+     * or option type is equal to checkbox
+     * or option type is equal to multiple
+     * Get the values
+     */
+    if ($optionTypeData == 'drop_down' || $optionTypeData == 'radio' || $optionTypeData == 'checkbox' || $optionTypeData == 'multiple') {
+     $values = $o->getValues ();
+     ?>
+
+<table class="border form-list market_place_dropdown_row"
+                    cellpadding="0" cellspacing="0">
+                    <input type="hidden"
+                        class="required-option-select-type-rows"
+                        name="<?php
+     $optionCount_value = $optionCount;
+     echo 'validation_' . $optionCount_value . '_result';
+     ?>"
+                        value="">
+                    <thead>
+                        <tr class="headings">
+                            <th class="type-title"><label
+                                class="required"> <em>*</em> <?php echo __('Title'); ?> </label>
+
+                            </th>
+                            <th class="type-price"><label><?php echo __('Price'); ?></label></th>
+                            <th class="type-type"><label><?php echo __('Price Type'); ?></label></th>
+                            <th class="type-sku"><label><?php echo __('SKU'); ?></label></th>
+                            <th class="type-order"><label><?php echo __('Sort Order'); ?></label></th>
+                            <th class="type-butt last">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody  id="<?php
+     $optionCountValue = $optionCount;
+     echo 'select_option_type_row_' . $optionCountValue;
+     ?>">
+<?php
+     /**
+      * Custom option collection.
+      */
+     foreach ( $values as $k => $v ) {
+      $optionSubTitle = $optionPrice = $optionPrice = $optionPriceTypeData = $optionSkuVar = $optionSortOrder = '';
+      $optionSubTitle = $v->getTitle ();
+      $optionPrice = round ( $v->getPrice (), 2 );
+      $optionPriceTypeData = $v->getPriceType ();
+      $optionSkuVar = $v->getSku ();
+      $optionSortOrder = $v->getSortOrder ();
+      ?>
+                        <tr id="<?php $optionCountValue = $optionCount;
+                        echo 'product_option_' . $optionCountValue . '_select_' . $selectSubOptionCount; ?>">
+                            <td><input type="hidden"
+                                name="<?php
+      $optionCountValue = $optionCount;
+      echo 'product[options][' . $optionCountValue . '][values][' . $selectSubOptionCount . '][option_type_id]';
+      ?>"
+                                value="-1"> <input type="hidden"
+                                id="<?php
+      $optionCountValue = $optionCount;
+      echo 'product_option_' . $optionCountValue . '_select_' . $selectSubOptionCount . '_is_delete';
+      ?>"
+                                name="<?php
+      $optionCountValue = $optionCount;
+      echo 'product[options][' . $optionCountValue . '][values][' . $selectSubOptionCount . '][is_delete]';
+      ?>"
+                                value=""> <input type="text"
+                                class="required-entry input-text select-type-title"
+                                id="<?php
+      $optionCountValue = $optionCount;
+      echo 'product_option_' . $optionCountValue . '_select_' . $selectSubOptionCount . '_title';
+      ?>"
+                                name="<?php
+      $optionCountValue = $optionCount;
+      echo 'product[options][' . $optionCountValue . '][values][' . $selectSubOptionCount . '][title]';
+      ?>"
+                                value="<?php echo $optionSubTitle; ?>"></td>
+                            <td><input type="text"
+                                class="input-text validate-number product-option-price"
+                                id="<?php
+      $optionCountValue = $optionCount;
+      echo 'product_option_' . $optionCountValue . '_select_' . $selectSubOptionCount . '_price';
+      ?>"
+                                name="<?php
+      $optionCountValue = $optionCount;
+      echo 'product[options][' . $optionCountValue . '][values][' . $selectSubOptionCount . '][price]';
+      ?>"
+                                value="<?php echo $optionPrice; ?>"></td>
+                            <td><select
+                                name="<?php
+      $optionCountValue = $optionCount;
+      echo 'product[options][' . $optionCountValue . '][values][' . $selectSubOptionCount . '][price_type]';
+      ?>"
+                                id="<?php $optionCountValue = $optionCount; echo 'product_option_' . $optionCountValue . '_select_' . $selectSubOptionCount . '_price_type'; ?>"
+                                class="select product-option-price-type"  title="">
+
+                                    <option value="fixed"
+                                        <?php
+      echo  (isset ( $optionPriceTypeData ) && $optionPriceTypeData == 'fixed') ? 'selected':'';
+
+      ?>><?php echo __('fixed'); ?></option>
+                                    <option value="percent"
+                                        <?php
+      echo (isset ( $optionPriceTypeData ) && $optionPriceTypeData == 'percent')? 'selected':'';
+
+      ?>><?php echo __('Percent'); ?></option>
+                            </select></td>
+                            <td><input type="text" class="input-text"
+                                name="<?php
+      $optionCountValue = $optionCount;
+      echo 'product[options][' . $optionCountValue . '][values][' . $selectSubOptionCount . '][sku]';
+      ?>"
+                                value="<?php echo $optionSkuVar; ?>"></td>
+                            <td><input type="text"
+                                class="validate-zero-or-greater input-text"
+                                name="<?php
+      $optionCountValue = $optionCount;
+      echo 'product[options][' . $optionCountValue . '][values][' . $selectSubOptionCount . '][sort_order]';
+      ?>"
+                                value="<?php echo $optionSortOrder; ?>"></td>
+                            <td class="last"><span title="Delete row">
+                                    <button
+                                        id="delete_select_row_button"
+                                        title="<?php echo __('Delete Row')?>" type="button"
+                                        class="button delete_select_row_button scalable delete delete-select-row icon-btn"
+                                        onclick="removeMarketPlaceChildSelectOption(this)"
+                                        style="">
+                                        <span> <span><?php echo __('Delete Row'); ?></span></span>
+                                    </button>
+                            </span></td>
+                        </tr>
+                    <?php
+      $selectSubOptionCount = $selectSubOptionCount + 1;
+     }
+     ?>
+                        </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="100" class="a-right">
+                                <button
+                                    id="<?php
+     $optionCount_value = $optionCount;
+     echo 'add_select_row_button_' . $optionCount_value;
+     ?>"
+                                    name="<?php
+     $optionCount_value = $optionCount;
+     echo 'select_option_type_row_' . $optionCount_value;
+     ?>"
+                                    title="<?php echo __('Add New Row'); ?>"
+                                    type="button"
+                                    class="button scalable add add-select-row"
+                                    onclick="addMarketPlaceChildSelectOption(this.name,<?php
+     echo $optionCount;
+     ?>)">
+ <span><span><?php
+     /**
+      * Display Option to add new row
+      */
+     echo __ ( 'Add New Row' );
+     ?></span></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+<?php
+     $childOptionCountValue = $childOptionCountValue + 1;
+    }
+    /**
+     * Check option type is equal to field
+     * or option type is equal to area
+     * Get option price
+     * Get option price type
+     * Get option sku
+     * Get option maximum characters
+     */
+    if ($optionTypeData == 'field' || $optionTypeData == 'area') {
+     $optionPrice = $optionPriceTypeData = $optionSkuVar = $optionMaxCharacters = '';
+     $optionPrice = round ( $o->getPrice (), 2 );
+     $optionPriceTypeData = $o->getPriceType ();
+     $optionSkuVar = $o->getSku ();
+     $optionMaxCharacters = $o->getMaxCharacters ();
+     ?>
+<table class="border form-list" cellpadding="0" cellspacing="0">
+                    <tbody> <tr class="headings">
+                            <th class="type-price"><label><?php echo __('Price'); ?></label></th>
+                            <th class="type-type"><label><?php echo __('Price Type'); ?></label></th>
+                            <th class="type-sku"><label><?php echo __('SKU'); ?></label></th>
+                            <th class="type-last last"><label><?php echo __('Max Characters'); ?></label></th>
+                        </tr>
+                        <tr>
+                            <td><input type="text"
+                                class="input-text validate-number product-option-price"
+                                id="<?php echo 'product_option_' . $childOptionCountValue . '_price'; ?>"
+                                name="<?php
+     echo 'product[options][' . $childOptionCountValue . '][price]'?>"
+                                value="<?php
+     echo $optionPrice;
+     ?>"></td>
+                            <td>
+
+<?php
+     $fixed = $percent = '';
+     if (isset ( $optionPriceTypeData ) && $optionPriceTypeData == 'fixed') {
+      $fixed = 'selected';
+     }
+
+     if (isset ( $optionPriceTypeData ) && $optionPriceTypeData == 'percent') {
+      $percent = 'selected';
+     }
+     ?>
+<select
+                                name="<?php echo 'product[options][' . $childOptionCountValue . '][price_type]'; ?>"
+                                id="<?php
+     echo 'product_option_' . $childOptionCountValue . '_price_type';
+     ?>"
+                                class="select product-option-price-type"
+                                title="">
+                                    <option value="fixed"
+                                        <?php echo $fixed; ?>>
+<?php echo __('fixed'); ?></option>
+                                    <option value="percent"
+                                        <?php echo $percent;  ?>>
+<?php echo __('Percent'); ?></option>
+                            </select>
+                            </td>
+                            <td><input type="text" class="input-text"
+                                name="<?php echo 'product[options][' . $childOptionCountValue . '][sku]'; ?>"
+                                value="<?php
+     echo $optionSkuVar;
+     ?>"></td>
+                            <td class="type-last last"><input
+                                type="text"
+                                class="input-text validate-zero-or-greater"
+                                name="<?php echo 'product[options][' . $childOptionCountValue . '][max_characters]'; ?>"
+                                value="<?php
+     echo $optionMaxCharacters;
+     ?>"></td>
+                        </tr>
+                    </tbody>
+                </table>
+<?php
+     $childOptionCountValue = $childOptionCountValue + 1;
+    }
+    /**
+     * Check option type is equal to file
+     * If it is Define empty variables like
+     * option price, option price type, option sky, option file extension, option image sizex
+     */
+    if ($optionTypeData == 'file') {
+     $optionPrice = $optionPriceTypeData = $optionSkuVar = $optionFileExtension = $optionImageSizeX = $optionImageSizeY = '';
+     /**
+      * Get the value of option price, option price type, option sky, option file extension, option image size x, option image size y
+      */
+     $optionPrice = round ( $o->getPrice (), 2 );
+     $optionPriceTypeData = $o->getPriceType ();
+     $optionSkuVar = $o->getSku ();
+     $optionFileExtension = $o->getFileExtension ();
+     $optionImageSizeX = $o->getImageSizeX ();
+     $optionImageSizeY = $o->getImageSizeY ();
+     $childOptionCountData = $childOptionCountValue;
+
+     ?>
+                    <div
+                    id="<?php echo 'product_option_' . $childOptionCountData . '_type_file'; ?>"
+                    class="grid tier form-list">
+                    <table
+                        class="border form-list mareket_place_price_table"
+                        cellpadding="0" cellspacing="0">
+                        <tbody>
+                            <tr class="headings">
+                                <th class="type-price"><label><?php echo __('Price'); ?></label></th>
+                                <th class="type-type"><label><?php echo __('Price Type'); ?></label></th>
+                                <th class="type-sku"><label><?php echo __('SKU'); ?></label></th>
+                                <th class="type-title"><label><?php echo __('Allowed File Extensions'); ?></label></th>
+                                <th class="last"><label><?php echo __('Maximum Image Size'); ?></label></th>
+                            </tr>
+                            <tr>
+                                <td><input
+                                    class="input-text validate-zero-or-greater"
+                                    type="text"
+                                    name="<?php echo 'product[options][' . $childOptionCountData . '][price]'; ?>"
+                                    value="<?php
+     echo $optionPrice;
+     ?>"></td>
+                                <td>
+<?php
+     $fixedText = $percentText = '';
+     if (isset ( $optionPriceTypeData ) && $optionPriceTypeData == 'fixed') {
+      $fixedText = 'selected';
+     }
+     if (isset ( $optionPriceTypeData ) && $optionPriceTypeData == 'percent') {
+      $percentText = 'selected';
+     }
+     ?>
+<select
+                                    name="<?php echo 'product[options][' . $childOptionCountData . '][price_type]'; ?>"
+                                    id="<?php
+     echo 'product_option_' . $childOptionCountData . '_price_type';
+     ?>"
+                                    class="select product-option-price-type"
+                                    title="">
+                                        <option value="fixed"
+                                            <?php echo $fixedText;  ?>>
+<?php echo __('fixed'); ?></option>
+                                        <option value="percent"
+                                            <?php echo $percentText; ?>>
+<?php echo __('Percent'); ?></option>
+                                </select>
+                                </td>
+                                <td><input type="text"
+                                    class="input-text"
+                                    name="<?php echo 'product[options][' . $childOptionCountData . '][sku]'; ?>"
+                                    value="<?php
+     echo $optionSkuVar;
+     ?>"></td>
+                                <td><input class="input-text"
+                                    type="text"
+                                    name="<?php echo 'product[options][' . $childOptionCountData . '][file_extension]'; ?>"
+                                    value="<?php
+     echo $optionFileExtension;
+     ?>"></td>
+                                <td class="type-last last" nowrap=""><input
+                                    class="input-text" type="text"
+                                    name="<?php echo 'product[options][' . $childOptionCountData . '][image_size_x]'; ?>"
+                                    value="<?php
+     echo $optionImageSizeX;
+     ?>"><?php
+     echo __ ( 'x' );
+     ?>
+                    <input class="input-text" type="text"
+                                    name="<?php echo 'product[options][' . $childOptionCountData . '][image_size_y]'; ?>"
+                                    value="<?php
+     echo $optionImageSizeY;
+     ?>"><?php
+     echo __ ( 'px' ) . '.';
+     ?>
+<br><?php echo __('leave blank if its not an image'); ?>
+                                    </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+    <?php
+     $childOptionCountValue = $childOptionCountData;
+     $childOptionCountValue = $childOptionCountValue + 1;
+    }
+    /**
+     * checking option type is equal to date
+     * or option type is equal to date_time
+     * or option type is equal to time
+     * Get values of option price, option price type, option sku
+     */
+    if ($optionTypeData == 'date' || $optionTypeData == 'date_time' || $optionTypeData == 'time') {
+     $optionPrice = $optionPriceTypeData = $optionSkuVar = '';
+     $optionPrice = round ( $o->getPrice (), 2 );
+     $optionPriceTypeData = $o->getPriceType ();
+     $optionSkuVar = $o->getSku ();
+     ?>
+<table class="border form-list" cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr class="headings">
+                            <th class="type-price"><label><?php echo __('Price'); ?></label></th>
+                            <th class="type-type"><label><?php echo __('Price Type'); ?></label></th>
+                            <th class="last"><label><?php echo __('SKU'); ?></label></th>
+                        </tr>
+                        <tr>
+                            <td><input type="text"
+                                class="input-text validate-number product-option-price"
+                                id="<?php echo 'product_option_' . $childOptionCountValue . '_price'; ?>"
+                                name="<?php  echo 'product[options][' . $childOptionCountValue . '][price]';?>"
+                                value="<?php echo $optionPrice; ?>">
+                           </td>
+                            <td>
+     <?php
+     $percentString = $fixedString = '';
+     if (isset ( $optionPriceTypeData ) && $optionPriceTypeData == 'percent') {
+      $percentString = 'selected';
+     }
+     if (isset ( $optionPriceTypeData ) && $optionPriceTypeData == 'fixed') {
+      $fixedString = 'selected';
+     }
+     ?>
+     <select  name="<?php echo 'product[options][' . $childOptionCountValue . '][price_type]'; ?>"
+                                id="<?php echo 'product_option_' . $childOptionCountValue . '_price_type';  ?>"
+                                class="select product-option-price-type"
+                                title="">
+                                    <option value="fixed"<?php echo $fixedString; ?>><?php echo __('fixed'); ?></option>
+                                    <option value="percent" <?php echo $percentString; ?>><?php echo __('Percent'); ?></option>
+    </select>
+                            </td>
+                            <td class="last">
+                            <input type="text" class="input-text type-sku"  name="<?php echo 'product[options][' . $childOptionCountValue . '][sku]'; ?>"
+                                value="<?php echo $optionSkuVar;?>"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <?php
+
+$childOptionCountValue = $childOptionCountValue + 1;
+    }
+    $optionCount = $optionCount + 1;
+    ?>
+<!-- Div for removing custom option -->
+            </div>
+    <?php
+
+  }
+
+ ?>
+<!-- End marketplace custom option container -->
+        </div>
+    </div>
+<?php
+}
+/**
+ * End if for checking whether product option enabled or not
+ */
+?>
+<script type="text/javascript">
+var customOptionCount = <?php echo $optionCount ?>;
+var selectSubChildCustomOptionCount = <?php echo $selectSubOptionCount ?>;
+function addMarketPlaceCustomOption() {
+    var html = $("marketplace_custom_option_YYY").innerHTML.replace(/XXX/g, customOptionCount);
+    var new_html = html.replace(/YYY/g, customOptionCount);
+    $("marketplace_custom_option_list").insert(new_html);
+    customOptionCount = customOptionCount + 1;
+}
+</script>

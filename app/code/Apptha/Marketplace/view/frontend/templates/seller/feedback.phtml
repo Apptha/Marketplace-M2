@@ -1,0 +1,106 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+$sellerId = $this->getRequest ()->getParam ( 'id' );
+$isSellerReviewEnabled = $block->isSellerReviewEnabled ();
+if ($isSellerReviewEnabled == 1) {
+ ?>
+<div class="block">
+    <div class="block-title">
+        <strong><span><?php echo __('Feedback Ratings'); ?></span></strong>
+    </div>
+<?php
+ $ratings = $block->getRatingsData ( $sellerId );
+ $percent = $ratings ['percent'];
+ $count = $ratings ['count'];
+ ?>
+<div class="individual-star-ratings">
+        <ul class="rating-histogram">
+         <?php
+        
+          /**
+           * Show 5 star ratings
+           */
+         if( !empty($count) ){
+         $i = 1;
+         foreach ($count as $key => $values){?>
+            <li class="advanced-font-small"><span><?php echo __ ($i =='1'?( $i.'&nbsp;'.'Star' ):( $i.'&nbsp;'.'Stars' ));?></span>
+                <div class="rating-bars">
+                      <div class="progress  " style="width:<?php echo  (isset ( $percent[$key] )) ? ceil ( $ratings ['percent'] ):0;?>%; !important;"></div>
+                </div>
+               <strong><?php  echo (isset ( $count [$key] ))?$count [$key]:0;?> </strong>
+          </li>
+          <?php $i++; 
+         } 
+         } else { 
+         for ($i = '1'; $i<= '5'; $i++){?>
+         <li class="advanced-font-small"><span><?php echo __ ($i =='1'?( $i.'&nbsp;'.'Star' ):( $i.'&nbsp;'.'Stars' ));?></span>
+                <div class="rating-bars">
+                      <div class="progress  " style="width:<?php echo  0;?>%; !important;"></div>
+                </div>
+               <strong><?php  echo 0;?> </strong>
+          </li>
+         <?php }
+ } ?>
+        </ul>
+        <div class="positive_review_ratings">
+            <div class="positive_review_negative"><?php echo __('Negative'); ?></div>
+            <div class="positive_review_neutral"><?php echo __('Neutral'); ?></div>
+            <div class="positive_review_positive"><?php echo __('Positive'); ?></div>
+        </div>
+    </div>
+    <div class="seller-review">
+<?php
+ $reviews = $block->getReviewcount ( $sellerId );
+ if (count ( $reviews ) > 0) {
+  ?>
+ <a href='<?php echo $block->getReviewUrl($sellerId); ?>'> <?php
+  echo __ ( 'View Reviews' );
+  ?> </a>
+<?php
+ }
+ ?>
+
+<?php
+ if ($block->getLoggedInCustomerId () != '') {
+  $canReview = $block->canReview ( $block->getLoggedInCustomerId (), $sellerId );
+  if ($canReview == 1) {
+   ?>
+<h5>
+            <a
+                href='<?php echo $block->getWriteReviewUrl($sellerId).'#seller_review'; ?>'> <?php echo __('Write a Review to this Seller'); ?> </a>
+        </h5>
+
+<?php
+  }
+ } else {
+  ?>
+<h5><?php echo __('Have you bought something from this seller?').' '; ?></h5>
+        <a class="mp_view_allreview"
+            href="<?php echo $block->getLoginUrl(); ?>"><?php echo __('Login to Review'); ?></a>
+<?php } ?>
+</div>
+</div>
+<?php } ?>

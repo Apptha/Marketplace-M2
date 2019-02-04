@@ -1,0 +1,165 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+$OrderItemCollection = $block->getCollection ();
+$currencyCode = $block->getCurrencyCode ();
+$currencySymbol = $block->getCurrencySymbol ( $currencyCode );
+foreach ( $OrderItemCollection as $item ) {
+    $sellerId = $item->getSellerId ();
+    $orderId = $item->getOrderId ();
+    $customerId = $item->getCustomerId ();
+    $sellerOrder [] = $block->getTodayOrder ( $orderId, $sellerId, $customerId, $flag = '1' );
+    $lastWeekOrder [] = $block->getLastWeekIncome ( $orderId, $sellerId, $customerId, $flag = '2' );
+    $lastMonthOrder [] = $block->getLastMonthIncome ( $orderId, $sellerId, $customerId, $flag = '3' );
+    $lastYearOrder [] = $block->getLastYearIncome ( $orderId, $sellerId, $customerId, $flag = '4' );
+}
+$count = (!isset($sellerOrder) || is_null($sellerOrder)) ? '0' : count(array_filter($sellerOrder));
+?>
+<?php
+/**
+ * Todays Sales and today order count
+ */
+?>
+<div class="seller-today-sales">
+<div class="cart_bg">
+   <div class="left_wr"><strong><?php echo __("Today's Sales")?></strong>
+      <p><?php echo (!isset($sellerOrder) || is_null($sellerOrder)) ? $currencySymbol.'0' : $currencySymbol.array_sum($sellerOrder);?></p>
+   </div>
+   <i></i>
+</div>
+<div class="Order_bg">
+    <div class="left_wr">
+    <strong><?php echo __("Today's Orders")?></strong>
+        <p><?php echo (!isset($count) || is_null($count)) ? '0' : $count; ?></p>
+    </div> 
+<i></i>
+</div>
+</div>
+<?php
+/**
+ * Last week, Last month and Last Year sales
+ */
+?>
+
+
+
+
+<div class="seller-sales-income">            
+<h3 class="title_income">Your Income</h3>
+            <div class="content_wr">
+                <ul class="marketplace_total_income">
+                <li>
+                <p><?php echo (!isset($lastWeekOrder) || is_null($lastWeekOrder)) ? $currencySymbol.'0' : $currencySymbol.array_sum($lastWeekOrder);?></p>
+                <strong><?php echo __('last Week')?></strong>
+                </li>
+                    <li>
+                    <p><?php echo (!isset($lastMonthOrder) || is_null($lastMonthOrder)) ? $currencySymbol.'0' : $currencySymbol.array_sum($lastMonthOrder);?></p>
+            <strong><?php echo __('last Month')?></strong>
+            </li>
+              <li>
+              <p><?php echo (!isset($lastYearOrder) || is_null($lastYearOrder)) ? $currencySymbol.'0' : $currencySymbol.array_sum($lastYearOrder);?></p>
+            <strong><?php echo __('last Year')?></strong>
+            </li>
+              </ul>
+         </div>
+</div>
+<?php
+/**
+ * Orders status donut chart
+ */
+?>
+<h3 class="title_income">Orders</h3>
+<div class="seller-donut-chart">
+<?php
+echo $block->getChildHtml ( 'seller_orders' );
+?>
+</div>
+<div class="order-manage">
+
+<div class="table-wrapper orders-history">
+<span class="order-title"><?php echo __('Last Five Orders');?></span>
+<table class="data table table-order-items history"
+id="my-orders-table">
+<caption class="table-caption"><?php echo __('Recent Orders');?></caption>
+<tr>
+<th><?php echo __('Order #');?></th>
+<th><?php echo __('Date');?></th>
+<th><?php echo __('Product Details');?></th>
+<th><?php echo __('Total Product Amount');?></th>
+<th><?php echo __('Commission');?></th>
+<th><?php echo __('Seller Amount');?></th>
+<th><?php echo __('Status');?></th>
+<th><?php echo __('Action');?></th>
+</tr>
+  <?php
+  if ($OrderItemCollection->getSize () > 0) {
+    foreach ( $OrderItemCollection as $item ) {
+        $orderId = $item->getOrderId ();
+        $sellerId = $item->getSellerId ();
+        $customerId = $item->getCustomerId ();
+        $orderDetails = $block->getOrderDetails ( $orderId, $sellerId, $customerId );
+        $productName = $block->getProductDetails ( $orderId, $sellerId );
+        $createdAt = $orderDetails ['created_at'];
+        $modifiedDate = new DateTime ( $createdAt );
+        $createdAt = $modifiedDate->format ( 'm/d/Y' );
+        $currencyCode = $item->getOrderCurrencyCode ();
+        $currencySymbol = $block->getCurrencySymbol ( $currencyCode );
+        if (empty ( $currencySymbol )) {
+            $currencySymbol = $currencyCode;
+        }
+        ?>
+                       <tr>
+<td><?php echo $item->getIncrementId();?></td>
+<td><?php echo $createdAt;?></td>
+<td><?php echo $productName; ?></td>
+<td><?php echo $currencySymbol.number_format($item->getSellerProductTotal(),2, '.', '');?></td>
+<td><?php echo $currencySymbol.number_format($item->getCommission(),2, '.', ''); ?></td>
+<td><span class="price"><?php echo $currencySymbol.number_format($item->getSellerAmount(),2,'.','');?></span></td>
+<td><?php echo ucfirst($item->getStatus());?></td>
+<td><a
+href="<?php echo $block->getUrl('marketplace/order/vieworder/id/'.$orderId)?>"
+class="action view"> <span><?php echo __('View');?></span>
+</a></td>
+</tr>
+            <?php }?>    
+   <?php
+} else { ?>
+    <tr><td colspan="8" align="center"><?php echo __ ( 'No Records were Found' );?></td></tr><?php 
+}
+?>
+</table>
+<div class="toolbar-bottom"></div>
+</div>
+</div>
+<?php
+/**
+ * Most viewed
+ */
+?>
+<div class="seller-orders-viewed"><?php
+echo $block->getChildHtml ( 'seller_mostviewed' );?>
+</div>

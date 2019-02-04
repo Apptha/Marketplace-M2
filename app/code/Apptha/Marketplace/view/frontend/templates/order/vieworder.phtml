@@ -1,0 +1,480 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ * */
+$orderId = $this->getRequest ()->getParam ( 'id' );
+$orderDetails = $block->getOrderDetails ( $orderId );
+$refundedProductIds = $orderDetails ['refunded_product_ids'];
+$shippingFlag = $block->shipmentFlag ( $orderId );
+$createdAt = $orderDetails ['created_at'];
+$modifiedDate = new DateTime ( $createdAt );
+$createdAt = $modifiedDate->format ( 'M d,Y' );
+$productDatas = $block->getProductDetails ( $orderId );
+
+
+$priceDetails = $block->getOrderPriceDetails ( $orderId );
+$orderDatas = $priceDetails->getData ();
+$orderCurrencyCode = '';
+$orderSellerTotal = '';
+$commission = '';
+$sellerAmount = '';
+foreach ( $orderDatas as $orderData ) {
+    $orderSellerTotal = $orderData ['seller_product_total'];
+    $orderCurrencyCode = $orderData ['order_currency_code'];
+    $commission = $orderData ['commission'];
+    $sellerAmount = $orderData ['seller_amount'];
+}
+$currencySymbol = '';
+if (! empty ( $orderCurrencyCode )) {
+    $currencySymbol = $block->getCurrencySymbol ( $orderCurrencyCode );
+    if (empty ( $currencySymbol )) {
+        $currencySymbol = $orderCurrencyCode;
+    }
+}
+?>
+<div id="marketplace-order-vieworder"
+    class="marketplace-order-vieworder">
+    <span class="order-status"><?php
+    if ($orderDetails ['refund_flag'] != 1 && $orderDetails ['is_refunded']) {
+        if ($orderDetails ['original_Status'] == 'complete') {
+            echo __ ( 'Completed' );
+        } elseif ($orderDetails ['original_Status'] == 'canceled') {
+            echo __ ( 'Canceled' );
+        } else {
+            echo __ ( 'Processing' );
+        }
+    } elseif ($orderDetails ['refund_flag'] != 1) {
+        echo ucfirst ( $orderDetails ['seller_order_status'] );
+    } else {
+        echo __ ( 'Closed' );
+    }
+    ?></span>
+    <div class="order-date">
+        <span class="label"><?php echo __('Order Date:');?></span>
+        <date><?php echo $createdAt;?></date>
+    </div>
+
+    <ul class="items order-links">
+        <li class="nav item current"><strong><?php echo __('Items Ordered');?></strong></li>
+    </ul>
+    <div class="order-details-items ordered">
+        <div class="order-title">
+            <strong><?php echo __('Items Ordered');?></strong>
+        </div>
+        <div class="table-wrapper order-items">
+            <table class="data table table-order-items"
+                id="my-orders-table" summary="Items Ordered">
+                <caption class="table-caption"><?php echo __('Items Ordered');?></caption>
+                <thead>
+                    <tr>
+                        <th class="col name"><?php echo __('Product Name');?></th>
+                        <th class="col sku"><?php echo __('SKU');?></th>
+                        <th class="col price"><?php echo __('Price');?></th>
+                        <th class="col qty"><?php echo __('Qty');?></th>
+                        <th class="col subtotal"><?php echo __('Subtotal');?></th>
+                    </tr>
+                </thead>
+                <tbody>
+<?php
+
+foreach ( $productDatas as $product ) {
+    $productTypeId = $block->getProductTypeId ( $product );
+    $resultDetails = $block->getOrderProductDetails ( $product, $orderId );
+    $resultDatas = $resultDetails ['products'];
+    $attributes = $resultDetails ['attributes'];
+    $result = $resultDatas->getData ();
+    foreach ( $result as $productData ) {
+        $decodedOptionsData = json_decode ( ($productData ['options']), true );
+       ?>
+                <tr id="<?php echo $orderId?>">
+                        <td class="col name" data-th="Product Name"><strong
+                            class="product name product-item-name"><?php echo $productData['product_name'];?><br />
+        <?php
+        if (isset ( $decodedOptionsData ['options'] )) {
+            $decodedoptions = $decodedOptionsData ['options'];
+            foreach ( $decodedoptions as $option ) {?>
+            <h4><?php  echo $option['label'];?></h4>
+         <?php echo $option['value'];?><br />
+         <?php }
+        }
+        
+        if (isset ( $decodedOptionsData ['attributes_info'] )) {
+            $decodedoptions = $decodedOptionsData ['attributes_info'];
+            foreach ( $decodedoptions as $option ) {?>
+                    <h4><?php  echo $option['label'];?></h4>
+                 <?php echo $option['value'];?><br />
+                 <?php }
+                }
+        ?></strong></td>
+                        <td class="col sku" data-th="SKU"><?php echo $productData['product_sku'];?></td>
+                        <td class="col price" data-th="Price"><span
+                            class="price-excluding-tax"
+                            data-label="Excl. Tax"> <span
+                                class="cart-price"> <span class="price"><?php echo $currencySymbol. number_format($productData['product_price'],2, '.', '');?></span>
+                            </span>
+
+                        </span></td>
+                        <input type="hidden" id="qty" value="<?php echo $productData['product_qty'];?>">
+                        <td class="col qty" data-th="Qty">
+                            <ul class="items-qty">
+                                <li class="item"><span class="title"><?php echo __('Ordered');?></span>
+                                    <span class="content"><?php echo round($productData['product_qty'],2);?></span>
+                                </li>
+             <?php if($orderDetails['is_shipped'] == 1 && $productTypeId != 'virtual' && $productTypeId != 'downloadable'){ ?>
+            <li class="item"><span class="title"><?php echo __('Shipped');?></span>
+                                    <span class="content"><?php echo round($productData['product_qty'],2);?></span>
+                                </li> 
+            <?php } ?>
+            <?php if($orderDetails['is_invoiced'] == 1){ ?>
+            <li class="item"><span class="title"><?php echo __('Invoiced');?></span>
+                                    <span class="content"><?php echo round($productData['product_qty'],2);?></span>
+                                </li> 
+            <?php } ?>  
+            <?php if($productData['is_canceled'] == 1){ ?>
+            <li class="item"><span class="title"><?php echo __('Canceled');?></span>
+                                    <span class="content"><?php echo round($productData['product_qty'],2);?></span>
+                                </li> 
+            <?php } ?>
+            <?php if($productData['is_returned'] == 1){ ?>
+            <li class="item"><span class="title"><?php echo __('Returned');?></span>
+                                    <span class="content"><?php echo round($productData['product_qty'],2);?></span>
+                                </li> 
+            <?php } ?>
+            <?php
+        $productId = $productData ['product_id'];
+        if ($productData ['is_refunded'] == 1 && in_array ( $productId, $refundedProductIds )) {
+            ?>
+            <li class="item"><span class="title"><?php echo __('Refunded');?></span>
+                                    <span class="content"><?php echo round($productData['product_qty'],2);?></span>
+                                </li> 
+            <?php } ?>
+        </ul>
+                        </td>
+                        <td class="col subtotal" data-th="Subtotal"><span
+                            class="price-excluding-tax"
+                            data-label="Excl. Tax"> <span
+                                class="cart-price"> <span class="price"><?php echo $currencySymbol. number_format($productData['product_price']*$productData['product_qty'],2, '.', '');?></span>
+                            </span>
+
+                        </span>
+    <?php
+        $buyercancelledOrReturned = $productData ['is_buyer_canceled'] == 1 || $productData ['is_buyer_returned'] == 1;
+        $buyerRefundedorProductRefunded=$productData ['is_buyer_refunded'] == 1 || $productData ['is_refunded'];
+        $productDataCancelled=$productData ['is_canceled'] != 1 && $productData ['is_returned'] != 1;
+        if ($buyercancelledOrReturned || $buyerRefundedorProductRefunded && ! in_array ( $productId, $refundedProductIds ) && $productDataCancelled) {
+                $itemId = $productData ['order_item_id'];
+        ?>
+   <?php if (! in_array ( $productId, $refundedProductIds )) { ?>
+   <label><?php echo __('Action').' : '; ?></label>
+   <?php } ?>
+   <?php
+                if ($productData ['is_refunded'] == 1 && ! in_array ( $productId, $refundedProductIds )) { ?>
+               <span><?php echo __('Refund request sent to Admin'); ?></span>
+              <?php }else{ ?>
+                <a  href="<?php  echo $block->getOrderItemUrl () . 'id/' . $itemId . '/action/';
+                    echo ($productData ['is_buyer_canceled'] == 1) ? 'canceled':'';
+                    echo  ($productData ['is_buyer_returned'] == 1)? 'returned':'';
+                    echo  ($productData ['is_buyer_refunded'] == 1) ? 'refunded':''
+                    ?>"><?php
+                    echo  ($productData ['is_buyer_canceled'] == 1 )? __ ( 'Cancel Item' ):($productData['is_canceled'] == 1)?__('Canceled'):'';
+                    echo  ($productData ['is_buyer_returned'] == 1) ?__ ( 'return Item' ):'';
+                    echo ($productData ['is_buyer_refunded'] == 1 && ! in_array ( $productId, $refundedProductIds ))? __ ( 'Refund Item' ):'';
+                    ?></a>
+   <?php
+                }
+            }
+        
+        ?>
+    </td></tr>
+<?php
+    }
+}
+?>  </tbody>
+                <tfoot>
+                    <tr class="subtotal">
+                        <th colspan="4" class="mark" scope="row">
+                         <?php echo __('Subtotal');?>                   </th>
+                        <td class="amount" data-th="Subtotal"><span
+                            class="price"><?php echo $currencySymbol.number_format($orderSellerTotal,2, '.', ''); ?></span>
+                        </td>
+                    </tr>
+                    <?php if($orderDetails['shipping_amount'] > 0){ ?>                  
+                 <tr class="shipping">
+                        <th colspan="4" class="mark" scope="row">
+                           <?php echo __('Shipping Handling'.' (+)');?>                 </th>
+                        <td class="amount" data-th="Shipping Handling"><span
+                            class="price"><?php echo $currencySymbol.number_format($orderDetails['shipping_amount'],2, '.', '');?></span>
+                        </td>
+                    </tr>
+                <?php } ?>
+                    <tr class="shipping">
+                        <th colspan="4" class="mark" scope="row">
+                           <?php echo __('Commission'.' (-)');?>                 </th>
+                        <td class="amount" data-th="Shipping Handling"><span
+                            class="price"><?php echo $currencySymbol.number_format($commission,2, '.', '');?></span>
+                        </td>
+                    </tr>
+                      
+            <tr class="grand_total">
+                        <th colspan="4" class="mark" scope="row"><strong> <?php echo __('Estimated Seller Amount');?>   </strong>
+                        </th>
+                        <td class="amount" data-th="Estimated Total"><strong><span
+                                class="price"><?php echo $currencySymbol.number_format($sellerAmount + $orderDetails['shipping_amount'],2, '.', '');?></span></strong>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="actions-toolbar">
+            <div class="secondary">
+                <a class="action back"
+                    href="<?php echo $block->getUrl('*/*/order');?>"> <span><?php echo __('Back to My Orders');?></span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="block block-order-details-view">
+        <div class="block-title">
+            <strong><?php echo __('Order Information');?></strong>
+        </div>
+        <div class="block-content">
+    <?php if(count($orderDetails['shipping_address']) > 0){ ?>
+    <div class="box box-order-shipping-address">
+                <strong class="box-title"><span><?php echo __('Shipping Address');?></span></strong>
+                <div class="box-content">
+                    <address>
+                        <div class="billing-name"><?php 
+                        $firstName=$orderDetails['shipping_address']['firstname'];
+                        echo $firstName.' '.$orderDetails['billing_address']['lastname'];?></div>
+                        <div class="billing-street"><?php
+                        $street=$orderDetails['shipping_address']['street'];
+                        echo $street;?></div>
+                        <div class="billing-address"><?php
+                        $city=$orderDetails['shipping_address']['city'];
+                        echo $city.','.$orderDetails['shipping_address']['region'].','.$orderDetails['shipping_address']['postcode'];?></div>
+                        <div class="billing-country"><?php 
+                        $countryId=$orderDetails['shipping_address']['country_id'];
+                        echo $countryId;?></div>
+                        <div class="billing-telphone"><?php 
+                        $telephone=$orderDetails['shipping_address']['telephone'];
+                        echo $telephone;?></div>
+                   </address>
+                </div>
+            </div>
+         <?php } ?>
+        <?php if(isset($orderDetails['shipping_method'])){ ?>
+        <div class="box box-order-shipping-method">
+                <strong class="box-title"> <span><?php echo __('Shipping Method');?></span>
+                </strong>
+                <div class="box-content">
+                         <?php echo $orderDetails['shipping_method'];?>                  </div>
+            </div>
+        <?php } ?>
+    
+        <div class="box box-order-billing-address">
+                <strong class="box-title"> <span><?php echo __('Billing Address');?></span>
+                </strong>
+                <div class="box-content">
+                    <address>
+                        <div class="billing-name"><?php echo $orderDetails['billing_address']['firstname'].' '.$orderDetails['billing_address']['lastname'];?></div>
+                        <div class="billing-street"><?php  echo $orderDetails['billing_address']['street'];?></div>
+                        <div class="billing-address"><?php echo $orderDetails['billing_address']['city'].','.$orderDetails['billing_address']['region'].','.$orderDetails['billing_address']['postcode'];?></div>
+                        <div class="billing-country"><?php echo $orderDetails['billing_address']['country_id'];?></div>
+                        <div class="billing-telphone"><?php echo $orderDetails['billing_address']['telephone'];?></div>
+                    </address>
+                </div>
+            </div>
+            <div class="box box-order-billing-method">
+                <strong class="box-title"> <span><?php echo __('Payment Method');?></span>
+                </strong>
+                <div class="box-content">
+                    <dl class="payment-method checkmemo">
+                        <dt class="title"><?php echo $orderDetails['payment_method'];?></dt>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input name="form_key" type="hidden" value="P7RVuAVFjR8BM9oD">
+    <div id="authenticationPopup"
+        data-bind="scope:'authenticationPopup'" style="display: none;"></div>
+
+</div>
+
+<?php
+/**
+ * Start seller order management section
+ */
+
+$isSellerOrderManagement = $block->getSellerOrderManagement ();
+if ($isSellerOrderManagement == 1) {
+    ?>
+<div class="seller_order_managment">
+
+    <form class="form product form-product"
+        action="<?php  echo $block->getOrderUpdateUrl();?>"
+        method="post" enctype="multipart/form-data">
+        <input type="hidden" name="order_id"
+            value="<?php  echo $orderId; ?>" /> <input type="hidden"
+            name="action" value="invoice" /> <input type="hidden"
+            name="ship_flag" value="<?php  echo $shippingFlag; ?>" /> <input
+            class="action submit primary" type="submit"
+            value="<?php echo __('Invoice'); ?>"
+            <?php
+    $orderInvoicedorCancelled = $orderDetails ['is_invoiced'] == 1 || $orderDetails ['is_canceled'] == 1;
+    if ($orderInvoicedorCancelled || $orderDetails ['is_returned'] == 1 || $orderDetails ['refund_flag'] == 1 || $orderDetails ['original_Status'] == 'canceled') {
+        echo ' disabled ';
+    }
+    ?>>
+    </form>
+
+    <!-- Seller order tracking details -->
+    <div id="shipment_container">
+        <form class="form product form-product"
+            action="<?php echo $block->getOrderUpdateUrl();?>"
+            method="post" id="tracking_number_form"
+            enctype="multipart/form-data" autocomplete="off">
+            <input type="hidden" name="order_id"
+                value="<?php  echo $orderId; ?>" /> <input type="hidden"
+                name="action" value="shipment" />
+<?php if($shippingFlag == 1){ ?>
+<input class="action submit primary" id="udpate_shipment" type="button"
+                <?php
+        $orderDetailShippedOrCancelled = $orderDetails ['is_shipped'] == 1 || $orderDetails ['is_canceled'] == 1;
+        if ($orderDetailShippedOrCancelled || $orderDetails ['is_returned'] == 1 || $orderDetails ['refund_flag'] == 1 || $orderDetails ['original_Status'] == 'canceled') {
+            echo ' disabled ';
+        }
+        ?>
+                value="<?php echo __('Shipment'); ?>">
+<?php } ?>
+<table id="tracking_numbers_table" style="display: none;">
+                <thead id="tracking_number_heading"
+                    style="display: none;">
+                    <tr class="headings fieldset ">
+                        <th class="col-carrier"><?php echo __('Carrier'); ?></th>
+                        <th class="col-title field required"><span
+                            class="label tracking_label"><?php echo __('Title'); ?></span></th>
+                        <th class="col-number field required"><span
+                            class="label tracking_label"><?php echo __('Number'); ?></span></th>
+                        <th class="col-delete"><?php echo __('Action'); ?></th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <td colspan="4"
+                            class="col-actions-add add_tracking_number"><button
+                                id="add_tracking_number_row"
+                                title="<?php echo __('Add Tracking Number'); ?>"
+                                type="button">
+                                <span><?php echo __('Add Tracking Number'); ?></span>
+                            </button> <br> <input
+                            class="action submit primary" type="submit"
+                            value="<?php echo __('Submit'); ?>"></td>
+                    </tr>
+                </tfoot>
+                <tbody id="track_row_container">
+                </tbody>
+            </table>
+        </form>
+        <table style="display: none;">
+            <tr id="new_tracking_number_row">
+                <td class="col-carrier"><select
+                    name="tracking[CCC][carrier_code]"
+                    id="tracking_carrier_CCC"
+                    class="select tracking_number_carrier"
+                    data-validate="{required:true}">
+                        <option value="custom"><?php echo __('Custom Value'); ?></option>
+                        <option value="dhl"><?php echo __('DHL'); ?></option>
+                        <option value="fedex"><?php echo __('Federal Express'); ?></option>
+                        <option value="ups"><?php echo __('United Parcel Service'); ?></option>
+                        <option value="usps"><?php echo __('United States Postal Service'); ?></option>
+                </select></td>
+                <td class="col-title"><input
+                    class="input-text tracking_number_title" type="text"
+                    name="tracking[CCC][title]" id="tracking_title_CCC"
+                    value="" data-validate="{required:true}"></td>
+                <td class="col-number"><input class="input-text"
+                    type="text" name="tracking[CCC][number]"
+                    id="tracking_number_CCC" value=""
+                    data-validate="{required:true}"></td>
+                <td class="col-delete">
+                    <button type="button"
+                        class="delete_tracking_number_row action-delete">
+                        <span><?php echo __('Delete'); ?></span>
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script>
+require([
+    'jquery',
+    'mage/mage'
+], function($){
+    var dataForm = $('#tracking_number_form');
+    var ignore = null;
+    dataForm.mage('validation', {
+            ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
+        }).find('input:text').attr('autocomplete', 'off');
+    var rowCount = 1;
+    $("#add_tracking_number_row").click(function() {
+    qty = Math.floor($("#qty").val());    
+    $("#tracking_number_heading").show();     
+    $( "#new_tracking_number_row" ).clone(); 
+    if(rowCount <= qty) { 
+    $('#track_row_container').append('<tr>'+$("#new_tracking_number_row" ).html().replace(/CCC/g,rowCount)+'</tr>');
+    rowCount = rowCount + 1;
+    } else{
+    alert('Adding Tracking Number is allowed based on Order Quantity Only');
+    }       
+    }); 
+     $(document.body).on("click",".delete_tracking_number_row",function(e){
+$(this).closest( "tr" ).remove();
+rowCount = rowCount - 1;
+if(rowCount <= 1) {
+$("#tracking_number_heading").hide();
+}
+});
+
+    $("#udpate_shipment").click(function() { 
+    $('#tracking_numbers_table').show();    
+    }); 
+
+$(document.body).on("change",".tracking_number_carrier",function(e){
+var tracking_number_carrier_title = $('#'+this.id).val();
+if(tracking_number_carrier_title != 'custom'){
+$(this).closest('td').next().find('input').val($('#'+this.id+' option:selected').text());
+}
+    });
+});
+</script>
+</div>
+<?php
+}
+?>

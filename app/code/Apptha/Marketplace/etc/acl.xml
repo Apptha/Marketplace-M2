@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+! -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/Acl/etc/acl.xsd">
+  <acl>
+    <resources>
+      <resource id="Magento_Backend::admin">
+        <resource id="Apptha_Marketplace::main_menu" title="Apptha Marketplace" sortOrder="20">
+          <resource id="Apptha_Marketplace::settings" title="Configurations" sortOrder="4" />
+          <resource id="Apptha_Marketplace::manage_sellers" title="Manage Sellers" sortOrder="2" />
+          <resource id="Apptha_Marketplace::manage_products" title="Manage Products" sortOrder="3" />
+          <resource id="Apptha_Marketplace::manage_transactions" title="Manage Seller Orders" sortOrder="4" />
+          <resource id="Apptha_Marketplace::manage_payments" title="Manage Seller Payments" sortOrder="5" />
+          <resource id="Apptha_Marketplace::manage_review" title="Manage Seller Review" sortOrder="6" />
+          <resource id="Apptha_Marketplace::manage_subscriptionplans" title="Manage Seller Subscription Plans" sortOrder="7" />
+          <resource id="Apptha_Marketplace::manage_subscriptionprofiles" title="Manage Subscribed Profiles" sortOrder="8" />
+        </resource>
+        <resource id="Magento_Backend::stores">
+          <resource id="Magento_Backend::stores_settings">
+            <resource id="Magento_Config::config">
+              <resource id="Apptha_Marketplace::system_config" title="Apptha Marketplace Section" />
+            </resource>
+          </resource>
+        </resource>
+      </resource>
+    </resources>
+  </acl>
+</config>

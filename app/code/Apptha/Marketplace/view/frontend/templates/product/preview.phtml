@@ -1,0 +1,288 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+
+$sellerId = $productName = $productSku = $productImage = $productPrice = $isInStock = '';
+$productId = $this->getRequest ()->getParam ( 'id' );
+$previewDetails = $block->getPreviewProductDetatils ( $productId );
+$sellerId = $previewDetails ['sellerid'];
+$productName = $previewDetails ['product_name'];
+$productSku = $previewDetails ['product_sku'];
+$productImage = $previewDetails ['product_image'];
+$productPrice = $previewDetails ['product_price'];
+$isInStock = $previewDetails ['isinstock'];
+?>
+<div class="column main">
+    <div class="product-info-main">
+        <div class="page-title-wrapper product">
+            <h1 class="page-title">
+                <span class="base" data-ui-id="page-title-wrapper"
+                    itemprop="name"><?php echo $productName;?></span>
+            </h1>
+        </div>
+        <div class="product-reviews-summary empty">
+            <div class="reviews-actions">
+                <a class="action add" href="#"><?php echo __('Be the first to review this product')?></a>
+            </div>
+        </div>
+        <div class="product-info-price">
+            <div class="price-box price-final_price"
+                data-role="priceBox"
+                data-product-id="<?php echo $productId;?>">
+                <span class="price-container price-final_price tax weee"
+                    itemprop="offers" itemscope=""
+                    itemtype="http://schema.org/Offer"> <span
+                    class="price"><?php echo $productPrice;?></span>
+                </span></span>
+            </div>
+            <div class="product-info-stock-sku">
+                <div class="stock available" title="Availability"><?php
+
+                if ($isInStock == 1) {
+                 echo __ ( 'In Stock' );
+                } else {
+
+                 echo __ ( 'Out Of Stock' );
+                }
+                ?></span>
+                </div>
+                <div class="product attibute sku">
+                    <strong class="type"><?php echo __('SKU');?></strong>
+                    <div class="value" itemprop="sku"><?php echo $productSku;?></div>
+                </div>
+            </div>
+        </div>
+        <div class="product-add-form">
+            <form action="#" method="post" id="product_addtocart_form"
+                novalidate="novalidate">
+                <div class="product-options-bottom">
+                    <div class="box-tocart">
+                        <div class="fieldset">
+                            <div class="field qty">
+                                <label class="label" for="qty"><span><?php echo __('Qty');?></span></label>
+                                <div class="control">
+                                    <input type="number" name="qty"
+                                        id="qty" maxlength="12"
+                                        value="1" title="Qty"
+                                        class="input-text qty">
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button type="submit"
+                                    title="Add to Cart"
+                                    class="action primary tocart"
+                                    id="product-addtocart-button">
+                                    <span><?php echo __('Add to Cart');?></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="product-social-links">
+            <div class="product-addto-links" data-role="add-to-links">
+                <a href="#" class="action towishlist"
+                    data-action="add-to-wishlist"><span><?php echo __('Wish List');?></span></a>
+                <a href="#" data-role="add-to-links"
+                    class="action tocompare"><span><?php echo __('Compare');?></span></a>
+            </div>
+            <a href="#" class="action mailto friend"><span><?php echo __('Email');?></span></a>
+        </div>
+    </div>
+    <div class="product media">
+        <div class="gallery-placeholder"
+            data-gallery-role="gallery-placeholder">
+            <div class="fotorama--hidden"></div>
+            <div class="fotorama-item " data-gallery-role="gallery"
+                tabindex="0">
+                <div data-gallery-role="fotorama__focusable-start"
+                    tabindex="0"></div>
+                <div
+                    class="fotorama__wrap fotorama__wrap--css3 fotorama__wrap--slide fotorama__wrap--toggle-arrows fotorama__wrap--no-controls"
+                    style="min-width: 0px; max-width: 100%;">
+                    <div class="fotorama__stage"
+                        style="width: 707px; height: 566px; line-height: 566px;">
+                        <div class="fotorama__fullscreen-icon"
+                            data-gallery-role="fotorama__fullscreen-icon"
+                            tabindex="0" role="button"></div>
+                        <div
+                            class="fotorama__arr fotorama__arr--prev fotorama__arr--disabled"
+                            tabindex="-1" role="button"
+                            aria-label="Previos" disabled="disabled"
+                            style="display: none;">
+                            <div class="fotorama__arr__arr"
+                                data-gallery-role="arrow"></div>
+                        </div>
+                        <div class="fotorama__stage__shaft" tabindex="0"
+                            data-gallery-role="stage-shaft"
+                            style="transition-duration: 0ms; transform: translate3d(0px, 0px, 0px); width: 707px; margin-left: 0px;">
+                            <div
+                                class="fotorama__stage__frame fotorama__active fotorama_horizontal_ratio fotorama__loaded fotorama__loaded--img"
+                                aria-hidden="false" data-active="true"
+                                href="#" style="left: 0px;">
+                                <img src="<?php echo $productImage;?>"
+                                    class="fotorama__img">
+                            </div>
+                        </div>
+                        <div
+                            class="fotorama__arr fotorama__arr--next fotorama__arr--disabled"
+                            tabindex="-1" role="button"
+                            aria-label="Next" disabled="disabled"
+                            style="display: none;">
+                            <div class="fotorama__arr__arr"
+                                data-gallery-role="arrow"></div>
+                        </div>
+                    </div>
+                    <div class="fotorama__nav-wrap"
+                        data-gallery-role="nav-wrap"
+                        style="display: none;">
+                        <div class="fotorama__nav"
+                            style="height: 114px;">
+                            <div
+                                class="fotorama__thumb__arr--left fotorama__arr--disabled"
+                                tabindex="-1" role="button"
+                                aria-label="Previous"
+                                disabled="disabled">
+                                <div class="fotorama__thumb__arr"
+                                    data-gallery-role="arrow"></div>
+                            </div>
+                            <div class="fotorama__nav__shaft">
+                                <div class="fotorama__thumb-border"></div>
+                            </div>
+                            <div
+                                class="fotorama__thumb__arr--right fotorama__arr--disabled"
+                                tabindex="-1" role="button"
+                                aria-label="Next" disabled="disabled">
+                                <div class="fotorama__thumb__arr"
+                                    data-gallery-role="arrow"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div data-gallery-role="fotorama__focusable-end"
+                    tabindex="0"></div>
+            </div>
+            <div class="magnifier-preview magnify-hidden"
+                data-gallery-role="magnifier" id="preview"
+                style="display: none;"></div>
+        </div>
+    </div>
+    <div class="product info detailed">
+        <div class="product data items" role="tablist">
+            <div class="data item title active"
+                aria-labeledby="tab-label-reviews-title"
+                data-role="collapsible" id="tab-label-reviews"
+                role="tab" data-collapsible="true"
+                aria-controls="reviews" aria-selected="false"
+                aria-expanded="true" tabindex="0">
+                <a class="data switch" tabindex="-1"
+                    data-toggle="switch" href="#reviews"
+                    id="tab-label-reviews-title">
+                 <?php echo __('Reviews');?></a>
+            </div>
+            <div class="data item content" id="reviews"
+                data-role="content" aria-labelledby="tab-label-reviews"
+                role="tabpanel" aria-hidden="false">
+                <div id="product-review-container"
+                    data-role="product-review"></div>
+                <div class="block review-add">
+                    <div class="block-title">
+                        <strong><?php echo __('Write Your Own Review');?></strong>
+                    </div>
+                    <div class="block-content">
+                        <form action="#" class="review-form"
+                            method="post" id="review-form"
+                            data-role="product-review-form"
+                            data-bind="scope: 'review-form'"
+                            novalidate="novalidate">
+                            <fieldset class="fieldset review-fieldset"
+                                data-hasrequired="">
+                                <legend class="legend review-legend">
+                                    <span><?php echo __('You\'re reviewing:');?></span><strong><?php echo $productName;?></strong>
+                                </legend>
+                                <br>
+                                <div
+                                    class="field review-field-nickname required">
+                                    <label for="nickname_field"
+                                        class="label"><span><?php echo __('Nickname');?></span></label>
+                                    <div class="control">
+                                        <input type="text"
+                                            name="nickname"
+                                            id="nickname_field"
+                                            class="input-text"
+                                            data-validate="{required:true}"
+                                            data-bind="value: nickname()"
+                                            aria-required="true">
+                                    </div>
+                                </div>
+                                <div
+                                    class="field review-field-summary required">
+                                    <label for="summary_field"
+                                        class="label"><span><?php echo __('Summary');?></span></label>
+                                    <div class="control">
+                                        <input type="text" name="title"
+                                            id="summary_field"
+                                            class="input-text"
+                                            data-validate="{required:true}"
+                                            data-bind="value: review().title"
+                                            aria-required="true">
+                                    </div>
+                                </div>
+                                <div
+                                    class="field review-field-text required">
+                                    <label for="review_field"
+                                        class="label"><span><?php echo __('Review');?></span></label>
+                                    <div class="control">
+                                        <textarea name="detail"
+                                            id="review_field" cols="5"
+                                            rows="3"
+                                            data-validate="{required:true}"
+                                            data-bind="value: review().detail"
+                                            aria-required="true"></textarea>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <div
+                                class="actions-toolbar review-form-actions">
+                                <div class="primary actions-primary">
+                                    <button type="submit"
+                                        class="action submit primary">
+                                        <span><?php echo __('Submit Review');?></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input name="form_key" type="hidden" value="gCWCrYOvsXE974Bk">
+    <div id="authenticationPopup"
+        data-bind="scope:'authenticationPopup'" style="display: none;"></div>
+</div>

@@ -1,0 +1,110 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+$address = $block->getAddress ();
+$sellerState = $address ['state'];
+$sellerCountry = $address ['country'];
+$sellerState = preg_replace ( '/\s+/', '', $sellerState );
+
+$objectModelManager = \Magento\Framework\App\ObjectManager::getInstance ();
+
+$googleMapApi = $objectModelManager->get ( '\Magento\Framework\App\Config\ScopeConfigInterface' )->getValue('marketplace/general/googlemap', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+/**
+ * get seller id
+ */
+$urlData = 'http://maps.google.com/maps/api/geocode/json?address="' . $sellerState . '"&sensor=false&region="' . $sellerCountry . '"';
+$response = file_get_contents ( $urlData );
+$response = json_decode ( $response, true );
+$lat = $long = '';
+if (isset ( $response ['results'] [0] ['geometry'] ['location'] ['lng'] )) {
+ $long = $response ['results'] [0] ['geometry'] ['location'] ['lng'];
+}
+if (isset ( $response ['results'] [0] ['geometry'] ['location'] ['lat'] )) {
+ $lat = $response ['results'] [0] ['geometry'] ['location'] ['lat'];
+}
+if (! empty ( $lat ) && ! empty ( $long )) {
+ ?>
+<script src="http://maps.googleapis.com/maps/api/js?key=<?php echo $googleMapApi?>"></script>
+<script>
+    var myCenter=new google.maps.LatLng(<?php echo $lat; ?>,<?php
+ echo $long;
+ ?>);
+      function initialize() {
+        var mapCanvas = document.getElementById('map_canvas');
+        var mapOptions = {
+          center: new google.maps.LatLng(<?php echo $lat;?>, <?php
+ echo $long;
+ ?>),
+          zoom: 6,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        var map = new google.maps.Map(mapCanvas, mapOptions);
+        var marker = new google.maps.Marker({
+            position: myCenter,
+            map: mapCanvas
+          });
+        marker.setMap(map);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+<div class="block">
+    <div class="block-title">
+        <strong><span><?php echo __('Store Location');?></span></strong>
+    </div>
+    <div class="block-content">
+        <div id="map_canvas" style="width: 235px; height: 235px"></div>
+    </div>
+</div>
+<?php } ?>
+<style>
+.sidebar .block {
+box-shadow: 0 1px 2px rgba(43, 59, 93, 0.29);
+}
+
+.sidebar .block {
+background: #fff;
+}
+
+.sidebar .block-content {
+margin: 0;
+padding: 15px;
+overflow: hidden;
+}
+
+.sidebar .block-title strong {
+font-size: 18px;
+font-weight: normal;
+color: #181818;
+}
+
+.sidebar .block-title {
+padding: 0px 15px;
+margin: 10px 0 0 0;
+display: inline-block;
+border-top: 0;
+}
+</style>

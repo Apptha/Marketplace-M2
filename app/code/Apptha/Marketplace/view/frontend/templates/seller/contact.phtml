@@ -1,0 +1,101 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+$sellerDetails = $block->getSellerDetails ();
+?>
+<form class="form seller-contact-account " enctype="multipart/form-data"
+    action="<?php  echo $block->getUrl('*/*/savesellercontact')?>"
+    method="post" id="seller_profile_validates"
+    data-mage-init='{"validation":{}}'>
+    <div class="block-title">
+        <strong><span><?php echo __('Contact Seller');?></span></strong>
+    </div>
+    <fieldset class="fieldset"
+        data-hasrequired="<?php  echo __('* Required Fields') ?>">
+        <div class="fields">
+            <div class="field customer_name required">
+                <div class="control">
+                    <input class="required-entry" name="customer_name"
+                        id="customer_name"
+                        title="<?php echo __('Customer Name'); ?>"
+                        value="<?php echo $sellerDetails['customer_name']; ?>"
+                        type="text"
+                        placeholder="<?php echo __('Your Name'); ?>"
+                        data-validate="{required:true}" />
+                </div>
+            </div>
+        </div>
+        <div class="fields">
+            <div class="field customer_email required">
+                <div class="control">
+                    <input class="required-entry validate-email"
+                        name="customer_email" id="customer_email"
+                        title="<?php echo __('Customer Email'); ?>"
+                        value="<?php echo $sellerDetails['customer_email']; ?>"
+                        type="text"
+                        placeholder="<?php echo __('Your Email'); ?>"
+                        data-validate="{required:true}" />
+                </div>
+            </div>
+        </div>
+        <div class="fields">
+            <div class="field message required">
+                <div class="control">
+                    <textarea name="message" id="message"
+                        title="<?php echo __('Message'); ?>"
+                        class="required-entry input-text" cols="5"
+                        rows="3"
+                        placeholder="<?php echo __('Your Message'); ?>"></textarea>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="seller_name" id="seller_name"
+            class="seller_name"
+            value="<?php echo $sellerDetails['seller_name']; ?>" /> <input
+            type="hidden" name="seller_email" id="seller_name"
+            class="seller_email"
+            value="<?php echo $sellerDetails['seller_email']; ?>" /> <input
+            type="hidden" name="seller_id" id="seller_id"
+            class="seller_id"
+            value="<?php echo $sellerDetails['seller_id']; ?>" />
+
+        <button type="submit" class="button validation-passed"
+            title="Save Profile" name="save_profile" id="save_profile">
+            <span><span><?php echo __('Submit')?></span></span>
+        </button>
+    </fieldset>
+</form>
+
+<script>
+require([
+         'jquery',
+         'mage/calendar'
+     ], function($){
+     var myLength = $("#customer_email").val().length;
+if (myLength > 0 ){
+$('#customer_email').prop('readonly', true);
+}
+});
+</script>

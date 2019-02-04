@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+! -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Email/etc/email_templates.xsd">
+  <template id="marketplace_seller_admin_approval_template" label="Default Template" file="seller_admin_approval.html" type="html" module="Apptha_Marketplace" area="adminhtml" />
+  <template id="marketplace_seller_admin_disapproval_template" label="Default Template" file="seller_admin_not_approve.html" type="html" module="Apptha_Marketplace" area="frontend" />
+  <template id="marketplace_seller_contact_admin_template" label="Default Template" file="contactform.html" type="html" module="Apptha_Marketplace" area="frontend" />
+  <template id="marketplace_seller_contact_seller_template" label="Default Template" file="contact_seller.html" type="html" module="Apptha_Marketplace" area="frontend" />
+  <template id="marketplace_product_approval_template" label="Default Template" file="product_approved.html" type="html" module="Apptha_Marketplace" area="adminhtml" />
+  <template id="marketplace_product_disapproval_template" label="Default Template" file="product_disapproved.html" type="html" module="Apptha_Marketplace" area="adminhtml" />
+  <template id="marketplace_order_notification_template" label="Default Template" file="seller_order_notification.html" type="html" module="Apptha_Marketplace" area="frontend" />
+  <template id="marketplace_order_item_request_template" label="Default Template" file="seller_order_item_request.html" type="html" module="Apptha_Marketplace" area="frontend" />
+  <template id="marketplace_order_item_cancel_return_template" label="Default Template" file="seller_order_item_cancel_return.html" type="html" module="Apptha_Marketplace" area="frontend" />
+  <template id="marketplace_review_admin_approval_template" label="Default Template" file="review_admin_approval.html" type="html" module="Apptha_Marketplace" area="adminhtml" />
+  <template id="marketplace_review_admin_disapproval_template" label="Default Template" file="review_admin_not_approve.html" type="html" module="Apptha_Marketplace" area="adminhtml" />
+  <template id="marketplace_review_admin_notification_template" label="Default Template" file="review_admin_notification.html" type="html" module="Apptha_Marketplace" area="frontend" />
+  <template id="marketplace_subscription_admin_notification_template" label="Default Template" file="subscription_admin_notification.html" type="html" module="Apptha_Marketplace" area="frontend" />
+  <template id="marketplace_subscription_seller_notification_template" label="Default Template" file="subscription_seller_notification.html" type="html" module="Apptha_Marketplace" area="frontend" />
+  <template id="marketplace_subscription_sellersuccess_notification_template" label="Default Template" file="subscription_sellersuccess_notification.html" type="html" module="Apptha_Marketplace" area="frontend" />
+  <template id="seller_product_outofstock_notification" label="Default Template" file="seller_product_outofstock_notification.html" type="html" module="Apptha_Marketplace" area="frontend" />
+  <template id="seller_product_notification" label="Default Template" file="seller_product_notification.html" type="html" module="Apptha_Marketplace" area="frontend" />
+</config>

@@ -1,0 +1,306 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+?>
+<?php
+$attributeCount = '';
+$currentproductId = $this->getRequest ()->getParam ( 'id' );
+use Magento\Framework\App\Action\Action;
+$compareProducts = $block->getProducts ();
+$compareProductsCount = count ( $compareProducts );
+$dataHelper = $this->helper( 'Apptha\Marketplace\Helper\Data' );
+$enableAssignProduct = $dataHelper->getAssignProduct ();
+
+    if ($compareProductsCount >= 1 && $enableAssignProduct) {
+        ?>
+<div id="seller_price_comparison_wrapper" class="compare_wrapper">
+
+ <h1><?php echo __('More sellers selling this product')?></h1>
+
+ <table class="data-table" id="compare_product">
+  <tr>
+   <div class="sku-update-loader cssload-jumping">
+    <span></span><span></span><span></span><span></span><span></span>
+   </div>
+   <th><?php echo __('Seller Information');?></th>
+   <th class="product_info_title">
+
+                <?php echo __('Product Information');?></th>
+   <th class="padding"><?php echo __('Price');?></th>
+   <th><?php echo __('Cart')?></th>
+  </tr>
+           <?php
+        foreach ( $compareProducts as $compareProduct ) {
+            $sellerId = $compareProduct ['seller_id'];
+            $sellerDatas = $block->getSellerStoreDetails ( $sellerId );
+            $attributeCount = '';
+            ?>
+              <tr class="<?php echo $compareProduct['entity_id']?>">
+   <td><a
+    href="<?php echo $block->getUrl($sellerDatas['request_path']);?>"
+    title="<?php echo $sellerDatas['store_name'];?>"><?php echo $sellerDatas['store_name'];?></a>
+   </td>
+   <td class="product_compare">
+    <p><?php echo $compareProduct->getDescription(); ?></p>
+   </td>
+   <td>
+                  <?php
+            $helper = $this->helper( 'Apptha\Marketplace\Helper\Objectmanager' );
+            $product = $helper->loadProduct($compareProduct ['entity_id']);
+            $proTypeId = $product->getTypeId ();
+            if ($proTypeId == "configurable") {
+               $attributes = $product->getTypeInstance ( true )->getConfigurableAttributes($product);
+               $attributeCount = count ( $attributes );
+               $helper = $this->helper( 'Apptha\Marketplace\Helper\Objectmanager' );
+               $productDatas = $helper->usedProductCollection($product);
+                $associatedProducts = $productDatas->getData ();
+                foreach ( $associatedProducts as $associatedProduct ) {
+                    $assignProductId = $associatedProduct ['entity_id'];
+                    $helper = $this->helper( 'Apptha\Marketplace\Helper\Objectmanager' );
+                    $productDetail = $helper->loadProduct($assignProductId);
+                    $assignSimpleProductId = $productDetail->getConfigAssignSimpleId ();
+                    echo '<p class="simple_id_' . $assignSimpleProductId . ' assign_simple_product" style="display:none;">' . $dataHelper->getFormattedPrice ( $productDetail->getPrice () ) . '</p>';
+                }
+            } else {
+                echo '<p class="org_product_id assign_simple_product">' . $dataHelper->getFormattedPrice ( $product->getPrice () ) . '</p>';
+            }
+            ?>
+                </td>
+   <td>
+                <?php
+            if ($proTypeId != "configurable") {
+                $helper = $this->helper( 'Apptha\Marketplace\Helper\Objectmanager' );
+                $cartParams = $helper->assignedProducts();
+                $postParams = $cartParams->getAddToCartPostParams ( $compareProduct );
+                if (($compareProduct->isSaleable ())) {
+                    ?> <form data-role="tocart-form"
+     action="<?php echo $postParams['action']; ?>" method="post">
+     <?php echo $block->getBlockHtml('formkey'); ?>
+     <input type="hidden" name="product"
+      value="<?php /* @escapeNotVerified */ echo $postParams['data']['product']; ?>">
+     <input type="hidden"
+      name="<?php /* @escapeNotVerified */ echo Action::PARAM_NAME_URL_ENCODED; ?>"
+      value="<?php /* @escapeNotVerified */ echo $postParams['data'][Action::PARAM_NAME_URL_ENCODED]; ?>">
+
+                                                <?php echo $block->getBlockHtml('formkey')?>
+                                            <div class="field qty">
+      <div class="control">
+       <input type="hidden" name="qty" id="prod-qtys" maxlength="12"
+        title="Qty" class="input-text prod-qty"
+        data-validate="{required-number:true,validate-item-quantity:{minAllowed:1}}">
+      </div>
+     </div>
+     <button type="submit"
+      title="<?php echo __('Add to Cart'); ?>"
+      class="action tocart primary mp_addtocart_button">
+      <span><?php  echo __('Add to Cart') ?></span>
+     </button>
+    </form>
+                            <?php
+                } else {
+                    ?>
+                            <p class="availability out-of-stock"><?php echo __('Out of Stock'); ?></p>
+                            <?php
+                }
+            }
+
+            elseif ($proTypeId == "configurable" && $compareProduct->isSaleable ()) {
+                $helper = $this->helper( 'Apptha\Marketplace\Helper\Objectmanager' );
+                $product = $helper->loadProduct($compareProduct ['entity_id']);
+                $helper = $this->helper( 'Apptha\Marketplace\Helper\Objectmanager' );
+                $productDatas = $helper->usedProductCollection($product);
+                $associatedProducts = $productDatas->getData ();
+                 foreach ( $associatedProducts as $associatedProduct ) {
+                        $assignProductId = $associatedProduct ['entity_id'];
+                        $helper = $this->helper( 'Apptha\Marketplace\Helper\Objectmanager' );
+                        $productDetail = $helper->loadProduct($assignProductId);
+                        $assignSimpleProductId = $productDetail->getConfigAssignSimpleId ();
+
+                        ?>
+         <div class="actions-primary">
+        <?php
+                        $helper = $this->helper( 'Apptha\Marketplace\Helper\Objectmanager' );
+                        $cartParams = $helper->assignedProducts();
+                        $postParams = $cartParams->getAddToCartPostParams ( $compareProduct );
+
+                        ?>
+     <form data-role="tocart-form"
+      action="<?php echo $postParams['action']; ?>" method="post">
+      <?php echo $block->getBlockHtml('formkey'); ?>
+      <input type="hidden" name="product"
+       value="<?php  echo $postParams['data']['product']; ?>"> <input
+       type="hidden"
+       name="<?php  echo Action::PARAM_NAME_URL_ENCODED; ?>"
+       value="<?php echo $postParams['data'][Action::PARAM_NAME_URL_ENCODED]; ?>">
+                                            <?php
+
+                                            $data=array('attributes'=>$attributes,'productdetail'=>$productDetail);
+                                            echo $this->getLayout()->createBlock("Magento\Catalog\Block\Product\View")->setData($data)->setTemplate("Apptha_Marketplace::assignproduct/comparepriceattributes.phtml")->toHtml();
+                    ?>
+
+                                            <?php echo $block->getBlockHtml('formkey')?>
+                                            <div class="field qty">
+       <div class="control">
+        <input type="hidden" name="qty"
+         id="prod-qty<?php echo $assignProductId ?>" maxlength="12"
+         title="Qty" class="input-text prod-qty"
+         data-validate="{required-number:true,validate-item-quantity:{minAllowed:1}}">
+       </div>
+      </div>
+      <button type="submit"
+       title="<?php echo $block->escapeHtml(__('Add to Cart')); ?>"
+       class="action tocart primary <?php echo "simple_id_$assignSimpleProductId"; ?> assignproduct-cart"
+       id="assignproduct-cart<?php echo $compareProduct['entity_id'];?>">
+       <span><?php echo __('Add to Cart') ?></span>
+      </button>
+     </form>
+
+    </div><?php }?>
+    <?php }
+
+
+            else { ?>
+                                                    <?php if ($compareProduct->getIsSalable()){ ?>
+                                                        <div class="stock available">
+                                                          <span><?php     echo __('In Stock') ?></span>
+                                                       </div>
+                                                    <?php }else{ ?>
+                                                        <div class="stock unavailable">
+                                                         <span><?php /* @escapeNotVerified */ echo __('Out of Stock') ?></span>
+                                                       </div>
+                                                    <?php } ?>
+                                                <?php } ?>
+                            </td>
+                     </tr>
+          <?php
+
+        }
+        ?>
+        </table>
+</div>
+<input type="hidden" id="compare_price_url" name="compare_price_url"
+ value="<?php echo $block->getComparePriceAjaxUrl(); ?>" />
+<input type="hidden" id="current_product_id" name="current_product_id"
+ value="<?php echo $currentproductId; ?>" />
+
+<?php }?>
+<script type="text/x-magento-init">
+        {
+            "[data-role=tocart-form], .form.map.checkout": {
+                "catalogAddToCart": {}
+            }
+}
+  </script>
+<script>
+require([
+         'jquery',
+         'mage/mage'
+     ], function($){
+ $('.sku-update-loader').hide();
+$('.assignproduct-cart').css("display","none");
+$('.assignproduct-cart').on("click", function () {
+$('.prod-qty').val($('#qty').val());
+});
+
+$('.mp_addtocart_button').on("click", function () {
+ $('.prod-qty').val($('#qty').val());
+ });
+jsonObj = [];
+var hash = {};
+var length;
+var option;
+var attributeslength='<?php echo $attributeCount;?>';
+
+if ($(".super-attribute-select").length > 0) {
+
+
+$('.super-attribute-select').on("click", function () {
+option=$("input[name=selected_configurable_option]").val();
+if(option!=""){
+ $('.assign_simple_product').css("display","none");
+ $('.assignproduct-cart').css("display","none");
+ $('.simple_id_'+option).css("display","block");
+}
+
+
+});
+
+}
+$( document ).on('click','.swatch-attribute', function() {
+  $('.assign_simple_product').css("display","none");
+  $('.assignproduct-cart').css("display","none");
+ code=$(this).attr('attribute-code');
+ attribteid=$(this).attr('attribute-id');
+ $('#super_attribute').val(attribteid);
+ setTimeout(function(){
+  productid=$('#current_product_id').val();
+  value=$('.'+code).attr('option-selected');
+  if(value!== undefined){
+   hash[code] = value;
+  }
+  else{
+   delete hash[code];
+  }
+  length= Object.keys(hash).length;
+  if(length==attributeslength){
+    $('.sku-update-loader').show();
+    $('.assign_simple_product').css("display","none");
+    $('.assignproduct-cart').css("display","none");
+             $.ajax({
+             type: "POST",
+             url: $('#compare_price_url').val(),
+             data: {attributes: hash,id:productid},
+             success: function(transport){
+              $('.sku-update-loader').hide();
+              $('.assign_simple_product').css("display","none");
+              $('.assignproduct-cart').css("display","none");
+               var result = $.parseJSON(transport);
+
+                if(result.length>=1){
+       for (var i = 0; i < result.length; i++) {
+                 $('.simple_id_'+result[i]).css("display","block");
+
+                   }
+
+                    if(result==null){
+                     $('.assign_simple_product').css("display","none");
+                    }
+
+                }
+              else{
+               $('.assign_simple_product').css("display","none");
+               }
+           }
+             });
+   }
+         }, 50);
+
+});
+});
+</script>

@@ -1,0 +1,82 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+$helper = $this->helper( 'Apptha\Marketplace\Helper\Objectmanager' );
+$customerSession = $helper->customerSession();
+if ($customerSession->isLoggedIn ()) {
+ $customerId = $customerSession->getId ();
+}
+$customerGroupId = $customerSession->getCustomer ()->getGroupId ();
+$helper = $this->helper ( 'Apptha\Marketplace\Helper\Objectmanager' );
+$resultData = $helper->sellerCollection();
+$resultDatasCollection = $resultData->getCollection ();
+$resultDatas = $resultDatasCollection->getData ();
+$resultIds = array ();
+foreach ( $resultDatas as $resultId ) {
+ $sellerIds [] = $resultId ['customer_id'];
+}
+if ($customerGroupId != '4') {
+ ?>
+<div class="col-main">
+    <div class="my-account">
+        <div class="box-account box-info">
+            <p>Turn in to a seller today and enjoy some incredible
+                benefits like adding logo to your profile page for
+                better branding, setting up multiple products to improve
+                conversions, etc.</p>
+            <p>Click the button to become a Seller</p>
+            <form data-mage-init='{"validation":{}}' name="buyer-seller"
+                id="buyer-seller"
+                action="<?php  echo $block->getUrl('*/*/Saveseller')?>"
+                method="post">
+                <div class="input-box">
+                    <input type="checkbox" id="privacy_policy"
+                        name="privacy_policy" value="1"
+                        title="I agree the Terms and Condition"
+                        data-validate="{required:true}" /> <label
+                        for="privacy_policy"> I agree the <a
+                        href="<?php echo $block->getUrl('privacy-policy-cookie-restriction-mode');?>"
+                        target="_blank"><?php echo __('Terms and Conditions') ?></a>
+                    </label>
+                </div>
+                <div class="actions-toolbar">
+                    <div class="primary">
+                        <button type="submit"
+                            class="action submit primary">
+                            <span><?php  echo __('Submit') ?></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<?php
+
+} else {
+    echo __ ( 'Admin Approval is required. Please wait until admin confirms your seller account.');
+ }?>

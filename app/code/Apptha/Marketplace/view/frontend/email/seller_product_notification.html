@@ -1,0 +1,23 @@
+<!--@subject Out Of Stock Notification @-->
+
+{{template config_path="design/email/header_template"}}
+<!-- pathe of template header-->
+
+<!-- here $myvar1 , $myvar2, $myvar3, $myvar4, $myvar5, $myvar6 are variables in which we
+                                     asssign values when we use this template for send mail-->
+
+<!-- you can Modify content of template according to your requirement-->
+<table>
+	<tr>
+		<td valign="top">
+			<p style="font-size: 12px; line-height: 16px; margin: 0 0 16px 0;">
+				Hi {{var receivername}},<br />
+				<br />Your product is Out Of Stock. So please check below status and update the product.<br />
+				<br />Product Name                : {{var productname}} <br />
+				<br />SKU                         : {{var sku}} <br />
+				<br />Quantity                    : {{var qty}} <br />
+				<br />Allowed Minimum Quantity    : {{var minqty}} <br />
+		</td>
+	</tr>
+</table>
+{{template config_path="design/email/footer_template"}}

@@ -1,0 +1,26 @@
+<!--@subject Your subscription plan was expired @-->
+<!--
+@vars {
+"var this.getUrl($store, 'admin')":"Warehouse Account URL",
+"var customer.email":"Customer Email",
+"var customer.name":"Customer Name"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+<!-- pathe of template header-->
+
+<!-- here $myvar1 , $myvar2, $myvar3, $myvar4, $myvar5, $myvar6 are variables in which we
+                                     asssign values when we use this template for send mail-->
+
+<!-- you can Modify content of template according to your requirement-->
+<table>
+	<tr class="email-intro">
+		<td>
+			<p style="font-size: 12px; line-height: 16px; margin: 0 0 16px 0;">
+				Hi {{var sellername}},<br />
+			</p>
+			<p>Your subscription plan "{{var plan}}" was expired</p>
+		</td>
+	</tr>
+</table>
+{{template config_path="design/email/footer_template"}}

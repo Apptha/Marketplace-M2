@@ -1,0 +1,189 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<div>
+    <h3><?php
+    echo __ ( 'Reviews and Ratings of' ) . ' ' . $block->getStoreName ();
+    ?></h3>
+<?php
+$sellerReviews = $block->getCollection ();
+if (count ( $sellerReviews ) >= 1) {
+ ?>
+      <div class="toolbar-bottom">
+        <div class="toolbar bottom">
+            <?php echo $block->getPagerHtml(); ?>
+         </div>
+    </div>
+<?php
+ foreach ( $sellerReviews as $sellerReview ) {
+  ?>
+      <div class="all_review_container" id="all_review_container">
+        <div class="all_reviews_details">
+            <p class="all_reviews_block">
+                    <?php
+  /**
+   * Display seller rating
+   */
+  if ($sellerReview->getRating () == 1) {
+   ?>
+                        <label class="all_review_rating"
+                    style="width: 20%;"><span>&#10038;</span></label>
+                    <?php } elseif ($sellerReview->getRating() == 2) { ?>
+                        <label class="all_review_rating"
+                    style="width: 40%;"><span>&#10038;</span><span>&#10038;</span></label>
+                    <?php } elseif ($sellerReview->getRating() == 3) { ?>
+                        <label class="all_review_rating"
+                    style="width: 60%;"><span>&#10038;</span><span>&#10038;</span><span>&#10038;</span></label>
+                    <?php } elseif ($sellerReview->getRating() == 4) { ?>
+                        <label class="all_review_rating"
+                    style="width: 80%;"><span>&#10038;</span><span>&#10038;</span><span>&#10038;</span><span>&#10038;</span></label>
+                    <?php } else { ?>
+                        <label class="all_review_rating"
+                    style="width: 100%;"><span>&#10038;</span><span>&#10038;</span><span>&#10038;</span><span>&#10038;</span><span>&#10038;</span></label>
+                    <?php } ?>
+                </p>
+            <b><?php echo $block->getCustomerName($sellerReview->getCustomerId()) . '</br>'; ?></b>
+            <span>
+                    <?php
+
+  $date = $sellerReview->getCreatedAt ();
+  echo $newDate = date ( 'M j, Y', strtotime ( $date ) ) . '</br>';
+  ?>
+                </span>
+        </div>
+        <p
+            class="all_reviews_comments <?php if(strlen($sellerReview->getReview()) > 700){?> product_review <?php } ?>">
+        <?php echo $sellerReview->getReview() . '</br>'; ?>
+            </p>
+        <span class="read-more"
+            <?php if(strlen($sellerReview->getReview()) < 700){?>
+            style='display: none;' <?php } ?>><?php echo __('Read More'); ?></span>
+    </div>
+    <div class="clear"></div>
+<?php
+ }
+ ?>
+      <div class="toolbar-bottom">
+        <div class="toolbar bottom">
+            <?php echo $block->getPagerHtml(); ?>
+         </div>
+    </div>
+<?php
+} else if(!$this->getRequest()->getParams('seller_id')){
+ ?>
+<p><?php echo __("We couldn't find any records."); ?></p>
+<?php
+}
+?>
+<?php
+/**
+ * Seller review form
+ */
+?>
+<div id="seller_review">
+<?php
+$sellerId = $this->getRequest ()->getParam ( 'seller_id' );
+$write = $this->getRequest ()->getParam ( 'write' );
+if (! empty ( $sellerId ) && $write == 1 && $block->getLoggedInCustomerId () != $sellerId) {
+ $canReview = $block->canReview ( $block->getLoggedInCustomerId (), $sellerId );
+ if ($canReview == 1) {
+  ?>
+<ul>
+            <div class="mp_seller_rating" id="mp_seller_rating">
+                <form action='<?php echo $block->saveReviewUrl(); ?>'
+                    id="seller_review_form" method="post">
+                    <p class="mp_seller_comments">
+                        <label for="sellername"> <?php echo __('Name:'); ?>  </label><em style="color: red; font-weight: normal; font-family: 'Open Sans', sans-serif; font-size: 12px;">*</em>
+                        <input type="text"
+                            value="<?php echo $block->getCustomerName($block->getLoggedInCustomerId()); ?>"
+                            readonly />
+                    </p>
+                    <p class="mp_seller_comments">
+                        <label for="feedback"> <?php echo __('Feedback about seller:'); ?>  </label><em style="color: red; font-weight: normal; font-family: 'Open Sans', sans-serif; font-size: 12px;">*</em>
+                        <textarea id="feedback" rows="9" cols="49"
+                            name="feedback" class="input-text"
+                            data-validate="{required:true}"></textarea>
+                    </p>
+                    <input type="hidden" name="seller_id"
+                        value="<?php echo $sellerId; ?>" /> 
+                        <div class="review">
+              <label class="mp_seller_left" for="rating"><?php echo __('Rate Seller:'); ?>  </label><em style="color: red; font-weight: normal; font-family: 'Open Sans', sans-serif; font-size: 12px;">*</em>
+                  </div>
+                     <div class="stars">
+        <input type="radio" name="star" class="star-1" id="star-1" value="1"/>
+        <label class="star-1" for="star-1">1</label>
+        <input type="radio" name="star" class="star-2" id="star-2" value="2"/>
+        <label class="star-2" for="star-2">2</label>
+        <input type="radio" name="star" class="star-3" id="star-3" value="3"/>
+        <label class="star-3" for="star-3">3</label>
+        <input type="radio" name="star" class="star-4" id="star-4" value="4"/>
+        <label class="star-4" for="star-4">4</label>
+        <input type="radio" name="star" class="star-5" id="star-5" value="5"/>
+        <label class="star-5" for="star-5">5</label>
+        <span></span>
+    </div>
+                    <div style="display: none;" id="rating-error"><?php echo __('Please select one of the above ratings.'); ?></div>
+                    <button type="submit" class="button"
+                        title="<?php echo __('Submit Review') ?>"
+                        name="submit_review">
+                        <span><span><?php echo __('Submit') ?></span></span>
+                    </button>
+                </form>
+            </div>
+        </ul>
+<?php
+        }
+
+}
+?>
+</div>
+</div>
+
+<script>
+require([
+    'jquery',
+    'mage/mage'
+], function($){
+    var dataForm = $('#seller_review_form');
+    var ignore = null;
+    dataForm.mage('validation', {
+            ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
+        }).find('input:text').attr('autocomplete', 'off');
+
+    $("#seller_review_form").on('submit',(function(e){
+    if($("input[name=star]:checked").val() == undefined){
+    $('#rating-error').show();
+    $('#rating-error').css({"color": "#e02b27","font-size": "1.2rem"});
+    return false;
+    }else{
+    $('#rating-error').hide();
+    }
+    }));
+        if($( "#mp_seller_rating" ).length == '1'){
+    $('#all_review_container').hide();
+        }
+});
+</script>

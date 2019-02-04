@@ -1,0 +1,61 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+?>
+<form class="form form-edit-account " enctype="multipart/form-data"
+    action="<?php  echo $block->getUrl('*/*/savedata')?>" method="post"
+    id="marketplaceContactForm" data-mage-init='{"validation":{}}'>
+    <fieldset class="fieldset"
+        data-hasrequired="<?php  echo __('* Required Fields') ?>">
+        <div class="fields">
+            <div class="field subject required">
+                <label for="subject" class="label"><span><?php  echo __('Subject') ?></span></label>
+                <div class="control">
+                    <input type="text" name="subject" alt="subject"
+                        id="subject" value="<?php ?>" class="input-text"
+                        data-validate="{required:true}" />
+                </div>
+            </div>
+        </div>
+        <div class="fields">
+            <div class="field message required">
+                <label for="message" class="label"><span><?php  echo __('Message') ?></span></label>
+                <div class="control">
+                    <textarea name="message" id="message"
+                        title="<?php echo __('Message')?>" class="input-text" cols="5"
+                        rows="3" data-validate="{required:true}"></textarea>
+                </div>
+            </div>
+            <button type="submit" class="button validation-passed"
+                title="<?php echo __('Save Profile')?>" name="save_profile"
+                id="save_profile">
+                <span><span><?php echo __('Send')?></span></span>
+            </button>
+    </fieldset>
+</form>

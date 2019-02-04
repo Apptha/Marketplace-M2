@@ -1,0 +1,272 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+
+/**
+ * Get image data
+ */
+$configurableImage = $this->getRequest ()->getParam ( 'configurable_image' );
+$imageSelectUnique = $this->getRequest ()->getParam ( 'image_select_unique' );
+$imagesPath = $this->getRequest ()->getParam ( 'configurable_images_path' );
+$imagesPathAll = $this->getRequest ()->getParam ( 'images_path_all' );
+
+$baseImage = $this->getRequest ()->getParam ( 'base_image' );
+$baseImageAll = $this->getRequest ()->getParam ( 'base_image_all' );
+
+/**
+ * Get price data
+ */
+$configurablePrice = $this->getRequest ()->getParam ( 'configurable_price' );
+$priceSelectUnique = $this->getRequest ()->getParam ( 'price_select_unique' );
+$priceUniqueValue = $this->getRequest ()->getParam ( 'price_unique_value' );
+$priceAllValue = $this->getRequest ()->getParam ( 'price_all_value' );
+
+$configurableProductPrice = $this->getRequest ()->getParam ( 'configurable_product_price' );
+
+$configurableSku = $this->getRequest ()->getParam ( 'configurable_sku' );
+
+/**
+ * Get quantity data
+ */
+$configurableQty = $this->getRequest ()->getParam ( 'configurable_qty' );
+$qtySelectUnique = $this->getRequest ()->getParam ( 'qty_select_unique' );
+$qtyUniqueValue = $this->getRequest ()->getParam ( 'qty_unique_value' );
+$qtyAllValue = $this->getRequest ()->getParam ( 'qty_all_value' );
+
+/**
+ * Get options value(s)
+ */
+$allAttributes = $this->getRequest ()->getParam ( 'all_attributes' );
+$allAttributesIds = $this->getRequest ()->getParam ( 'all_attributes_ids' );
+$labelAttributes = $this->getRequest ()->getParam ( 'label_attributes' );
+$allOptions = $this->getRequest ()->getParam ( 'all_options' );
+$labelOptions = $this->getRequest ()->getParam ( 'label_options' );
+
+$attributeOptionsArray = array ();
+foreach ( $allOptions as $key => $allOption ) {
+ $attributeOptionsArray [$allOption] [] = $key;
+}
+
+$attributeCombinations = $block->generateCombinations ( $attributeOptionsArray );
+
+$productId = $this->getRequest ()->getParam ( 'product_id' );
+
+$existProductVariants = array ();
+if (! empty ( $productId )) {
+ $product = $block->getConfigurableProductData ( $productId );
+ $existProductVariants = $block->getexistingProductVariants ( $productId, $product, $allAttributesIds, $allAttributes );
+}
+?>
+
+<div id="configurable_product_prepared_data"
+    class="configurable_product_prepared_data">
+
+    <input type="hidden" value="<?php echo $configurableImage; ?>"
+        name="configurable_image"> <input type="hidden"
+        value="<?php echo $configurablePrice; ?>"
+        name="configurable_price"> <input type="hidden"
+        value="<?php echo $configurableQty; ?>" name="configurable_qty">
+    <input type="hidden" value="<?php echo $configurableQty; ?>"
+        name="configurable_qty">
+<?php
+
+foreach ( $allAttributes as $allAttribute ) {
+ ?>
+<input type="hidden" value="<?php echo $allAttribute; ?>"
+        name="selected_attributes[]">
+<?php
+}
+?>
+
+<?php
+foreach ( $allOptions as $key => $allOption ) {
+ ?>
+<input type="hidden" value="<?php echo $allOption; ?>"
+        name="selected_options[<?php echo $key; ?>]">
+<?php
+}
+?>
+
+<table>
+        <tr>
+            <th><?php echo __('Images'); ?></th>
+            <th><?php echo __('SKU'); ?></th>
+            <th><?php echo __('Quantity'); ?></th>
+<?php foreach($allAttributes as $allAttribute){ ?>
+<th><?php echo $labelAttributes[$allAttribute]; ?></th>
+<?php } ?>
+<th><?php echo __('Price'); ?></th>
+        </tr>
+<?php
+$i = 0;
+foreach ( $attributeCombinations as $attributeCombination ) {
+ $simpleProductIdValue = '';
+ ?>
+<tr>
+            <td>
+<?php
+ /**
+  * Select simple product data
+  */
+ foreach ( $existProductVariants as $key => $existProductVariant ) {
+  $diffAttributes = array_diff ( $existProductVariant, $attributeCombination );
+  if (count ( $diffAttributes ) <= 0) {
+   $simpleProductIdValue = $key;
+   ?>
+<input type="hidden" value="<?php echo $key; ?>"
+                name="configurable_product[<?php echo $i; ?>][simple_product_id]">
+<?php
+  }
+ }
+
+ $attributeCombinationValue = '';
+ foreach ( $attributeCombination as $value ) {
+  $attributeCombinationValue = $attributeCombinationValue . '-' . $value;
+ }
+ ?>
+<input type="hidden" value="<?php echo $attributeCombinationValue; ?>"
+                name="configurable_product[<?php echo $i; ?>][attribute_combination]">
+<?php
+ if ($configurableImage != '') {
+  $mediaImageUrl = $block->getMediaImageUrl ();
+  if ($configurableImage == 'image_unique') {
+   foreach ( $attributeCombination as $value ) {
+       $data=array('mediaimageurl'=>$mediaImageUrl,'baseimage'=>$baseImage,'value'=>$value,'imgincrement'=>$i,'imagesPath'=>$imagesPath);
+       echo $this->getLayout()->createBlock("Apptha\Marketplace\Block\Product\Summary")->setData($data)->setTemplate("Apptha_Marketplace::product/summaryimage.phtml")->toHtml();
+
+   }
+  }
+
+  if ($configurableImage == 'image_all') {
+      $details=array('mediaimageurl'=>$mediaImageUrl,'baseimageAll'=>$baseImageAll,'imgincrement'=>$i,'imagesPathAll'=>$imagesPathAll);
+      if ($baseImageAll != '') {
+       echo $this->getLayout()->createBlock("Apptha\Marketplace\Block\Product\Summary")->setDetails($details)->setTemplate("Apptha_Marketplace::product/summaryimage.phtml")->toHtml();
+   }
+  }
+ }
+ ?>
+</td>
+            <td>
+<?php
+ $configurableSimpleSku = '';
+ $configurableSimpleSku = $configurableSimpleSku . $configurableSku;
+ foreach ( $attributeCombination as $value ) {
+  $configurableSimpleSku = $configurableSimpleSku . '-' . $labelOptions [$value];
+ }
+ echo $configurableSimpleSku;
+ ?>
+<input type="hidden" value="<?php echo $configurableSimpleSku; ?>"
+                name="configurable_product[<?php echo $i; ?>][sku]">
+            </td>
+            <td>
+<?php
+ $qtyFlagForProduct = 0;
+
+  if ($configurableQty == 'qty_unique') {
+   foreach ( $attributeCombination as $value ) {
+    if (isset ( $qtyUniqueValue [$qtySelectUnique] [$value] )) {
+     echo $qtyUniqueValue [$qtySelectUnique] [$value];
+     $qtyFlagForProduct = 1;
+     ?>
+<input type="hidden"
+                value="<?php echo $qtyUniqueValue[$qtySelectUnique][$value]; ?>"
+                name="configurable_product[<?php echo $i; ?>][qty][<?php echo $value; ?>]">
+<?php
+    }
+   }
+  }
+  if ($configurableQty == 'qty_all') {
+   echo $qtyAllValue;
+   $qtyFlagForProduct = 1;
+   ?>
+<input type="hidden" value="<?php echo $qtyAllValue; ?>"
+                name="configurable_product[<?php echo $i; ?>][qty][all]">
+<?php
+  }
+
+  if ($configurableQty == 'qty_skip' && ! empty ( $simpleProductIdValue ) && $qtyFlagForProduct == 0) {
+   echo $block->getQtyForProduct ( $simpleProductIdValue );
+  }
+
+ ?>
+</td>
+<?php
+ foreach ( $attributeCombination as $value ) {
+  ?>
+<td><?php echo $labelOptions[$value];  ?></td>
+<?php
+ }
+ ?>
+<td>
+<?php
+ $priceFlagForProduct = 0;
+
+  if ($configurablePrice == 'price_unique') {
+   foreach ( $attributeCombination as $value ) {
+    if (isset ( $priceUniqueValue [$priceSelectUnique] [$value] )) {
+     echo round ( $priceUniqueValue [$priceSelectUnique] [$value], 2 );
+     $priceFlagForProduct = 1;
+     ?>
+<input type="hidden"
+                value="<?php echo $priceUniqueValue[$priceSelectUnique][$value]; ?>"
+                name="configurable_product[<?php echo $i; ?>][price][<?php echo $value; ?>]">
+<?php
+    }
+   }
+  } elseif ($configurablePrice == 'price_all') {
+   echo round ( $priceAllValue, 2 );
+   $priceFlagForProduct = 1;
+   ?>
+<input type="hidden" value="<?php echo $priceAllValue; ?>"
+                name="configurable_product[<?php echo $i; ?>][price][all]">
+<?php
+  } else {
+   if (empty ( $simpleProductIdValue )) {
+    $priceFlagForProduct = 1;
+    echo round ( $configurableProductPrice, 2 );
+    ?>
+<input type="hidden" value="<?php echo $configurableProductPrice; ?>"
+                name="configurable_product[<?php echo $i; ?>][price][all]">
+<?php
+            }
+        }
+
+        if ($configurablePrice == 'price_skip' && ! empty ( $simpleProductIdValue ) && $priceFlagForProduct == 0) {
+            echo round ( $block->getPriceForProduct ( $simpleProductIdValue ), 2 );
+        }
+
+    echo ' ['.$block->getBaseCurrencyForConfigurableProductSummary().'] ';
+?>
+
+</td>
+        </tr>
+<?php
+$i = $i + 1;
+}
+?>
+</table>
+</div>

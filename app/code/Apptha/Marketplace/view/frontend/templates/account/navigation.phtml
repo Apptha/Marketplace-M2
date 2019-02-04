@@ -1,0 +1,116 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+?>
+<?php
+$sellerGroupId = $customerId = $customerGroupId = $status = '';
+$urlInterface = \Magento\Framework\App\ObjectManager::getInstance ()->get ( 'Magento\Framework\UrlInterface' );
+$currentUrl = $urlInterface->getCurrentUrl ();
+$helper = $this->helper('Apptha\Marketplace\Helper\Objectmanager');
+$customerSession = $helper->customerSession();
+$customerDatas = $customerSession->getCustomer ();
+if ($customerSession->isLoggedIn ()) {
+ $customerId = $customerSession->getId ();
+ $customerGroupId = $customerDatas->getGroupId ();
+ $helper = $this->helper('Apptha\Marketplace\Helper\Objectmanager');
+ $sellerGroupData = $helper->customerSessionGroup($customerGroupId);
+ $sellerGroupId = $sellerGroupData->getId ();
+ $status = $helper->sellerStatus( $customerId);
+}
+$reviewSellerId = $this->getRequest ()->getParam ( 'seller_id' );
+?>
+ <?php
+ $helper = $this->helper('Apptha\Marketplace\Helper\Objectmanager');
+ $requestInterface = $helper->actionController();
+ $routeName = $requestInterface->getRouteName ();
+ $action = $requestInterface->getActionName();
+ if ($routeName != 'catalog' && $routeName != 'catalogsearch') {
+  ?>
+<div class="block block-collapsible-nav" <?php if($routeName !='marketplace' && $routeName !='vacationmode' && $action !='view'){?>style="margin-bottom:-25px;<?php }?>"
+    <?php if(!empty($reviewSellerId)){ echo 'style="display:none;"'; } ?>>
+    <div class="content block-collapsible-nav-content"
+        id="block-collapsible-navigation">
+        <ul class="nav items">
+            <li class="nav item "><strong><?php echo __('MARKETPLACE'); ?></strong></li>
+        <?php
+  $seller = $this->helper( 'Apptha\Marketplace\Helper\Data' );
+  $assignProduct = $seller->getAssignProduct ();
+  $isSellerReviewEnabled = $seller->isSellerReviewEnabled ();
+  if ($customerGroupId != $sellerGroupId || $status == 0) {
+   ?>
+        <li  class="nav item <?php if($currentUrl==$block->getUrl('marketplace/general/changebuyer')){?>current<?php }?>"><a
+                href="<?php echo $block->getUrl('marketplace/general/changebuyer') ?>"><?php echo __('Become a Seller'); ?></a></li>
+                <?php }?>
+        <?php if($customerGroupId==$sellerGroupId && $status==1){ ?>
+        <li  class="nav item <?php if($currentUrl==$block->getUrl('marketplace/seller/dashboard')){?>current<?php }?>"><a
+                href="<?php echo $block->getUrl('marketplace/seller/dashboard') ?>"><?php echo __('Seller Dashboard'); ?></a></li>
+            <li class="nav item <?php if($currentUrl==$block->getUrl('marketplace/product/manage')|| $currentUrl==$block->getUrl('marketplace/product/add')){?>current<?php }?>"><a
+                href="<?php echo $block->getUrl('marketplace/product/manage') ?>"><?php echo __('Manage Products'); ?></a></li>
+        <?php if($assignProduct){?>
+        <li
+                class="nav item <?php if($currentUrl==$block->getUrl('marketplace/assignproduct/manage')|| $currentUrl==$block->getUrl('marketplace/assignproduct/search')){?>current<?php }?>"><a
+                href="<?php echo $block->getUrl('marketplace/assignproduct/manage') ?>"><?php echo __('Assign Product'); ?></a></li>
+        <?php }?>
+        <li  class="nav item <?php if($currentUrl==$block->getUrl('marketplace/seller/profile')){?>current<?php }?>"><a
+                href="<?php echo $block->getUrl('marketplace/seller/profile') ?>"><?php echo __('My Store'); ?></a></li>
+            <li class="nav item <?php if($currentUrl==$block->getUrl('marketplace/order/manage')){?>current<?php }?>"><a
+                href="<?php echo $block->getUrl('marketplace/order/manage') ?>"><?php echo __('Order Management'); ?></a></li>
+            <li class="nav item <?php
+   $requestInterface = $helper->actionController();
+   $routeName = $requestInterface->getRouteName ();
+   $controllerName = $requestInterface->getControllerName ();
+   $actionName = $requestInterface->getActionName ();
+   if ($currentUrl == $block->getUrl ( 'marketplace/seller/transactions' ) || $routeName == 'marketplace' && $controllerName == 'seller' && $actionName == 'transactions') {
+    ?>current
+    <?php }?>"><a href="<?php echo $block->getUrl('marketplace/seller/transactions') ?>"><?php echo __('Transactions'); ?></a></li>
+        <?php if($isSellerReviewEnabled == 1){ ?>
+        <li class="nav item <?php if($currentUrl==$block->getUrl('marketplace/seller/review')){?>current<?php }?>"><a
+                href="<?php echo $block->getUrl('marketplace/seller/review') ?>"><?php echo __('Reviews'); ?></a></li>
+        <?php } ?>
+       <?php
+   $adminApproval = $seller->getContactAdmin ();
+   if ($adminApproval) {
+    ?>
+        <li  class="nav item <?php if($currentUrl==$block->getUrl('marketplace/contact/form')){?>current<?php }?>"><a
+                href="<?php echo $block->getUrl('marketplace/contact/form') ?>"><?php echo __('Contact Admin'); ?></a></li>
+       <?php }?>
+       <?php
+   $isSellerSubscriptionEnabled = $seller->isSellerSubscriptionEnabled ();
+   if ($isSellerSubscriptionEnabled) {
+    ?>
+       <li  class="nav item <?php if($currentUrl==$block->getUrl('marketplace/seller/subscriptionplans')){?>current<?php }?>"><a
+                href="<?php echo $block->getUrl('marketplace/seller/subscriptionplans') ?>"><?php echo __('Subscription Plans'); ?></a></li>
+       <?php
+            }
+            ?>
+       <?php }?>
+        </ul>
+    </div>
+</div>
+<?php }?>

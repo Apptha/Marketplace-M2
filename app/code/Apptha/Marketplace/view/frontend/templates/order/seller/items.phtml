@@ -1,0 +1,144 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+$orderId = $block->getOrderId ();
+$sellerId = $block->getSellerId ();
+/**
+ * Get order and order items details
+ */
+$sellerOrder = $this->getOrderDetails ( $orderId, $sellerId );
+$sellerOrderItem = $this->getOrderItemDetails ( $orderId, $sellerId );
+$currencySymbol = $orderCurrencyCode = '';
+$orderCurrencyCode = $sellerOrder->getOrderCurrencyCode ();
+$orderSellerTotal = $sellerOrder->getSellerProductTotal ();
+$commission = $sellerOrder->getCommission ();
+$sellerAmount = $orderSellerTotal - $commission;
+$shippingAmount = $sellerOrder->getShippingAmount ();
+if (empty ( $shippingAmount )) {
+ $shippingAmount = 0;
+}
+
+if (! empty ( $orderCurrencyCode )) {
+ $currencySymbol = $block->getCurrencySymbol ( $orderCurrencyCode );
+ if (empty ( $currencySymbol )) {
+  $currencySymbol = $orderCurrencyCode;
+ }
+}
+?>
+<div class="table-wrapper order-items">
+    <table class="data table table-order-items" id="my-orders-table">
+        <thead>
+            <tr>
+                <th style="width: 43%" class="col name"><?php echo __('Product Name');?></th>
+                <th style="text-align: center; width: 30%;"class="col sku"><?php echo __('SKU');?></th>
+                <th style="text-align: center; width: 30%;" class="col price"><?php echo __('Price');?></th>
+                <th style="text-align: center; width: 30%;" class="col qty"><?php echo __('Qty');?></th>
+                <th style="text-align: center; width: 30%;"  class="col subtotal"><?php echo __('Subtotal');?></th>
+            </tr>
+        </thead>
+        <tbody>
+           <?php
+           foreach ( $sellerOrderItem as $item ) {
+            $productData = $item->getData ();
+            $decodedOptionsValue = json_decode ( ($productData ['options']), true );
+            ?>
+                <tr id="<?php echo $orderId?>">
+                <td style="width: 30%;" class="col name"  data-th="Product Name"><strong   class="product name product-item-name"><?php echo $productData['product_name'];?><br />
+        <?php
+            
+            $type = $block->getProductType ( $productData ['product_id'] );
+            $attributes = $block->getProductAttributes ( $orderId );
+            if ($type == "configurable" && isset ( $attributes [$productData ['product_id']] )) {
+             $attributeoptions = $attributes [$productData ['product_id']];
+             foreach ( $attributeoptions as $attribute ) {
+              ?>
+             <div class="attribute"> <h5><?php echo $attribute['label']."-".$attribute['value'];?></h5>
+              </div>
+              <?php
+             }
+            }
+            if (isset ( $decodedOptionsValue ['options'] )) {
+             $decodedData= $decodedOptionsValue ['options'];
+             foreach ( $decodedData as $option ) {
+              ?><h4><?php  echo $option['label'];?></h4>
+         <?php echo $option['value'];?><br /><?php
+             }
+            } ?>
+             </strong>
+             </td>
+                <td style="text-align: center; width: 30%;" class="col sku" data-th="SKU"><?php echo $productData['product_sku'];?></td>
+                <td style="text-align: center; width: 30%;" class="col price" data-th="Price">
+                    <span class="price-excluding-tax" data-label="Excl. Tax">
+                        <span class="cart-price"> <span class="price"><?php echo $currencySymbol. round($productData['product_price'],2);?></span>
+                    </span>
+                </span></td>
+                <td style="text-align: center; width: 30%;"
+                    class="col qty" data-th="Qty">
+                    <ul style="padding: 1px; text-align: center;" class="items-qty">
+                        <li style="list-style: none;" class="item">
+                        <span class="title"><?php echo __('Ordered');?></span>
+                            <span class="content"><?php echo round($productData['product_qty'],2);?></span>
+                        </li></ul></td>
+                <td style="text-align: center; width: 30%;"
+                    class="col subtotal" data-th="Subtotal">
+                    <span class="price-excluding-tax" data-label="Excl. Tax">
+                     <span class="cart-price"> <span class="price"><?php echo $currencySymbol. round($productData['product_price']*$productData['product_qty'],2);?></span>
+                    </span>
+                </span></td>
+    <?php } ?>    
+    </tbody>
+        <tfoot>
+            <tr class="subtotal">
+                <th colspan="4" class="mark" scope="row"> <?php echo __('Subtotal');?>  </th>
+                <td class="amount" data-th="Subtotal"><span class="price"><?php echo $currencySymbol.round($orderSellerTotal,2); ?></span>
+                </td>
+            </tr>
+            <tr class="shipping">
+                <th colspan="4" class="mark" scope="row"><?php echo __('Commission'.' (-)');?> </th>
+                <td class="amount" data-th="Shipping Handling"><span
+                    class="price"><?php echo $currencySymbol.round($commission,2);?></span>
+                </td>
+            </tr>
+          <?php if($shippingAmount > 0){ ?>                  
+                 <tr class="shipping">
+                <th colspan="4" class="mark" scope="row"> <?php echo __('Shipping Handling');?> </th>
+                <td class="amount" data-th="Shipping Handling"><span class="price"><?php echo $currencySymbol.round($shippingAmount,2);?></span>
+                </td>
+            </tr>
+                <?php } ?>            
+            <tr class="grand_total">
+                <th colspan="4" class="mark" scope="row"><strong> <?php echo __('Estimated Seller Amount');?>   </strong>
+                </th>
+                <td class="amount" data-th="Estimated Total"><strong><span
+                        class="price"><?php echo $currencySymbol.round($sellerAmount + $shippingAmount,2);?></span></strong>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

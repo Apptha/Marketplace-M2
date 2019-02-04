@@ -1,0 +1,201 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+$productId = $this->getRequest ()->getParam ( 'product_id' );
+$product = $block->getProductDetails($productId);
+$images = $product->getMediaGalleryImages ();
+if(!empty($images)){
+foreach ( $images as $image ) {
+    if ($image->getMediaType () == 'external-video') {
+        $videoUrl = $image->getVideoUrl ();
+    }
+}
+}
+$youTubeApiKey = $block->getApiKey ();
+$videoEnabled = $block->getVideoEnabled ();
+if (! empty ( $youTubeApiKey ) && $videoEnabled == '1') {
+    ?>
+<div class="vid">
+     <form action="#" method="POST" enctype="multipart/form-data"
+          class="video_upload_form" name="video_upload_form"
+          id="video_upload_form">
+          <input type="hidden" id="video_upload_ajax_url" class="images_list"
+               name="video_upload_ajax_url"
+               value="<?php echo $block->getYoutubeUrl(); ?>" /> <label
+               for="product_video" class="label"><span><?php echo __('Youtube URL') ?></span></label>
+          <input type="text" name="product_video" id="product_video"
+               value="<?php if(!empty($videoUrl)){echo $videoUrl;}?>"
+               title="<?php echo __('Product Video') ?>" class="input-text"
+               data-validate="{'validate-url':true}">
+</div>
+<div class="spinner" style="display: none;" id="video_upload_ajax_loader">
+  <div class="bounce1"></div>
+  <div class="bounce2"></div>
+  <div class="bounce3"></div>
+</div>
+<div id="dialog" >
+     <div class="video_container" id="video_container"></div>
+     <span id="magenote"></span>
+</div>
+</form>
+<script>
+require([
+    'jquery',
+    'mage/mage'
+], function($){
+     $('#video_information').hide();
+     $('#video_title').hide();
+     $('#video_description').hide();
+     $( document ).ready(function(){
+     var urls = $('#product_video').val();
+     if(urls.length != 0){
+          addVideo();
+     }
+     });
+     $("#product_video").change(function() {
+          addVideo();
+     });
+     function addVideo(){
+         var urls = $('#product_video').val();
+         if(urls == 0){
+              $('#video_upload_ajax_loader').hide();
+             $('#dialog').hide();
+             $('#product_video').removeClass('mage-error');
+             $("#btn_save_product").attr("disabled",false);
+             return false;
+         }
+         $('#video_upload_ajax_loader').show();
+         if ($('#video_upload_ajax_loader').show()){
+            $('#btn_save_product').attr("disabled",true);
+         }
+         $('#dialog table').empty();
+         $('#magenote').empty();
+         $('#video_container').empty();
+         $('#dialog label').empty();
+         $.ajax({
+             url: $('#video_upload_ajax_url').val(),
+             data: 'url='+urls,
+             type: 'POST',
+             success: function (transport) {
+                 if(transport.success != 'Not Found' && transport.error !='Invalid URL'){
+                  $('#video_information').show();
+                  $('#video_title').show();
+                  $('#video_description').show();
+             $('#video_upload_ajax_loader').hide();
+             $('#magenote').hide();
+             var obj = $.parseJSON(transport.success);
+             var desc = $.parseJSON(transport.description);
+             var orderArray = new Array();
+                  var orderArrayHeader = ["Title","Description","Preview Image"];
+                  // get handle on div
+                  var container = document.getElementById('dialog');
+                  // create table element
+                  var table = document.createElement('table');
+                  var tbody = document.createElement('tbody');
+                  var thead = document.createElement('thead');
+                  table.appendChild(thead);
+                      // get inner array
+                      var vals = orderArray;
+                      // create tr element
+                      var row = document.createElement('tr');
+                      // create td element
+                      var cell = document.createElement('td');
+                      // set text
+                      cell.textContent = vals;
+                      // append td to tr
+                      row.appendChild(cell);
+                      elmNewContent = document.createElement('input');
+                      elmNewContent.setAttribute('type','text');
+                      elmNewContent.setAttribute('name','video_title');
+                      elmNewContent.setAttribute('class', 'video_title');
+                      elmNewContent.setAttribute('id', 'video_title');
+                      elmNewContent.setAttribute('value', obj.title);
+                      cell.appendChild(elmNewContent);
+                      elmNewContent = document.createElement('input');
+                      elmNewContent.setAttribute('type','hidden');
+                      elmNewContent.setAttribute('name','video_thumbnailurl');
+                      elmNewContent.setAttribute('id', 'video_thumbnailurl');
+                      elmNewContent.setAttribute('value', obj.thumbnail_url);
+                      cell.appendChild(elmNewContent);
+                      elmNewContent = document.createElement('textarea');
+                      elmNewContent.setAttribute('name','video_description');
+                      elmNewContent.setAttribute('class', 'video_description');
+                      elmNewContent.setAttribute('id', 'video_description');
+                      cell.appendChild(elmNewContent);
+                      elmNewContent = document.createElement('img');
+                      elmNewContent.setAttribute('type','image');
+                      elmNewContent.setAttribute('src',obj.thumbnail_url);
+                      elmNewContent.setAttribute('name','preview_image');
+                      elmNewContent.setAttribute('id', 'preview_image');
+                      elmNewContent.setAttribute("alt", "Preview");
+                      elmNewContent.setAttribute('class', 'preview_image');
+                      elmNewContent.setAttribute('id', 'preview_image');
+                      cell.appendChild(elmNewContent);
+                      //append tr to tbody
+                      tbody.appendChild(row);
+                      // append tbody to table
+                      table.appendChild(tbody);
+                      // append table to container
+                      dialog.appendChild(table);
+                      document.getElementById("video_description").value = desc['items']['0']['snippet']['description'];
+                      $('#product_video').removeClass('mage-error');
+                      $("#btn_save_product").attr("disabled",false);
+                      $( "<label>Title</label>" ).insertBefore( ".video_title" );
+                      $( "<label>Description</label>" ).insertBefore( ".video_description" );
+                      $( "<label>Preview Image</label>" ).insertBefore( ".preview_image" );
+                      $( "<label>Video Preview</label>" ).insertBefore( ".video_container" );
+                      $('#video_description').attr("rows", "10");
+                      $('#video_container').append(obj.html);
+             } else if(transport.error) {
+                  $('#video_title').hide();
+                 $('#video_description').hide();
+                 $('#preview_image').hide();
+                 $('#video_upload_ajax_loader').hide();
+                 $('#video_information').hide();
+                 $('#product_video').addClass("mage-error");
+                 $('#magenote').addClass('magenote');
+                 $('#magenote').show();
+                 document.getElementById("magenote").append('Please check the URL');
+                 $("#btn_save_product").attr("disabled",true);
+             } else {
+                 $('#video_upload_ajax_loader').hide();
+                 $('#video_information').hide();
+                 $('#video_title').hide();
+                 $('#video_description').hide();
+                 $('#preview_image').hide();
+                 $('#product_video').addClass("mage-error");
+                 $('#magenote').addClass('magenote');
+                 $('#magenote').show();
+                 document.getElementById("magenote").append('Please check the URL');
+                 $("#btn_save_product").attr("disabled",true);
+             }
+             },
+         });
+         }
+    });
+</script>
+<?php }?>

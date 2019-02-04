@@ -1,0 +1,63 @@
+<?php
+/**
+ * Apptha
+ * NOTICE OF LICENSE
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ * ==============================================================
+ * MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category Apptha
+ * @package Apptha_Marketplace
+ * @version 1.2
+ * @author Apptha Team <developers@contus.in>
+ * @copyright Copyright (c) 2017 Apptha. (http://www.apptha.com)
+ * @license http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php $sellerInformation=$block->getAllsellerdatas()->getData(); ?>
+<?php $sellerCount=count($sellerInformation);?>
+<?php if($sellerCount>=1){?>
+<div class="my-account-wrapper">
+    <ul class="mp_all_sellers_container f-left" border="0"
+        cellspacing="0" cellpadding="0">
+      <?php
+ foreach ( $sellerInformation as $sellerData ) {
+  $sellerDatas = $block->getSellerrequestpath ( $sellerData );
+  ?>
+       <li class="f-left"><a class="mp_all_sellers_view"
+            href="<?php echo $block->getUrl($sellerDatas['request_path']);?>"
+            title="<?php echo $sellerDatas['store_name'];?>">
+           <?php if($sellerDatas['logo_name']!=""){?>
+           <img
+                src="<?php echo $sellerDatas['logo_path'].$sellerDatas['logo_name'];?>"
+                alt="Store Logo" class="store-logo">
+           <?php } else{?>
+           <img
+                src="<?php echo $block->getViewFileUrl('Apptha_Marketplace::images/no-store-logo.png');?>"
+                alt="Store Logo" class="store-logo">
+         <?php  }?>
+         <span style="clear: both; text-transform: uppercase;"><?php echo $sellerDatas['store_name'];?></span>
+        </a></li>
+      <?php }?>
+ </ul>
+</div>
+      <?php if ($block->getPagerHtml()): ?>
+        <div class="allseller-toolbar toolbar bottom"><?php echo $block->getPagerHtml(); ?></div>
+    <?php endif ?>
+<?php
+
+} else {
+    echo __ ( 'No Registered Seller Records Were Found' );
+}
+
+?>

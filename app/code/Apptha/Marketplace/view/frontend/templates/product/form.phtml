@@ -106,7 +106,7 @@ if (count ( $productTypes ) >= 1 && $productTypes [0] == 'virtual' || count ( $p
                 <?php if (! empty ( $productId ) && $typeId == 'configurable') {?>
                 <input type="hidden" value="<?php echo $productData->getAttributeSetId(); ?>"  name="set" />
                 <?php } ?>
-                <select id="attribute_set" <?php if(!empty($productId)){ echo 'disabled'; } ?>  name="set" <?php if(!empty($productId)){ echo __('disabled'); } ?>
+                <select id="attribute_set" <?php if(!empty($productId)){ echo 'disabled'; } ?>  name="set" 
                         title="<?php echo __('Attribute Set') ?>" class="validate-select" data-validate="{required:true}">
                         <option  value="<?php echo $block->getDefaultAttributeSetId(); ?>"><?php echo __('Default'); ?></option>
                     <?php

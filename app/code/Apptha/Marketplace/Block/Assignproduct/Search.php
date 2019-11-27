@@ -32,7 +32,7 @@ namespace Apptha\Marketplace\Block\Assignproduct;
 use Magento\Framework\View\Element\Template;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogInventory\Model\StockRegistry;
-use Zend\Form\Annotation\Object;
+use Zend\Form\Annotation\Instance;
 
 /**
  * This class used to display the assign products collection

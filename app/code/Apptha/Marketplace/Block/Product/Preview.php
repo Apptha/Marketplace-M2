@@ -31,8 +31,8 @@ namespace Apptha\Marketplace\Block\Product;
 
 use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Catalog\Model\Resource\Product\CollectionFactory;
-use Zend\Form\Annotation\Object;
 use Magento\CatalogInventory\Model\StockRegistry;
+use Zend\Form\Annotation\Instance;
 
 /**
  * This class used to display product preview page

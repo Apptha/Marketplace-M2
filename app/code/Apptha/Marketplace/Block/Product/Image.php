@@ -32,7 +32,7 @@ namespace Apptha\Marketplace\Block\Product;
 use Magento\Framework\View\Element\Template;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogInventory\Model\StockRegistry;
-use Zend\Form\Annotation\Object;
+use Zend\Form\Annotation\Instance;
 
 /**
  * This class used to configurable product image

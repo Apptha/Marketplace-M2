@@ -108,7 +108,7 @@ class Savedata extends \Magento\Framework\App\Action\Action {
             $productModel = $this->_objectManager->get ( 'Magento\Catalog\Model\Product' )->getCollection ();
             $productModel->addFieldToFilter ( 'sku', $productData ['sku'] );
             $productModel->addFieldToFilter ( 'entity_id', array (
-                    'neq' => $productId
+                'neq' => $productId
             ) );
             if (count ( $productModel ) >= 1) {
                 $this->messageManager->addNotice ( __ ( 'Sku already exists' ) );
@@ -138,7 +138,7 @@ class Savedata extends \Magento\Framework\App\Action\Action {
         $storeId = $store->getStoreId ();
         $websiteId = $store->getWebsiteId ();
         $product->setWebsiteIds ( array (
-                $websiteId
+            $websiteId
         ) );
         $product = $this->assignProductData ( $productId, $product, $storeId, $productTypeId, $productData );
         $productData = $this->changeProductData ( $productData );
@@ -146,15 +146,15 @@ class Savedata extends \Magento\Framework\App\Action\Action {
         $product->setName ( $productData ['name'] );
         if ($productTypeId == 'downloadable') {
             $product->setStockData ( array (
-                    'use_config_manage_stock' => 0,
-                    'is_in_stock' => 1,
-                    'manage_stock' => 0,
-                    'use_config_notify_stock_qty' => 0
+                'use_config_manage_stock' => 0,
+                'is_in_stock' => 1,
+                'manage_stock' => 0,
+                'use_config_notify_stock_qty' => 0
             ) );
         } else {
             $product->setStockData ( array (
-                    'qty' => $productData ['quantity_and_stock_status'] ['qty'],
-                    'is_in_stock' => $productData ['quantity_and_stock_status'] ['is_in_stock']
+                'qty' => $productData ['quantity_and_stock_status'] ['qty'],
+                'is_in_stock' => $productData ['quantity_and_stock_status'] ['is_in_stock']
             ) );
         }
         $productApproval = $this->systemHelper->getProductApproval ();
@@ -209,8 +209,8 @@ class Savedata extends \Magento\Framework\App\Action\Action {
         $marketplaceGeneral->assignDataForDownloadableProduct ( $downloadProductId, $store, $downloadableData );
         $this->updateStockDataForProduct ( $product->getId (), $productData );
         $this->_eventManager->dispatch ( 'controller_action_catalog_product_save_entity_after', [
-                'controller' => $this,
-                'product' => $product
+            'controller' => $this,
+            'product' => $product
         ] );
         $this->_redirect ( 'marketplace/product/manage' );
     }
@@ -308,7 +308,7 @@ class Savedata extends \Magento\Framework\App\Action\Action {
         if(!empty($ConfigEdit)){
             $product->setVisibility ( '1' );
         } else{
-        $product->setVisibility ( \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH );
+            $product->setVisibility ( \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH );
         }
 
         if (! empty ( $nationalShippingAmount )) {
@@ -334,7 +334,7 @@ class Savedata extends \Magento\Framework\App\Action\Action {
      * @return void
      */
     public function saveImageForProduct($productId, $imagesPaths) {
-        if (count ( $imagesPaths ) >= 1) {
+        if (is_array($imagesPaths) && count ( $imagesPaths ) >= 1) {
             array_unique ( $imagesPaths );
 
             $productImage = $this->_objectManager->create ( 'Magento\Catalog\Model\Product' )->load ( $productId );
@@ -349,42 +349,45 @@ class Savedata extends \Magento\Framework\App\Action\Action {
                     $randomString .= $characters [rand ( 0, $charactersLength - 1 )];
                 }
                 $randomStringArr = array (
-                        "position" => $inc,
-                        "media_type" => "image",
-                        "video_provider" => "",
-                        "file" => $path,
-                        "value_id" => "",
-                        "label" => "",
-                        "disabled" => 0,
-                        "removed" => "",
-                        "video_url" => "",
-                        "video_title" => "",
-                        "video_description" => "",
-                        "video_metadata" => "",
-                        "role" => ""
+                    "position" => $inc,
+                    "media_type" => "image",
+                    "video_provider" => "",
+                    "file" => $path,
+                    "value_id" => "",
+                    "label" => "",
+                    "disabled" => 0,
+                    "removed" => "",
+                    "video_url" => "",
+                    "video_title" => "",
+                    "video_description" => "",
+                    "video_metadata" => "",
+                    "role" => ""
                 );
                 $images [$randomString] = $randomStringArr;
                 $inc = $inc + 1;
             }
             $productImage->setData ( 'media_gallery', [
-                    'images' => $images
+                'images' => $images
             ] );
             $productImage->save ();
         }
     }
 
     /**
-     * Removing existing images from product
-     *
-     * @param
-     *            int product id
-     * @param array $removeImageIds
-     * @return void
+     * @param $productId int product id
+     * @param $imagesIds array $removeImageIds
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function removeImageForProduct($productId, $imagesIds) {
-        if (count ( $imagesIds ) < 1) {
+        if (is_array($imagesIds) && count ( $imagesIds ) < 1) {
             return;
         }
+
+        if (!is_array($imagesIds)) {
+            return;
+        }
+
+
         array_unique ( $imagesIds );
 
         $product = $this->_objectManager->get ( 'Magento\Catalog\Model\Product' )->load ( $productId );
@@ -478,7 +481,7 @@ class Savedata extends \Magento\Framework\App\Action\Action {
                     }
 
                     $customOption = $this->_objectManager->create('Magento\Catalog\Api\Data\ProductCustomOptionInterfaceFactory')->create ( [
-                            'data' => $customOptionData
+                        'data' => $customOptionData
                     ] );
                     $customOption->setProductSku ( $product->getSku () );
                     $customOptions [] = $customOption;
@@ -546,7 +549,7 @@ class Savedata extends \Magento\Framework\App\Action\Action {
                         $websiteId = $store->getWebsiteId ();
                         $simpleProduct->setStoreId ( 0 );
                         $simpleProduct->setWebsiteIds ( array (
-                                $websiteId
+                            $websiteId
                         ) );
                         $simpleProduct->setProductApproval ( 1 );
                         /**
@@ -644,11 +647,11 @@ class Savedata extends \Magento\Framework\App\Action\Action {
             }
         }
         return array (
-                'used_path' => $usedPath,
-                'product_id_for_image' => $productIdForImage,
-                'images_paths' => $imagesPaths,
-                'simple_product_images_path' => $simpleProductImagesPath,
-                'base_image' => $baseImage
+            'used_path' => $usedPath,
+            'product_id_for_image' => $productIdForImage,
+            'images_paths' => $imagesPaths,
+            'simple_product_images_path' => $simpleProductImagesPath,
+            'base_image' => $baseImage
         );
     }
 
@@ -728,10 +731,10 @@ class Savedata extends \Magento\Framework\App\Action\Action {
                 $qty = 0;
             }
             $simpleProduct->setStockData ( array (
-                    'use_config_manage_stock' => 0,
-                    'manage_stock' => 1,
-                    'is_in_stock' => 1,
-                    'qty' => $qty
+                'use_config_manage_stock' => 0,
+                'manage_stock' => 1,
+                'is_in_stock' => 1,
+                'qty' => $qty
             ) );
             $qtyData ['simple_product'] = $simpleProduct;
         }
@@ -796,9 +799,9 @@ class Savedata extends \Magento\Framework\App\Action\Action {
         if (count ( $productImages ) >= 1) {
             foreach ( $productImages as $productImage ) {
                 $currentProduct->addImageToMediaGallery ( $productImage ['path'], array (
-                        'image',
-                        'small_image',
-                        'thumbnail'
+                    'image',
+                    'small_image',
+                    'thumbnail'
                 ), false, false );
             }
             $currentProduct->save ();
@@ -878,9 +881,9 @@ class Savedata extends \Magento\Framework\App\Action\Action {
                  */
                 foreach ( $attributes as $attributeId ) {
                     $data = array (
-                            'attribute_id' => $attributeId,
-                            'product_id' => $productId,
-                            'position' => $position
+                        'attribute_id' => $attributeId,
+                        'product_id' => $productId,
+                        'position' => $position
                     );
                     $position ++;
                     $attributeModel->setData ( $data )->save ();

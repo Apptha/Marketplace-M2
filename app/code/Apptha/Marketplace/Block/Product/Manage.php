@@ -189,7 +189,7 @@ class Manage extends \Magento\Framework\View\Element\Template {
         $productIds = array ();
         $delete = $this->getRequest ()->getPost ( 'multi' );
         $productIds = $this->getRequest ()->getParam ( 'id' );
-        if (count ( $productIds ) > 0 && $delete == 'delete') {
+        if (is_array($productIds) && count ( $productIds ) > 0 && $delete == 'delete') {
             $deleteFlag = 0;
             foreach ( $productIds as $productId ) {
                 $objectManager = \Magento\Framework\App\ObjectManager::getInstance ();

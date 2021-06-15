@@ -37,7 +37,7 @@ use Magento\Eav\Model\Entity\Collection\AbstractCollection;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Catalog\Block\Product\AbstractProduct;
-use Zend\Form\Annotation\Object;
+use Zend\Form\Annotation\Instance;
 
 /**
  * This class used to display the products collection

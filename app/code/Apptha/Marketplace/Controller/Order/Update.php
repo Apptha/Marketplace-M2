@@ -33,7 +33,7 @@ namespace Apptha\Marketplace\Controller\Order;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Order\Email\Sender\ShipmentSender;
 use Magento\Sales\Model\Order\ShipmentFactory;
-use Zend\Form\Annotation\Object;
+use Zend\Form\Annotation\Instance;
 
 /**
  * This class contains seller order item invoice and shippment funcationaity

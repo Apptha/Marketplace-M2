@@ -30,7 +30,7 @@
  */
 namespace Apptha\Marketplace\Controller\Order;
 
-use Zend\Form\Annotation\Object;
+use Zend\Form\Annotation\Instance;
 
 class Vieworder extends \Magento\Framework\App\Action\Action {
     

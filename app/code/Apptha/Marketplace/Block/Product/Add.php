@@ -31,7 +31,7 @@ namespace Apptha\Marketplace\Block\Product;
 
 use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Catalog\Model\Resource\Product\CollectionFactory;
-use Zend\Form\Annotation\Object;
+use Zend\Form\Annotation\Instance;
 
 /**
  * This class used to display product add/edit form
